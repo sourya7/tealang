@@ -1,0 +1,197 @@
+1. Comments 
+a. Single line comments begin with #
+b. Multiple line comments begin and end with ##
+
+1. Statments 
+a. A newline is taken as the end of each statement
+b. Variables are created using the 'var' keyword
+c. Scopes exist top down with global and a local scope. 
+d. Global variables are shadowed by local variables of the same name
+
+2. Functions
+a. Values are always passed by reference. A constant value must be specified as such
+b. A function must be defined with the 'fun' keyword. It must end with the 'end' keyword.
+|   fun hello
+|       [print: "Hello World"]
+|   end
+
+c. Functions have their parameters in the format specified as below.
+|   fun printX:X andY:Y
+|       [print:X+' '+Y]
+|   end
+
+d. Functions get called in the same order that they are defined
+|   fun helloX:X andY:Y
+|       [printX:X andY:Y]
+|   end
+
+e. Functions can be grouped
+|   fun addX:X andY:Y
+|       return x+y
+|   end
+|
+|   fun helloNewX:X andY:Y
+|       [printX:[addX:X andY:Y] andY:Y] 
+|   end
+
+f. Functions are first class objects
+|   var copiedX:Y: = addX:andY:
+|
+|   fun takesCB:(cbX:Y:) withX:X withY:Y
+|       [cbX:X withY:Y]
+|   end
+|
+|   [takesCB: (copiedX:Y:) withX: X withY: Y]
+
+g. Anonymous functions
+|   var anonFuncX:Y: = fun (X:Y:)
+|      [printX:X andY:Y]
+|   end
+
+4. Basic Data types
+a. Integers represents the rational numbers
+b. Double represents the fraction and irrational numbers 
+c. String repreents a sequence of characters
+d. Function represents a function object
+e. Boolean values represent true of false values
+
+5. Complex data types
+a. Lists can store unordered data of any type
+|   var list = @[1,2,"something"]
+|   list[0] == 1 # true
+|   list[0] = 5
+|   [list length]
+
+b. Tuples are forced to share the same data types
+|   @("abc", 123), ("def", 345) => are the same types of tuples
+
+c. Dictionary stores key value pairs. 
+|   @{"key"=> val}
+
+6. Classes 
+a. Classes can be used to build complex data types
+|   class Dog
+|       fun bark
+|           [print:"woof!"]
+|       end
+|   end
+
+b. Classes can inherit from one or more datatype
+|   class Animal
+|       var sound
+|       fun init: sound
+|           self.sound = sound
+|       end
+|       fun makeSound
+|           [print:self.sound]
+|       end
+|   end
+
+# A overriding class must call the super constructor
+|   class Dog isa Animal,Organism 
+|       fun init
+|           [super init:"Woof!"]
+|       end
+|       fun bark
+|           [self makeSound]
+|       end
+|   end
+|
+|   var dog = [Dog init]
+|   [dog bark]
+
+7. Control flow
+a. If
+|   if something 
+|       # do something
+|   end
+
+|   if something
+|       # do something
+|   elif something
+|       # do something
+|   else
+|       # do something
+|   end
+
+b. While 
+|   while something
+|       # do something
+|   end
+
+c. For
+|   for x in iterable
+|       # do something
+|   end
+|
+|   for x in range(10)
+|       #do something
+|   end
+
+d. Exception handling
+|   try
+|       # something
+|   catch e
+|       # do something
+|   end
+
+e. With
+|   with open(x) as f
+|       f.read()
+|   end
+
+8. Metaclasses
+a. Every thing is an object. Classes are objects as well with thier creation by a metaclass. Metaclasses are objects as well.
+|   class MetaClassExt isa MetaClass
+|       fun init:args
+|           # Called with a class 
+|           [super init:args]
+|       end
+|       @sym '$t == $t'
+|       fun equals:cls obj:obj 
+|           # Modify the equals operator
+|       end
+|       # t == this class
+|       # i == integers
+|       # s == strings
+|       # d == double
+|       # * == anyclass
+|       @sym '$t + $t'
+|       fun plus:cls obj:obj
+|           # Modify the plus operator
+|       end
+|   end
+|
+|   @meta('MetaClassExt')
+|   class NewClass
+|       fun init
+|           # do somethign
+|       end
+|   end
+|
+|   myNewClass = [NewClass init]
+|   myAnotherNewClass = [NewClass init]
+|   myAnotherNewClass == myNewClass # call the metaclass equals
+
+b. There is a common metaclass to all classes. This metaclass implements all the necessary functions like equals and so on. This metaclass can be extended on a subclass to modify these functions
+
+9. Experimental
+a. Add the ability to add own symbols
+|   @sym '{$# => $#, ...}' # a dict
+|   var dict = @{"a" => 2, "b" => 3}
+|
+|   @sym '($#, ...)' # a tuple
+|   var tuple = @(1,2)
+|
+|   @sym '[$#, ...]' # a list
+|   var list = [1,2,"something"]
+|
+|   class Map isa MapContainer
+|       fun init
+|           self = [super init]
+|       endfun
+|       @sym '($1* => $2*, ...)'
+|       fun addKey: key withVal: val
+|           [self map addKey: key withVal: val]
+|       endfun
+|   endclass

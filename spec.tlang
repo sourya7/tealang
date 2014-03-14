@@ -1,0 +1,41 @@
+fun sortArray:array
+    var less = @[]
+    var equal = @[]
+    var greater = @[]
+
+    if [len:array] > 1
+        var pivot = array[0]
+        for x in array
+            if x < pivot [less append:x]
+            if x == pivot [equal append:x]
+            if x > pivot [greater append:x]
+        endfor
+        return [sort: less] + [sort: equal] + [sort: greater]
+    else
+        return array
+    endif
+endfun
+
+@sym '{$# => $#, ...}' # a dict
+var dict = @{"a" => 2, "b" => 3}
+
+@sym '($#, ...)' # a tuple
+var tuple = @(1,2)
+
+@sym '[$#, ...]' # a list
+var list = [1,2,"something"]
+
+@sym '($# => $#, ...)'
+class NewClass
+    fun init
+        # do some memory stuff
+    endfun
+
+    @ext("sym")
+    fun addKey: key withVal: val
+        [self list appendKey: key withVal: val]
+    endfun
+endclass
+
+var nc = [NewClass init:("ab"=> 2, "cd" =>3))
+var bc = @--

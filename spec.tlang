@@ -1,3 +1,4 @@
+#qsort example
 fun sortArray:array
     var less = @[]
     var equal = @[]
@@ -16,26 +17,41 @@ fun sortArray:array
     endif
 endfun
 
-@sym '{$# => $#, ...}' # a dict
-var dict = @{"a" => 2, "b" => 3}
+# Comparing two objects
 
-@sym '($#, ...)' # a tuple
-var tuple = @(1,2)
-
-@sym '[$#, ...]' # a list
-var list = [1,2,"something"]
-
-@sym '($# => $#, ...)'
-class NewClass
-    fun init
-        # do some memory stuff
+class MyClass 
+    var num
+    @init
+    fun init:myNum
+        num = myNum
     endfun
 
-    @ext("sym")
-    fun addKey: key withVal: val
-        [self list appendKey: key withVal: val]
+    fun toNumber
+        return num
+    endfun
+
+    fun toString
+        return [num toString]
+    endfun
+    
+    @sym "#{MyClass} == #{Object}" "[isEqualTo:%2]" "%1"
+    fun isEqualTo:snd
+        if [num == [snd toNumber]] return True
+        return False
+    endfun
+
+    @sym "#{MyClass} + #{Object}" "[subtract:%2]" "%1"
+    fun add:snd
+        return [MyClass init:[num + [snd toNumber]]]
+    endfun
+
+    @sym "#{MyClass} - #{Object}" "[subtract:%2]" "%1"
+    fun subtract:snd
+        return [MyClass init:[num - [snd toNumber]]]
+    endfun
+
+    @sym "#{MyClass} << #{MyClass}" "[shiftLeftObj:%2]" "%1"
+    fun shiftLeftObj:obj
     endfun
 endclass
-
-var nc = [NewClass init:("ab"=> 2, "cd" =>3))
-var bc = @--
+    

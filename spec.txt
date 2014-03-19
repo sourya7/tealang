@@ -46,7 +46,7 @@ f. Functions are first class objects
 g. Anonymous functions
 |   var anonFuncX:Y: = fun (X:Y:)
 |      [printX:X andY:Y]
-|   end
+|   endfun
 
 4. Basic Data types
 a. Integers represents the rational numbers
@@ -62,10 +62,7 @@ a. Lists can store unordered data of any type
 |   list[0] = 5
 |   [list length]
 
-b. Tuples are forced to share the same data types
-|   @("abc", 123), ("def", 345) => are the same types of tuples
-
-c. Dictionary stores key value pairs. 
+b. Dictionary stores key value pairs. 
 |   @{"key"=> val}
 
 6. Classes 
@@ -73,29 +70,29 @@ a. Classes can be used to build complex data types
 |   class Dog
 |       fun bark
 |           [print:"woof!"]
-|       end
-|   end
+|       endfun
+|   endclass
 
 b. Classes can inherit from one or more datatype
 |   class Animal
 |       var sound
 |       fun init: sound
 |           self.sound = sound
-|       end
+|       endfun
 |       fun makeSound
 |           [print:self.sound]
-|       end
-|   end
+|       endfun
+|   endclass
 
 # A overriding class must call the super constructor
 |   class Dog isa Animal,Organism 
 |       fun init
 |           [super init:"Woof!"]
-|       end
+|       endfun
 |       fun bark
 |           [self makeSound]
-|       end
-|   end
+|       endfun
+|   endclass
 |
 |   var dog = [Dog init]
 |   [dog bark]
@@ -104,7 +101,7 @@ b. Classes can inherit from one or more datatype
 a. If
 |   if something 
 |       # do something
-|   end
+|   endif
 
 |   if something
 |       # do something
@@ -112,86 +109,42 @@ a. If
 |       # do something
 |   else
 |       # do something
-|   end
+|   endif
 
 b. While 
 |   while something
 |       # do something
-|   end
+|   endwhile
 
 c. For
 |   for x in iterable
 |       # do something
-|   end
+|   endfor
 |
 |   for x in range(10)
 |       #do something
-|   end
+|   endfor
 
 d. Exception handling
 |   try
 |       # something
 |   catch e
 |       # do something
-|   end
+|   endtry
 
 e. With
 |   with open(x) as f
 |       f.read()
-|   end
+|   endwith
 
-8. Metaclasses
+8. Metaclasses [experimental]
 a. Every thing is an object. Classes are objects as well with thier creation by a metaclass. Metaclasses are objects as well.
-|   class MetaClassExt isa MetaClass
-|       fun init:args
-|           # Called with a class 
-|           [super init:args]
-|       end
-|       @sym '$t == $t'
-|       fun equals:cls obj:obj 
-|           # Modify the equals operator
-|       end
-|       # t == this class
-|       # i == integers
-|       # s == strings
-|       # d == double
-|       # * == anyclass
-|       @sym '$t + $t'
-|       fun plus:cls obj:obj
-|           # Modify the plus operator
-|       end
-|   end
-|
-|   @meta('MetaClassExt')
-|   class NewClass
-|       fun init
-|           # do somethign
-|       end
-|   end
-|
-|   myNewClass = [NewClass init]
-|   myAnotherNewClass = [NewClass init]
-|   myAnotherNewClass == myNewClass # call the metaclass equals
-
 b. There is a common metaclass to all classes. This metaclass implements all the necessary functions like equals and so on. This metaclass can be extended on a subclass to modify these functions
 
-9. Experimental
+9. Other Experimental
 a. Add the ability to add own symbols
-|   @sym '{$# => $#, ...}' # a dict
-|   var dict = @{"a" => 2, "b" => 3}
-|
-|   @sym '($#, ...)' # a tuple
-|   var tuple = @(1,2)
-|
-|   @sym '[$#, ...]' # a list
-|   var list = [1,2,"something"]
-|
-|   class Map isa MapContainer
-|       fun init
-|           self = [super init]
-|       endfun
-|       @sym '($1* => $2*, ...)'
-|       fun addKey: key withVal: val
-|           [self map addKey: key withVal: val]
-|       endfun
-|   endclass
+|   @sym "@{#{Object} => #{Object},...}" "[insert:%2 withKey:%1]" "[Dict init]"
+|   # The format is @sym <The string to parse> <The action> <The object to call>
+
+10. Keywords
+if, elif, else, endif, while, endwhile, for, in, endfor,fun, endfun, var, class, endclass, isa, try, catch, endtry, with, endwith, as 

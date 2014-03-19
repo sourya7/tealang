@@ -1,0 +1,33 @@
+@sym 'Point($, $)'
+class Point isa object
+    var x
+    var y
+    # default parameters
+    @init
+    fun initWithX:_x=0.0 andY:_y=0.0
+        x = _x
+        y = _y
+    endfun
+    @toString
+    fun toString
+        return "Point x: " + x + " y: " + y
+    endfun
+endclass
+
+@sym 'Circle(Point($,$))'
+class Circle 
+    #private by default
+    var point
+    var radius
+    @init
+    fun initWithPoint:_point andRadius:_radius
+        point = _point
+        radius = _radius
+    endfun
+    @toString
+    fun toString
+        return "Circle point: " + point + " radius: " + radius
+    endfun
+endclass
+
+

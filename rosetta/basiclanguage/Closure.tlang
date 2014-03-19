@@ -1,0 +1,14 @@
+fun closureWithXval:val
+    return fun (:x:y)
+        var sum = val + x*y
+        return sum
+    endfun
+endfun
+
+fun main:args
+    var closedFun = [closureWithXval: 2] 
+    [print [closedFun __callWithArgs:@[2,4]]]
+
+    var closedFunWithX:andY: = [closureWithXval:2] 
+    [print [closedFunWithX:2 andY:4]]
+endfun

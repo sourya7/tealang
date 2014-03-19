@@ -1,0 +1,31 @@
+# An example of tealang displaying polymorphism
+class Polygon
+    var width
+    var height 
+    @init
+    fun initWidth:_width andHeight:_height
+        width = _width
+        height = _height
+    endfun
+endclass
+
+class Rectangle isa Polygon
+    public fun area
+        return width * height
+    endfun
+endclass
+
+class Triangle isa Polygon
+    public fun area
+        return 0.5 * width * height
+    endfun
+endclass
+
+fun main:_args
+    var rect = [Rectangle initWidth:10 andHeight:10]
+    var triangle= [Triangle initWidth:10 andHeight:10]
+    [print [rect area]]
+    [print [triangle area]]
+endfun
+
+

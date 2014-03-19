@@ -1,0 +1,34 @@
+# Basically Try Catch Finally
+#
+
+try
+    raise SomeException
+catch SomeException as e
+    [print "There was a problem with " + [e getErrorMsg]]
+finally
+    # do something to resolve the problem
+endtry
+
+# Within a function
+#
+fun doSomethingBad
+    try
+        var a = [File open:"/etc/shadow/"]
+        var str = "Something that wont be written"
+        [a write:str]
+    catch FileWriteError as e
+        [print "There was a probem with " + [e getErrorMsg]]
+    finally
+        # Something that should always be done
+        # Cleanup resources
+        [a close]
+    endtry
+endfun
+
+# With keyword can be used as an alternate to using finally
+# The resources are always closed even if there was some excepton
+# 
+
+with [File open:"/etc/shadow"] as res
+    [res write:"something"]
+endwith

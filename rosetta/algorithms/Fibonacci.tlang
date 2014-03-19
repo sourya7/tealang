@@ -1,0 +1,18 @@
+fun fibWithN:n
+    var a = 1
+    var b = 1
+    for i in [rangeFrom:3 to:n]
+        fib = a + b
+        [printWithFormat:"F(%d) = %d\n" andArgs:@[n,fib]]
+        a = b
+        b = fib
+    endfor
+endfun
+
+fun main:args
+    var n = [Number fromString:args[1]]
+    [fibWithN:n]
+endfun
+
+
+   

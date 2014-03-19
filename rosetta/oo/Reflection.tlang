@@ -1,0 +1,16 @@
+fun main:_args
+    var exampleObj = [Example init]
+    var methodName = "someMethod"
+    var args = @[1,2,3,4]
+    if [exampleObj __hasMethod:methodName]
+        # call A method that does not have arguments
+        [exampleObj __callMethod:methodName]
+
+        # call A method that does have arguments
+        [exampleObj __callMethod:methodName withArgs:args]
+    endif
+endfun
+
+###
+If object is not found, result in an exception
+###

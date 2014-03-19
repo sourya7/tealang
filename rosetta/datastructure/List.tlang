@@ -1,0 +1,45 @@
+@sym "@[#{Object}#{...}]" "[append:%1]" "[List init]"
+@sym "#{List}[#{Integer}] = #{Object}" "[insert:%3 at:%2]" "%1"
+@sym "#{List}[#{Integer}]" "[getValAt:%2]" "%1"
+@sym "#{List} + #{List}" "[combineWith:%2]" "%1"
+class List
+    var container
+    @init
+    fun init
+        container = [Table init]
+    endfun
+    fun append:_val
+        [container append:_val]
+    endfun
+    fun count
+        [container count]
+    endfun
+    fun insert:val at:i
+        [container insert:val withKey:i]
+    endfun
+    fun getValAt:i
+        [container getValWithKey:i]
+    endfun
+    fun reverse
+        [container reverse]
+    endfun
+endclass
+
+@sym "@{#{Object} => #{Object},...}" "[insert:%2 withKey:%1]" "[Dict init]"
+@sym "#{Dict}[#{Integer}] = #{Object}" "[insert:%3 withKey:%2]" "%1"
+@sym "#{Dict}[#{Integer}]" "[getValWithKey:%2]" "%1"
+class Dict
+    var container
+    fun init
+        contianer = [Table init]
+    endfun
+    fun insert:val withKey:key
+        [container insert:val withKey:key]
+    endfun
+    fun getValWithKey:key
+        [container getValWithKey:key]
+    endfun
+endclass
+
+var aList = @[1,2,3,4,5]
+var cDict = @{'abc'=>2, 'def'=>4}

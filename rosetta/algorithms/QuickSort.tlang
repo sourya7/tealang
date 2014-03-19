@@ -1,0 +1,18 @@
+# qsort example
+fun sortArray:array
+    var less = @[]
+    var equal = @[]
+    var greater = @[]
+
+    if [len:array] > 1
+        var pivot = array[0]
+        for x in array
+            if x < pivot [less append:x]
+            if x == pivot [equal append:x]
+            if x > pivot [greater append:x]
+        endfor
+        return [sort:less] + [sort:equal] + [sort:greater]
+    else
+        return array
+    endif
+endfun

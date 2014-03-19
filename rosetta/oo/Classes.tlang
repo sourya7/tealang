@@ -1,0 +1,38 @@
+# A simple class
+# By convention, classes begin with a capital letter
+# They begin with the keyword 'class'
+# All classes inherit from the 'Object' class by default
+class SomeClass
+    # variables are public by default
+    # Convention is to capitalize the first letter 
+    private var Xval
+    private var Yval
+    # static vars can be instantiated at class creation
+    static private var StaticVar = 4
+    # All classes must have an init* function that is public
+    # They are marked as @init
+    @init
+    fun initWithX:x andY:y
+        Xval = x
+        Yval = y
+    endfun
+    fun addXAndY
+        return x+y
+    endfun
+
+    # Static functions and variables are marked as such
+    static fun doSomethingStatic
+        return StaticVar
+    endfun
+
+# classes end with the "endclass" keyword
+endclass
+
+fun main:args
+    # Create the class
+    var myCls = [SomeClass initWithX:x andY:y]   
+    # executea instance method
+    [myCls addXAndY]
+    # Call the Static method
+    [SomeClass doSomethingStatic]
+endfun

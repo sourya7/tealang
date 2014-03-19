@@ -1,0 +1,22 @@
+class SingletonExample
+    static var singleton = nil
+    private var someval 
+    @init
+    private fun initWithSomeVal:_val
+        someVal = _val
+    endfun
+    static fun getInstance
+        if singleton == nil
+            singleton = [SingletonExample initWithSomeVal:0]
+        endif
+        return singleton
+    endfun
+    fun printTheVal
+        [print someval]
+    endfun
+endclass
+
+fun main:args
+    var singletonInstance = [SingletonExample getInstance]
+    [singletonInstance printTheVal]
+endfun

@@ -1,0 +1,13 @@
+fun factorialOf:n
+    if n == 0
+        return 1
+    else
+        return n * [factorial n-1]
+    endif
+endfun
+
+fun main:args
+    var n = [Number fromString:args[1]]
+    var fac = [factorialOf n]
+    [printArgs:@[n,fac] withFormat:"The factorial of %d is %d"]
+endfun

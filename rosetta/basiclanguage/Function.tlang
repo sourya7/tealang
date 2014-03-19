@@ -1,0 +1,32 @@
+# Functions begin with the keyword 'fun'
+var abc = 5
+fun foo
+    # Variables inside a function shadow the ones
+    # outside in the global scope
+    var abc = 2 # global abc does not exist here
+    # the 'return' keyword can be used to return from a function
+    return abc
+# They end with the keyword 'endfun'
+endfun
+
+# functions can be called as [object funcName]
+# When 'object' is left, the current scope object is assumed
+
+
+# parameters are passed as following
+fun fooWothX:x andY:y
+    # here, the type of the function is '::',i.e., 
+    # it accepts two parameters
+    [print x + " " + y]
+endfun
+
+# functions can be anonymous
+var anonFunX:Y: = fun (:someVar:anotherVar)
+    return someVar + anotherVar
+endfun
+
+# They can be passed as parameters
+fun takesCB:(cbwithX:Y:) andX:x andY:y
+    return [cbwithX:x andY:y]
+endfun
+takesCB:(anonFuncX:Y:) andX:4 andY:5

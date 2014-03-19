@@ -1,0 +1,33 @@
+# Use a delegator to do stuff
+class Delegate
+    fun thing
+        return "Delegate implementation"
+    endfun
+endclass
+
+class NotDelegate
+endclass
+
+class Delegator
+    var delegate = nil
+    @init
+    fun initWithDelegate:_delegate
+        delegate = _delegate   
+    endfun
+    fun operation
+        if [delegate isInstanceOf:Delegate]
+            return [delegate thing]
+        else
+            return "Default implementation"
+        endif
+    endfun
+endclass
+    
+fun main:args
+    var realDelegate = [Delegate init]
+    var fakeDelegate = [NotDelegate init]
+    var delegatorReal = [Delegator initWithDelegate:realDelegate]
+    var delegatorFake = [Delegator initWithDelegate:fakeDelegate]
+    [assert ([delegatorReal operation] == "Delegate implementation")]
+    [assert ([delegatorFake operation] == "Default implementation")]
+endfun

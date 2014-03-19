@@ -1,0 +1,37 @@
+# All the classes inherit from the Object class by default
+# It implements the basic necessities. 
+
+class BaseClass
+    # The variables are privat to world, but visible to inherited
+    # classes
+    var SomeVar
+    var AnotherVar
+    @init
+    public fun initOne:_f andTwo:_s
+        SomeVar = _f
+        AnotherVar = _s
+    endfun
+
+    # functions can be marked abstract. They must be implemented
+    # in the inherited functions. Should always have the same
+    # function prototype
+    @abstract
+    public fun abstractFunWithVal:val
+    endfun
+endclass
+
+# A class can inherit another using the 'isa' keyword
+# Multiple base classes can be added by a comma
+# Here it would be 'class InheritedClass isa BaseClass, AnotherBaseClass'
+class InheritedClass isa BaseClass
+    public fun doSomething
+        # Access to the variables in the super class
+        return SomeVar + AnotherVar
+    endfun
+    public fun abstractFunWithVal:val
+    endfun
+endclass
+
+var myInheritedCls = [InheritedClass initOne:2 andTwo:5]
+[myInheritedCls doSomething]
+

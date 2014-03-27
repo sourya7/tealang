@@ -6,7 +6,7 @@ fun closureWithXval:val
 endfun
 
 fun main:args
-    var closedFun = [closureWithXval: 2] 
+    var closedFun = [closureWithXval:2] 
     [print [closedFun __callWithArgs:@[2,4]]]
 
     var closedFunWithX:andY: = [closureWithXval:2] 

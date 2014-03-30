@@ -49,7 +49,7 @@ A literal is a way to represent a fixed value. Tealang supports the string and v
 2. Calls
 Calls are made to objects and messages or arguemtns can be passed to them.
 |   [object method:args] // the message 'method: args' is sent to the object 'object'
-Calls that aren't directed towards an object are directed towards the global object under local scope. That is, it has access to local and global properties. 
+Calls that arent directed towards an object are directed towards the global object under local scope. That is, it has access to local and global properties. 
 |   var globalVar = 42
 |   [printFormat:"Hello world %d" withArgs:@[globalVar]]
 3. Variable declaration

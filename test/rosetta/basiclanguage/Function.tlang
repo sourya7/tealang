@@ -17,7 +17,7 @@ endfun
 fun fooWothX:x andY:y
     # here, the type of the function is '::',i.e., 
     # it accepts two parameters
-    [print x + " " + y]
+    [print: x + " " + y]
 endfun
 
 # functions can be anonymous

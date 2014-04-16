@@ -1,11 +1,25 @@
 #include <string>
 #include <istream>
+#include <iostream>
 #include <map>
 #include "token.h"
 #include "word.h"
 #include "number.h"
 #include "real.h"
 #include "lexer.h"
+
+using namespace std;
+
+/* TODO - Remove after I'm done with the lexer
+ * Just for debugging purposes */
+string mTagNames[] = {"BAND", "BOR", "BNOT", "BXOR", "PLUS", "MINUS", "MULT", "POW",
+                     "MOD", "NUM", "LSHIFT", "RSHIFT", "LTE", "GTE", "LT", "GT", "EQ", "NEQ", "AND",
+                     "OR", "NOT", "DIV", "ASSIGN", "DEFCLASS", "ENDCLASS", "DEFFUN", "ENDFUN", 
+                     "IF", "ELIF", "ELSE", "ENDIF", "WHILE", "ENDWHILE", "TRY", "CATCH", 
+                     "ENDTRY", "WITH", "ENDWITH", "AS", "IN", "FOR", "ENDFOR", "VAR", "ISA",
+                     "REAL", "ID", "DECR", "INCR", "BSQO", "BSQC", "SEOF", "STR", "BCRO", "BCRC"};
+/* debug stuff */
+
 
 /* 
  * Some helper functions for converting from numeric string types   
@@ -35,17 +49,6 @@ int decFromDec(string decStr){
 double floatFromFloat(string floatStr){
     return 0;
 }
-
-/*
-string getStrWhileCond(function<bool(char)>& cond){
-    string tmp;
-    do{
-        readChar();
-        tmp += peek;
-    }while(cond(peek));
-}
-*/
-/* End of helpers */
 
 Token Lexer::parseSpecialNumber(){
     bool isHex = peek == 'x';
@@ -98,16 +101,27 @@ Token Lexer::getIdentifierToken(){
     return Word(tmp, Tags::ID);
 }
 
+//TODO
 void Lexer::printAll(){
+    while(true){
+        debugCounter++;
+        Token newtok = scan();
+        if(newtok.tag == Tags::SEOF) exit(0);
+        if(newtok.tag == Tags::ID || newtok.tag == Tags::NUM || newtok.tag == Tags::REAL){
+        }
+        else{
+        }
+    }
 }
 
-Lexer::Lexer(istream pistream){ 
+Lexer::Lexer(istream& pistream){ 
     inputStream = &pistream; 
     peek = ' '; 
 }
 
 void Lexer::readChar(){ 
-    *inputStream >> peek; 
+    bool res = inputStream->get(peek); 
+    if(!res) peek = -1;
 }
 
 bool Lexer::readAndMatch(char ch) { 
@@ -130,7 +144,7 @@ Token Lexer::scan(){
     //Get rid of the white space
     for(;;readChar()){
         if(peek == '\n') {} //line += 1;
-        else if(!isspace(peek)){ continue; }
+        else if(isspace(peek)){ continue; }
         else { break; }
     }
     switch(peek){
@@ -139,17 +153,30 @@ Token Lexer::scan(){
         case '-': IFMATCHELSE('-', Tags::DECR, Tags::MINUS);
         case '+': IFMATCHELSE('+', Tags::INCR, Tags::PLUS);
         case '*': IFMATCHELSE('*', Tags::POW, Tags::MULT);
-        case '/': return Token(Tags::DIV);
+        case '/': readChar(); return Token(Tags::DIV);
         case '!': IFMATCHELSE('=', Tags::NEQ, Tags::NOT);
-        case '~': return Token(Tags::BNOT);
-        case '^': return Token(Tags::BXOR);
+        case '~': readChar(); return Token(Tags::BNOT);
+        case '^': readChar(); return Token(Tags::BXOR);
         case '<': IFMATCHELIFELSE('=', Tags::LTE, '<', Tags::LSHIFT, Tags::LT);
         case '>': IFMATCHELIFELSE('=', Tags::GTE, '>', Tags::RSHIFT, Tags::GT);
         case '=': IFMATCHELSE('=', Tags::EQ, Tags::ASSIGN);
-        case '[': return Token(Tags::BSQO);
-        case ']': return Token(Tags::BSQC);
+        case '[': readChar(); return Token(Tags::BSQO);
+        case ']': readChar(); return Token(Tags::BSQC);
+        case '(': readChar(); return Token(Tags::BCRO);
+        case ')': readChar(); return Token(Tags::BCRC);
+        case '"': return parseStringLiteral();
+        case -1: return Token(Tags::SEOF);
         default:
             return isdigit(peek) ? getNumericToken() : getIdentifierToken();
     }
+}
+
+Token Lexer::parseStringLiteral(){
+    readChar();
+    string tmp;
+    do{
+        tmp += peek;
+    } while(!readAndMatch('"'));
+    return Word(tmp, Tags::STR);
 }
 

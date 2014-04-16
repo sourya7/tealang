@@ -22,12 +22,14 @@ private:
     Token getNumericToken();
     Token getIdentifierToken();
     Token parseSpecialNumber();
+    Token parseStringLiteral();
+    int debugCounter = 0;
 public: 
     void printAll();
     void readChar();
     bool readAndMatch(char ch);
     Token scan();
-    Lexer(istream pistream);
+    Lexer(istream& pistream);
 };
 
 #endif

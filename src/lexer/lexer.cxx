@@ -30,7 +30,7 @@ Token Lexer::getNumericToken(){
         }
         return Number(0, Tags::NUM);
     }
-    
+
     //handle decimal numbers
     string tmp;
     do{
@@ -89,7 +89,16 @@ bool Lexer::readAndMatch(char ch) {
     return true;
 } 
 
-Token Lexer::scan() {
+#define IFMATCHELSE(match, ifMatch, elseMatch) \
+    if(readAndMatch(match)){ return Token(ifMatch); } \
+    else{ return Token(elseMatch); }
+
+#define IFMATCHELIFELSE(match, ifMatch, matchElif, elifMatch, elseMatch) \
+    if(readAndMatch(match)){ return Token(ifMatch); } \
+    else if(peek == matchElif) { return Token(elifMatch); } \
+    else{ return Token(elseMatch); }
+
+Token Lexer::scan(){
     //Get rid of the white space
     for(;;readChar()){
         if(peek == '\n') {} //line += 1;
@@ -97,52 +106,22 @@ Token Lexer::scan() {
         else { break; }
     }
     switch(peek){
-        case '&':
-            if(readAndMatch('&')){ return Word("&&", Tags::AND); }
-            else{ return Word("&", Tags::BAND); }
-        case '|':
-            if(readAndMatch('|')){ return Word("||", Tags::OR); }
-            else{ return Word("|", Tags::BOR); }
-        case '-':
-            if(readAndMatch('-')){ return Word("--", Tags::DECR); }
-            else{ return Word("-", Tags::MINUS); }
-        case '+':
-            if(readAndMatch('+')){ return Word("++", Tags::INCR); }
-            else{ return Word("+", Tags::PLUS); }
-        case '*':
-            if(readAndMatch('*')){ return Word("**", Tags::POW); }
-            else{ return Word("*", Tags::MULT); }
-        case '/':
-            return Word("/", Tags::DIV);
-        case '!':
-            if(readAndMatch('=')){ return Word("!=", Tags::NEQ); }
-            else { return Word("!", Tags::NOT); }
-        case '~':
-            return Word("~", Tags::BNOT);
-        case '^':
-            return Word("^", Tags::BXOR);
-        case '<':
-            if(readAndMatch('=')){ return Word("<=", Tags::LTE); }
-            else if(readAndMatch('<')) { return Word("<<", Tags::LSHIFT); }
-            else{ return Word("<", Tags::LT); }
-        case '>':
-            if(readAndMatch('=')){ return Word(">=", Tags::GTE); }
-            else if(readAndMatch('>')) { return Word(">>", Tags::RSHIFT); }
-            else{ return Word(">", Tags::GT); }
-        case '=':
-            if(readAndMatch('=')){ return Word("==", Tags::EQ); }
-            else{ return Word("=", Tags::ASSIGN); }
-        case '[':
-            return Word("[", Tags::BSQO);
-        case ']':
-            return Word("]", Tags::BSQC);
+        case '&': IFMATCHELSE('&', Tags::AND, Tags::BAND);
+        case '|': IFMATCHELSE('|', Tags::OR, Tags::BOR);
+        case '-': IFMATCHELSE('-', Tags::DECR, Tags::MINUS);
+        case '+': IFMATCHELSE('+', Tags::INCR, Tags::PLUS);
+        case '*': IFMATCHELSE('*', Tags::POW, Tags::MULT);
+        case '/': return Token(Tags::DIV);
+        case '!': IFMATCHELSE('=', Tags::NEQ, Tags::NOT);
+        case '~': return Token(Tags::BNOT);
+        case '^': return Token(Tags::BXOR);
+        case '<': IFMATCHELIFELSE('=', Tags::LTE, '<', Tags::LSHIFT, Tags::LT);
+        case '>': IFMATCHELIFELSE('=', Tags::GTE, '>', Tags::RSHIFT, Tags::GT);
+        case '=': IFMATCHELSE('=', Tags::EQ, Tags::ASSIGN);
+        case '[': return Token(Tags::BSQO);
+        case ']': return Token(Tags::BSQC);
         default:
-            if(isdigit(peek)){
-                return getNumericToken();
-            }
-            else{
-                return getIdentifierToken();
-            }
+            return isdigit(peek) ? getNumericToken() : getIdentifierToken();
     }
 }
 

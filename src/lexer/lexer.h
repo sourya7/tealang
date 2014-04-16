@@ -25,7 +25,7 @@ private:
     int decFromOct(string octStr);
     int decFromBin(string binStr);
     int decFromDec(string decStr);
-    double decFromFloat(string floatStr);
+    double floatFromFloat(string floatStr);
 
 public: 
     void printAll();

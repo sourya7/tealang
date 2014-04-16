@@ -44,7 +44,7 @@ Token Lexer::getNumericToken(){
         tmp += peek;
         readChar();
     }while(isdigit(peek));
-    return Real(decFromFloat(tmp), Tags::REAL);
+    return Real(floatFromFloat(tmp), Tags::REAL);
 }
 
 Token Lexer::getIdentifierToken(){
@@ -72,7 +72,7 @@ int Lexer::decFromDec(string decStr){
     return 0;
 }
 
-double Lexer::decFromFloat(string floatStr){
+double Lexer::floatFromFloat(string floatStr){
     return 0;
 }
 

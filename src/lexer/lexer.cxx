@@ -7,42 +7,84 @@
 #include "real.h"
 #include "lexer.h"
 
-using std::string;
-using std::istream;
+/* 
+ * Some helper functions for converting from numeric string types   
+ */
+//TODO
+int decFromHex(string hexStr){
+    return 0;
+}
+
+
+//TODO
+int decFromOct(string octStr){
+    return 0;
+}
+
+//TODO
+int decFromBin(string binStr){
+    return 0;
+}
+
+//TODO
+int decFromDec(string decStr){
+    return 0;
+}
+
+//TODO
+double floatFromFloat(string floatStr){
+    return 0;
+}
+
+/*
+string getStrWhileCond(function<bool(char)>& cond){
+    string tmp;
+    do{
+        readChar();
+        tmp += peek;
+    }while(cond(peek));
+}
+*/
+/* End of helpers */
+
+Token Lexer::parseSpecialNumber(){
+    bool isHex = peek == 'x';
+    bool isOctal = peek == isdigit(peek);
+    bool isBinary = peek == 'b';
+    if(isHex || isOctal || isBinary){
+        string tmp;
+        do {
+            readChar();
+            tmp += peek;
+        } while((isHex && isxdigit(peek))  || 
+                (isOctal && isdigit(peek)) || 
+                (isBinary && (peek == 0 || peek == 1)));
+        if(isHex) return Number(decFromHex(tmp), Tags::NUM);
+        else if(isHex) return Number(decFromOct(tmp), Tags::NUM);
+        else return Number(decFromBin(tmp), Tags::NUM);
+    }
+    return Number(0, Tags::NUM);
+}
 
 Token Lexer::getNumericToken(){
     if(peek == 0){
         readChar();
-        bool isHex = peek == 'x';
-        bool isOctal = peek == isdigit(peek);
-        bool isBinary = peek == 'b';
-        if(isHex || isOctal || isBinary){
-            string tmp;
-            do {
-                readChar();
-                tmp += peek;
-            } while((isHex && isxdigit(peek))  || 
-                    (isOctal && isdigit(peek)) || 
-                    (isBinary && (peek == 0 || peek == 1)));
-            if(isHex) return Number(decFromHex(tmp), Tags::NUM);
-            else if(isHex) return Number(decFromOct(tmp), Tags::NUM);
-            else return Number(decFromBin(tmp), Tags::NUM);
-        }
-        return Number(0, Tags::NUM);
+        return parseSpecialNumber();
     }
 
     //handle decimal numbers
     string tmp;
     do{
-        tmp += peek;
         readChar();
+        tmp += peek;
     }while(isdigit(peek));
-
     if(peek != '.') return Number(decFromDec(tmp), Tags::NUM);
+
     //handle real numbers
+    tmp += ".";
     do{
-        tmp += peek;
         readChar();
+        tmp += peek;
     }while(isdigit(peek));
     return Real(floatFromFloat(tmp), Tags::REAL);
 }
@@ -56,31 +98,17 @@ Token Lexer::getIdentifierToken(){
     return Word(tmp, Tags::ID);
 }
 
-int Lexer::decFromHex(string hexStr){
-    return 0;
+void Lexer::printAll(){
 }
 
-int Lexer::decFromOct(string octStr){
-    return 0;
+Lexer::Lexer(istream pistream){ 
+    inputStream = &pistream; 
+    peek = ' '; 
 }
 
-int Lexer::decFromBin(string binStr){
-    return 0;
+void Lexer::readChar(){ 
+    *inputStream >> peek; 
 }
-
-int Lexer::decFromDec(string decStr){
-    return 0;
-}
-
-double Lexer::floatFromFloat(string floatStr){
-    return 0;
-}
-
-void Lexer::printAll() {}
-
-Lexer::Lexer(istream pistream) { inputStream = &pistream; peek = ' '; }
-
-void Lexer::readChar() { *inputStream >> peek; }
 
 bool Lexer::readAndMatch(char ch) { 
     readChar();

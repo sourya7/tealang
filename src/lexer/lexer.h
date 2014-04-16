@@ -16,23 +16,18 @@ class Lexer {
 private:
     char peek;
     IDTable words;
-    void reserve(Word w);
     istream* inputStream;
 
+    void reserve(Word w);
     Token getNumericToken();
     Token getIdentifierToken();
-    int decFromHex(string hexStr);
-    int decFromOct(string octStr);
-    int decFromBin(string binStr);
-    int decFromDec(string decStr);
-    double floatFromFloat(string floatStr);
-
+    Token parseSpecialNumber();
 public: 
     void printAll();
-    Lexer(istream pistream);
     void readChar();
     bool readAndMatch(char ch);
     Token scan();
+    Lexer(istream pistream);
 };
 
 #endif

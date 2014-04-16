@@ -17,7 +17,8 @@ string mTagNames[] = {"BAND", "BOR", "BNOT", "BXOR", "PLUS", "MINUS", "MULT", "P
                      "OR", "NOT", "DIV", "ASSIGN", "DEFCLASS", "ENDCLASS", "DEFFUN", "ENDFUN", 
                      "IF", "ELIF", "ELSE", "ENDIF", "WHILE", "ENDWHILE", "TRY", "CATCH", 
                      "ENDTRY", "WITH", "ENDWITH", "AS", "IN", "FOR", "ENDFOR", "VAR", "ISA",
-                     "REAL", "ID", "DECR", "INCR", "BSQO", "BSQC", "SEOF", "STR", "BCRO", "BCRC"};
+                     "REAL", "ID", "DECR", "INCR", "BSQO", "BSQC", "SEOF", "STR", "BCIO", "BCIC"
+                     "BCUC", "BCUO"};
 /* debug stuff */
 
 
@@ -107,10 +108,7 @@ void Lexer::printAll(){
         debugCounter++;
         Token newtok = scan();
         if(newtok.tag == Tags::SEOF) exit(0);
-        if(newtok.tag == Tags::ID || newtok.tag == Tags::NUM || newtok.tag == Tags::REAL){
-        }
-        else{
-        }
+        cout << mTagNames[newtok.tag - 256] << endl;
     }
 }
 
@@ -162,8 +160,10 @@ Token Lexer::scan(){
         case '=': IFMATCHELSE('=', Tags::EQ, Tags::ASSIGN);
         case '[': readChar(); return Token(Tags::BSQO);
         case ']': readChar(); return Token(Tags::BSQC);
-        case '(': readChar(); return Token(Tags::BCRO);
-        case ')': readChar(); return Token(Tags::BCRC);
+        case '(': readChar(); return Token(Tags::BCIO);
+        case ')': readChar(); return Token(Tags::BCIC);
+        case '{': readChar(); return Token(Tags::BCUO);
+        case '}': readChar(); return Token(Tags::BCUC);
         case '"': return parseStringLiteral();
         case -1: return Token(Tags::SEOF);
         default:

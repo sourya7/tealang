@@ -6,7 +6,8 @@ enum Tags { BAND = 256, BOR, BNOT, BXOR, PLUS, MINUS, MULT, POW,
             OR, NOT, DIV, ASSIGN, DEFCLASS, ENDCLASS, DEFFUN, ENDFUN, 
             IF, ELIF, ELSE, ENDIF, WHILE, ENDWHILE, TRY, CATCH, 
             ENDTRY, WITH, ENDWITH, AS, IN, FOR, ENDFOR, VAR, ISA,
-            REAL, ID, DECR, INCR, BSQO, BSQC, SEOF, STR, BCRO, BCRC};
+            REAL, ID, DECR, INCR, BSQO, BSQC, SEOF, STR, BCIO, BCIC,
+            BCUC, BCUO };
 
 class Token {
 public:

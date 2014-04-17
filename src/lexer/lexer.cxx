@@ -31,15 +31,13 @@ string endTokens[] = {"endif","endfor","endtry","endcatch","endwhile","endclass"
 #define LEN_CMDTOKENS 5
 string cmdTokens [] = {"in", "var", "isa", "return", "break"};
 
- /* 
- * Some helper functions for converting from numeric string types   
- */
-
-//TODO
+/* 
+* Some helper functions for converting from numeric string types   
+* TODO
+*/
 int decFromHex(string hexStr){
     return 0;
 }
-
 
 //TODO
 int decFromOct(string octStr){
@@ -61,14 +59,14 @@ double floatFromFloat(string floatStr){
     return 0;
 }
 
-Token* Lexer::parseSpecialNumber(){
+Token* Lexer::ParseSpecialNumber(){
     bool isHex = peek == 'x';
     bool isOctal = peek == isdigit(peek);
     bool isBinary = peek == 'b';
     if(isHex || isOctal || isBinary){
         string tmp;
         do {
-            readChar();
+            ReadChar();
             tmp += peek;
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
@@ -80,16 +78,16 @@ Token* Lexer::parseSpecialNumber(){
     return new Number(0, Tags::NUM);
 }
 
-Token* Lexer::getNumericToken(){
+Token* Lexer::ParseNumericToken(){
     if(peek == 0){
-        readChar();
-        return parseSpecialNumber();
+        ReadChar();
+        return ParseSpecialNumber();
     }
 
     //handle decimal numbers
     string tmp;
     do{
-        readChar();
+        ReadChar();
         tmp += peek;
     }while(isdigit(peek));
     if(peek != '.') return new Number(decFromDec(tmp), Tags::NUM);
@@ -97,17 +95,17 @@ Token* Lexer::getNumericToken(){
     //handle real numbers
     tmp += ".";
     do{
-        readChar();
+        ReadChar();
         tmp += peek;
     }while(isdigit(peek));
     return new Real(floatFromFloat(tmp), Tags::REAL);
 }
 
-Token* Lexer::getIdentifierToken(){
+Token* Lexer::ParseIdentifierToken(){
     string tmp;
     while(isalpha(peek) || peek == ':' || isdigit(peek)){
         tmp += peek;  
-        readChar();
+        ReadChar();
     }
     if(count(blockTokens, blockTokens + LEN_BLOCKTOKENS, tmp) > 0)
         return new Word(tmp, Tags::BLK);
@@ -120,15 +118,10 @@ Token* Lexer::getIdentifierToken(){
 }
 
 //TODO
-void Lexer::printAll(){
+void Lexer::PrintAll(){
     while(true){
-        Token* newtok = scan();
+        Token* newtok = Scan();
         if(newtok->tag == Tags::SEOF) exit(0);
-        /*
-        */
-        if(debugCounter++ > 30){
-            exit(0);
-        }
         delete newtok;
     }
 }
@@ -138,66 +131,72 @@ Lexer::Lexer(istream& pistream){
     peek = ' '; 
 }
 
-void Lexer::readChar(){ 
+void Lexer::ReadChar(){ 
     bool res = inputStream->get(peek); 
     if(!res) peek = -1;
 }
 
-bool Lexer::readAndMatch(char ch) { 
-    readChar();
+bool Lexer::ReadAndMatch(char ch){ 
+    ReadChar();
     if(peek != ch){ return false; }
     peek = ' ';
     return true;
 } 
 
-#define IFMATCHELSE(match, ifMatch, elseMatch) \
-    if(readAndMatch(match)){ return new Token(ifMatch); } \
-    else{ return new Token(elseMatch); }
-
-#define IFMATCHELIFELSE(match, ifMatch, matchElif, elifMatch, elseMatch) \
-    if(readAndMatch(match)){ return new Token(ifMatch); } \
-    else if(peek == matchElif) { return new Token(elifMatch); } \
-    else{ return new Token(elseMatch); }
-
-Token* Lexer::scan(){
+/*
+ * TODO - Handle comments
+ * TODO - Use a symbol table to store the identifiers, strings, and numbers
+ *
+ */
+Token* Lexer::Scan(){
     //Get rid of the white space
-    for(;;readChar()){
-        if(peek == '\n') { cout << endl; } //line += 1;
+    for(;;ReadChar()){
+        if(peek == '\n') { line += 1; } //
         else if(isspace(peek)){ continue; }
         else { break; }
     }
+
     switch(peek){
         case '&': IFMATCHELSE('&', Tags::AND, Tags::BAND);
         case '|': IFMATCHELSE('|', Tags::OR, Tags::BOR);
         case '-': IFMATCHELSE('-', Tags::DECR, Tags::MINUS);
         case '+': IFMATCHELSE('+', Tags::INCR, Tags::PLUS);
         case '*': IFMATCHELSE('*', Tags::POW, Tags::MULT);
-        case '/': readChar(); return new Token(Tags::DIV);
+        case '/': ReadChar(); return new Token(Tags::DIV);
         case '!': IFMATCHELSE('=', Tags::NEQ, Tags::NOT);
-        case '~': readChar(); return new Token(Tags::BNOT);
-        case '^': readChar(); return new Token(Tags::BXOR);
+        case '~': ReadChar(); return new Token(Tags::BNOT);
+        case '^': ReadChar(); return new Token(Tags::BXOR);
         case '<': IFMATCHELIFELSE('=', Tags::LTE, '<', Tags::LSHIFT, Tags::LT);
         case '>': IFMATCHELIFELSE('=', Tags::GTE, '>', Tags::RSHIFT, Tags::GT);
         case '=': IFMATCHELSE('=', Tags::EQ, Tags::ASSIGN);
-        case '[': readChar(); return new Token(Tags::BSQO);
-        case ']': readChar(); return new Token(Tags::BSQC);
-        case '(': readChar(); return new Token(Tags::BCIO);
-        case ')': readChar(); return new Token(Tags::BCIC);
-        case '{': readChar(); return new Token(Tags::BCUO);
-        case '}': readChar(); return new Token(Tags::BCUC);
-        case '"': return parseStringLiteral();
+        case '[': ReadChar(); return new Token(Tags::BSQO);
+        case ']': ReadChar(); return new Token(Tags::BSQC);
+        case '(': ReadChar(); return new Token(Tags::BCIO);
+        case ')': ReadChar(); return new Token(Tags::BCIC);
+        case '{': ReadChar(); return new Token(Tags::BCUO);
+        case '}': ReadChar(); return new Token(Tags::BCUC);
+        case '"': case '\'': return ParseStringLiteral();
         case -1: return new Token(Tags::SEOF);
         default:
-            return isdigit(peek) ? getNumericToken() : getIdentifierToken();
+            return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken();
     }
 }
 
-Token* Lexer::parseStringLiteral(){
-    readChar();
+/*
+ * TODO - Handle Multi line strings
+ * TODO - Handle Escape Characters
+ *
+ * As for the escape characters, only the double quote or the multi line quote
+ * can represent them. Using the single quote, the escape characters are not 
+ * interpreted as special characters. 
+ */
+Token* Lexer::ParseStringLiteral(){
     string tmp;
+    char quote = peek;
+    ReadChar();
     do{
         tmp += peek;
-    } while(!readAndMatch('"'));
+    } while(!ReadAndMatch(quote));
     return new Word(tmp, Tags::STR);
 }
 

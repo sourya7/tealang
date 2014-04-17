@@ -14,5 +14,5 @@ int main(int argc, char* argv[]){
     else{
         lex = new Lexer(cin);
     }
-    lex->printAll();
+    lex->PrintAll();
 }

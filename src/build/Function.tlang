@@ -1,0 +1,19 @@
+var abc = 5
+fun foo
+    var abc = 2
+    return abc
+endfun
+
+
+fun fooWothX:x andY:y
+    [print: x + " " + y]
+endfun
+
+var anonFunX:Y: = fun (:someVar:anotherVar)
+    return someVar + anotherVar
+endfun
+
+fun takesCB:(cbwithX:Y:) andX:x andY:y
+    return [cbwithX:x andY:y]
+endfun
+takesCB:(anonFuncX:Y:) andX:4 andY:5

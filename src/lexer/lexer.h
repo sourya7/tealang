@@ -17,18 +17,18 @@ private:
     char peek;
     IDTable words;
     istream* inputStream;
+    int debugCounter = 0;
 
     void reserve(Word w);
-    Token getNumericToken();
-    Token getIdentifierToken();
-    Token parseSpecialNumber();
-    Token parseStringLiteral();
-    int debugCounter = 0;
+    Token* getNumericToken();
+    Token* getIdentifierToken();
+    Token* parseSpecialNumber();
+    Token* parseStringLiteral();
 public: 
     void printAll();
     void readChar();
     bool readAndMatch(char ch);
-    Token scan();
+    Token* scan();
     Lexer(istream& pistream);
 };
 

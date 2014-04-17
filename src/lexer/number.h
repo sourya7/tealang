@@ -2,8 +2,8 @@
 #define T_NUMBER_H
 #include "token.h"
 class Number : public Token {
-    int number;
 public:
+    int number;
     Number(int pnumber, Tags ptag) : Token(ptag), number(pnumber) {}
 };
 #endif

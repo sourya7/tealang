@@ -78,6 +78,11 @@ Token* Lexer::ParseSpecialNumber(){
     return new Number(0, Tags::NUM);
 }
 
+Token* Lexer::Next(){
+    currentTok = Scan();
+    return currentTok;
+}
+
 Token* Lexer::ParseNumericToken(){
     if(peek == 0){
         ReadChar();
@@ -117,8 +122,8 @@ Token* Lexer::ParseIdentifierToken(){
         return new Word(tmp, Tags::ID);
 }
 
-Lexer::Lexer(istream& pistream){ 
-    inputStream = &pistream; 
+Lexer::Lexer(istream* i){ 
+    inputStream = i; 
     peek = ' '; 
 }
 

@@ -28,18 +28,20 @@ private:
     unsigned int line;
     IDTable words;
     istream* inputStream;
+    Token* currentTok;
 
     void Reserve(Word w);
     Token* ParseNumericToken();
     Token* ParseIdentifierToken();
     Token* ParseSpecialNumber();
-    Token* ParseStringLiteral();
-public: 
-    void PrintAll();
     void ReadChar();
     bool ReadAndMatch(char ch);
+    Token* ParseStringLiteral();
     Token* Scan();
-    Lexer(istream& pistream);
+public: 
+    Token* Next();
+    Token* GetCurrent() { return currentTok; };
+    Lexer(istream* pistream);
 };
 
 

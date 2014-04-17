@@ -1,6 +1,6 @@
 #ifndef T_REAL_H
 #define T_REAL_H
-#include "token.h"
+#include "ltoken.h"
 class Real : public Token {
     double number;
 public:

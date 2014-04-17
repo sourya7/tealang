@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "parser.h"
 #include <iostream>
 #include <fstream>
 using std::cin;
@@ -26,16 +26,16 @@ using std::ifstream;
  *                                                                                    
  */
 int main(int argc, char* argv[]){
-    Lexer* lex;
+    TParser* parser;
     ifstream src;
     if(argc == 2){
         src.open(argv[1], std::ifstream::in);
-        lex = new Lexer(src);
+        parser = new TParser(&src);
     }                                                  
     else{                                              
-        lex = new Lexer(cin);                          
+        parser = new TParser(&cin);                          
     }                                                  
-    lex->PrintAll();                                   
+    parser->Parse();
 }                                                      
 
 

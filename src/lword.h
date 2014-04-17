@@ -1,7 +1,7 @@
 #ifndef T_WORD_H
 #define T_WORD_H
 
-#include "token.h"
+#include "ltoken.h"
 #include <string>
 
 using std::string;

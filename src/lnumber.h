@@ -1,6 +1,6 @@
 #ifndef T_NUMBER_H
 #define T_NUMBER_H
-#include "token.h"
+#include "ltoken.h"
 class Number : public Token {
 public:
     int number;

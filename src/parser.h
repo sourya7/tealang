@@ -14,49 +14,61 @@ using namespace std;
 
 class TParser {
 private:
-    istream* inputStream;
+    Token* look;
+    Lexer* lexer;
 public:
     TParser(istream* i) {
-        inputStream = i;
+        lexer = new Lexer(inputStream);
+    }
+
+    void move(){
+        look = lexer->Scan();
     }
     
-    /*
-     * Do I return something?
-     * 1. Create a new environment
-     * 2. 
-     *
-     */
     void Parse(){
-        Lexer* lex = new Lexer(inputStream);
-        Block* mainBlock = new Block(lex);
-        mainBlock->Parse();
+        /*
+         * Block => [Stmt]*
+         * Stmt => ifStmt, tryStmt, forStmt, whileStmt...
+         * ifStmt => 
+         */
+        ParseBlock();
+    }
+
+    void ParseFunctionStmt(){
+        /*
+         * defun bla
+         *    [print: something]
+         * endfun
+         * 
+         * defun funWith:a andB:b
+         * defun funWith:(funWithA:B:) andB:b
+         * endfun
+         */
+        Word* tok = (Word*)lexer->Next();
+        
+    }
+
+    void ParseBlock(){
+        Token* tok = lexer->Next();
+        switch(tok->tag){
+            case Tags::BLK:
+                Word* word = (Word*)tok;
+                if(word->lexeme == "defun") ParseFunctionStmt(); 
+                else if(word->lexeme == "defclass") ParseFunctionStmt(); 
+                else if(word->lexeme == "if") ParseFunctionStmt(); 
+                else if(word->lexeme == "for") ParseFunctionStmt(); 
+                else if(word->lexeme == "try") ParseFunctionStmt(); 
+                else if(word->lexeme == "while") ParseFunctionStmt(); 
+            case 
+        }
     }
 };
 
 class Node {
 protected:
-    Node* left;
-    Node* right;
-    Token* value; 
+    vector<Node*> nodes;
+    Tags tag;
 
 public:
-    Node(Node* l, Node* r, Token* v) : left(l), right(r), value(v) {}
     Node() {} 
-    SetLeft(Node* l) {}
-    SetRight(Node* r) {}
-    SetValue(Token* v) {}
-}
-
-class Block : public Node {
-    //Block -> stmt[s]
-private: 
-    Lexer* lexer;
-public:
-    Block(Lexer* l) : lexer(l) {} 
-    void Parse(){
-        Token* tok = lexer->Next();
-        switch(tok->tag){
-            case Tags::
-        }
-    }
 }

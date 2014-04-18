@@ -7,7 +7,7 @@ enum Tags { BAND = 256, BOR, BNOT, BXOR, PLUS, MINUS, MULT, POW,
             IF, ELIF, ELSE, ENDIF, WHILE, ENDWHILE, TRY, CATCH, 
             ENDTRY, WITH, ENDWITH, AS, IN, FOR, ENDFOR, VAR, ISA,
             REAL, ID, DECR, INCR, BSQO, BSQC, SEOF, STR, BCIO, BCIC,
-            BCUC, BCUO, BLK,ENDBLK,CMD };
+            BCUC, BCUO, BLK,ENDBLK,FLWBLK, CMD };
 
 class Token {
 public:

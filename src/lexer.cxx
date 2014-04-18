@@ -11,22 +11,15 @@
 
 using namespace std;
 
-/* TODO - Remove after I'm done with the lexer
- * Just for debugging purposes */
-string mTagNames[] = {"BAND", "BOR", "BNOT", "BXOR", "PLUS", "MINUS", "MULT", "POW",
-                     "MOD", "NUM", "LSHIFT", "RSHIFT", "LTE", "GTE", "LT", "GT", "EQ", "NEQ", "AND",
-                     "OR", "NOT", "DIV", "ASSIGN", "DEFCLASS", "ENDCLASS", "DEFUN", "ENDFUN", 
-                     "IF", "ELIF", "ELSE", "ENDIF", "WHILE", "ENDWHILE", "TRY", "CATCH", 
-                     "ENDTRY", "WITH", "ENDWITH", "AS", "IN", "FOR", "ENDFOR", "VAR", "ISA",
-                     "REAL", "ID", "DECR", "INCR", "BSQO", "BSQC", "SEOF", "STR", "BCIO", "BCIC",
-                     "BCUC", "BCUO", "BLK", "ENDBLK", "CMD"};
-
 /* debug stuff */
-#define LEN_BLOCKTOKENS 9
-string blockTokens[] = {"defclass", "defun", "if","elif","for","try","catch","else","while"};
+#define LEN_BLOCKTOKENS 6
+string blockTokens[] = {"defclass", "defun", "if", "for", "try", "while"};
 
-#define LEN_ENDTOKENS 7
-string endTokens[] = {"endif","endfor","endtry","endcatch","endwhile","endclass","endfun"};
+#define LEN_FLWBLKTOKENS 3
+string flwBlkTokens[] = {"elif", "catch", "else"};
+
+#define LEN_ENDTOKENS 6
+string endTokens[] = {"endif","endfor","endtry","endwhile","endclass","endfun"};
 
 #define LEN_CMDTOKENS 5
 string cmdTokens [] = {"in", "var", "isa", "return", "break"};
@@ -114,6 +107,8 @@ Token* Lexer::ParseIdentifierToken(){
     }
     if(count(blockTokens, blockTokens + LEN_BLOCKTOKENS, tmp) > 0)
         return new Word(tmp, Tags::BLK);
+    else if(count(flwBlkTokens, flwBlkTokens + LEN_FLWBLKTOKENS, tmp) > 0)
+        return new Word(tmp, Tags::FLWBLK);
     else if(count(endTokens, endTokens + LEN_ENDTOKENS, tmp) > 0)
         return new Word(tmp, Tags::ENDBLK);
     else if(count(cmdTokens, cmdTokens + LEN_CMDTOKENS, tmp) > 0)

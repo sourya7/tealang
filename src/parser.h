@@ -1,3 +1,5 @@
+#ifndef T_PARSER_H
+#define T_PARSER_H
 /**
  * What is the parser going to do?
  *
@@ -17,58 +19,12 @@ private:
     Token* look;
     Lexer* lexer;
 public:
-    TParser(istream* i) {
-        lexer = new Lexer(inputStream);
-    }
-
-    void move(){
-        look = lexer->Scan();
-    }
-    
-    void Parse(){
-        /*
-         * Block => [Stmt]*
-         * Stmt => ifStmt, tryStmt, forStmt, whileStmt...
-         * ifStmt => 
-         */
-        ParseBlock();
-    }
-
-    void ParseFunctionStmt(){
-        /*
-         * defun bla
-         *    [print: something]
-         * endfun
-         * 
-         * defun funWith:a andB:b
-         * defun funWith:(funWithA:B:) andB:b
-         * endfun
-         */
-        Word* tok = (Word*)lexer->Next();
-        
-    }
-
-    void ParseBlock(){
-        Token* tok = lexer->Next();
-        switch(tok->tag){
-            case Tags::BLK:
-                Word* word = (Word*)tok;
-                if(word->lexeme == "defun") ParseFunctionStmt(); 
-                else if(word->lexeme == "defclass") ParseFunctionStmt(); 
-                else if(word->lexeme == "if") ParseFunctionStmt(); 
-                else if(word->lexeme == "for") ParseFunctionStmt(); 
-                else if(word->lexeme == "try") ParseFunctionStmt(); 
-                else if(word->lexeme == "while") ParseFunctionStmt(); 
-            case 
-        }
-    }
+    TParser(istream* i);
+    void move();
+    void Parse();
+    void ParseBlock();
+    void ParseFunctionStmt();
+    void ParseFunctionParam();
 };
 
-class Node {
-protected:
-    vector<Node*> nodes;
-    Tags tag;
-
-public:
-    Node() {} 
-}
+#endif

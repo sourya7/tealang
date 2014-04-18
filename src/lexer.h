@@ -8,13 +8,13 @@
 #include "lword.h"
 
 #define IFMATCHELSE(match, ifMatch, elseMatch) \
-    if(ReadAndMatch(match)){ return new Token(ifMatch); } \
-    else{ return new Token(elseMatch); }
+    if(ReadAndMatch(match)){ return new Token(ifMatch, line); } \
+    else{ return new Token(elseMatch, line); }
 
 #define IFMATCHELIFELSE(match, ifMatch, matchElif, elifMatch, elseMatch) \
-    if(ReadAndMatch(match)){ return new Token(ifMatch); } \
-    else if(peek == matchElif) { return new Token(elifMatch); } \
-    else{ return new Token(elseMatch); }
+    if(ReadAndMatch(match)){ return new Token(ifMatch, line); } \
+    else if(peek == matchElif) { return new Token(elifMatch, line); } \
+    else{ return new Token(elseMatch, line); }
 
 
 using std::string;
@@ -25,10 +25,9 @@ typedef std::map<string, Token> IDTable;
 class Lexer {
 private:
     char peek;
-    unsigned int line;
+    unsigned long line;
     IDTable words;
     istream* inputStream;
-    Token* currentTok;
 
     void Reserve(Word w);
     Token* ParseNumericToken();
@@ -37,10 +36,8 @@ private:
     void ReadChar();
     bool ReadAndMatch(char ch);
     Token* ParseStringLiteral();
-    Token* Scan();
 public: 
-    Token* Next();
-    Token* GetCurrent() { return currentTok; };
+    Token* Scan();
     Lexer(istream* pistream);
 };
 

@@ -1,9 +1,7 @@
-//#include "parser.h"
-#include "lexer.h"
 #include <iostream>
 #include <fstream>
-using std::cin;
-using std::ifstream;
+#include "parser.h"
+using namespace std;
 
 /*                                                      
  *                                                                                                                                          
@@ -27,22 +25,8 @@ using std::ifstream;
  *                                                                                    
  */
 int main(int argc, char* argv[]){
-    Lexer* lex;
-    lex = new Lexer(&cin);
-    do {
-        lex->Next();
-        Word* tok = (Word*)lex->GetCurrent();
-        if(tok != nullptr){
-            std::cout << "<" << tok->lexeme << "> \n";
-        }
-    } while(lex->GetCurrent()->tag != Tags::SEOF);
-        /*
-        }
-        */
-
-    /*
-    TParser* parser;
     ifstream src;
+    TParser* parser;
     if(argc == 2){
         src.open(argv[1], std::ifstream::in);
         parser = new TParser(&src);
@@ -51,7 +35,6 @@ int main(int argc, char* argv[]){
         parser = new TParser(&cin);                          
     }                                                  
     parser->Parse();
-    */
 }                                                      
 
 

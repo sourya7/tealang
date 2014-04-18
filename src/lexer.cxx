@@ -64,16 +64,11 @@ Token* Lexer::ParseSpecialNumber(){
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
                 (isBinary && (peek == 0 || peek == 1)));
-        if(isHex) return new Number(decFromHex(tmp), Tags::NUM);
-        else if(isHex) return new Number(decFromOct(tmp), Tags::NUM);
-        else return new Number(decFromBin(tmp), Tags::NUM);
+        if(isHex) return new Number(decFromHex(tmp), line);
+        else if(isHex) return new Number(decFromOct(tmp), line);
+        else return new Number(decFromBin(tmp), line);
     }
-    return new Number(0, Tags::NUM);
-}
-
-Token* Lexer::Next(){
-    currentTok = Scan();
-    return currentTok;
+    return new Number(0, line);
 }
 
 Token* Lexer::ParseNumericToken(){
@@ -88,7 +83,7 @@ Token* Lexer::ParseNumericToken(){
         ReadChar();
         tmp += peek;
     }while(isdigit(peek));
-    if(peek != '.') return new Number(decFromDec(tmp), Tags::NUM);
+    if(peek != '.') return new Number(decFromDec(tmp), line);
 
     //handle real numbers
     tmp += ".";
@@ -96,25 +91,29 @@ Token* Lexer::ParseNumericToken(){
         ReadChar();
         tmp += peek;
     }while(isdigit(peek));
-    return new Real(floatFromFloat(tmp), Tags::REAL);
+    return new Real(floatFromFloat(tmp), line);
 }
 
 Token* Lexer::ParseIdentifierToken(){
     string tmp;
-    while(isalpha(peek) || peek == ':' || isdigit(peek)){
+    while(isalpha(peek) || isdigit(peek)){
         tmp += peek;  
         ReadChar();
     }
-    if(count(blockTokens, blockTokens + LEN_BLOCKTOKENS, tmp) > 0)
-        return new Word(tmp, Tags::BLK);
+    Tags tag;
+    if(peek == ':') { ReadChar(); tmp += ':'; tag = Tags::PARAM; }
+    else if(count(blockTokens, blockTokens + LEN_BLOCKTOKENS, tmp) > 0)
+        tag = Tags::BLK;
     else if(count(flwBlkTokens, flwBlkTokens + LEN_FLWBLKTOKENS, tmp) > 0)
-        return new Word(tmp, Tags::FLWBLK);
+        tag = Tags::FLWBLK;
     else if(count(endTokens, endTokens + LEN_ENDTOKENS, tmp) > 0)
-        return new Word(tmp, Tags::ENDBLK);
+        tag = Tags::ENDBLK;
     else if(count(cmdTokens, cmdTokens + LEN_CMDTOKENS, tmp) > 0)
-        return new Word(tmp, Tags::CMD);
+        tag = Tags::CMD;
     else
-        return new Word(tmp, Tags::ID);
+        tag = Tags::ID;
+
+    return new Word(tmp, tag, line);
 }
 
 Lexer::Lexer(istream* i){ 
@@ -153,21 +152,21 @@ Token* Lexer::Scan(){
         case '-': IFMATCHELSE('-', Tags::DECR, Tags::MINUS);
         case '+': IFMATCHELSE('+', Tags::INCR, Tags::PLUS);
         case '*': IFMATCHELSE('*', Tags::POW, Tags::MULT);
-        case '/': ReadChar(); return new Token(Tags::DIV);
+        case '/': ReadChar(); return new Token(Tags::DIV, line);
         case '!': IFMATCHELSE('=', Tags::NEQ, Tags::NOT);
-        case '~': ReadChar(); return new Token(Tags::BNOT);
-        case '^': ReadChar(); return new Token(Tags::BXOR);
+        case '~': ReadChar(); return new Token(Tags::BNOT, line);
+        case '^': ReadChar(); return new Token(Tags::BXOR, line);
         case '<': IFMATCHELIFELSE('=', Tags::LTE, '<', Tags::LSHIFT, Tags::LT);
         case '>': IFMATCHELIFELSE('=', Tags::GTE, '>', Tags::RSHIFT, Tags::GT);
         case '=': IFMATCHELSE('=', Tags::EQ, Tags::ASSIGN);
-        case '[': ReadChar(); return new Token(Tags::BSQO);
-        case ']': ReadChar(); return new Token(Tags::BSQC);
-        case '(': ReadChar(); return new Token(Tags::BCIO);
-        case ')': ReadChar(); return new Token(Tags::BCIC);
-        case '{': ReadChar(); return new Token(Tags::BCUO);
-        case '}': ReadChar(); return new Token(Tags::BCUC);
+        case '[': ReadChar(); return new Token(Tags::BSQO, line);
+        case ']': ReadChar(); return new Token(Tags::BSQC, line);
+        case '(': ReadChar(); return new Token(Tags::BCIO, line);
+        case ')': ReadChar(); return new Token(Tags::BCIC, line);
+        case '{': ReadChar(); return new Token(Tags::BCUO, line);
+        case '}': ReadChar(); return new Token(Tags::BCUC, line);
         case '"': case '\'': return ParseStringLiteral();
-        case -1: return new Token(Tags::SEOF);
+        case -1: return new Token(Tags::SEOF, line);
         default:
             return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken();
     }
@@ -188,6 +187,6 @@ Token* Lexer::ParseStringLiteral(){
     do{
         tmp += peek;
     } while(!ReadAndMatch(quote));
-    return new Word(tmp, Tags::STR);
+    return new Word(tmp, Tags::STR, line);
 }
 

@@ -4,6 +4,6 @@
 class Number : public Token {
 public:
     int number;
-    Number(int pnumber, Tags ptag) : Token(ptag), number(pnumber) {}
+    Number(int n, ulong l) : Token(Tags::NUM,l), number(n) {}
 };
 #endif

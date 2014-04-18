@@ -4,6 +4,6 @@
 class Real : public Token {
     double number;
 public:
-    Real(double pnumber, Tags ptag) : Token(ptag), number(pnumber) {}
+    Real(double n, uint l) : Token(Tags::REAL,l), number(n) {}
 };
 #endif

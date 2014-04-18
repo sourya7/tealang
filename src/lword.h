@@ -9,7 +9,7 @@ using std::string;
 class Word : public Token {
 public:
     const string lexeme;
-    Word(string plexeme, Tags ptag) : Token(ptag), lexeme(plexeme) {}
+    Word(string s, Tags t, ulong l) : Token(t,l), lexeme(s) {}
 };
 
 #endif

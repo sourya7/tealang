@@ -18,11 +18,12 @@ TParser::TParser(istream* i) {
 }
 
 void TParser::move(){
-    cin.get();
+    Word* word = dynamic_cast<Word*>(look);
+    if(word != nullptr){
+        cerr << "Line: " << look->line << " "; 
+        cerr << " <" << word->lexeme << ">\t";
+    }
     look = lexer->Scan();
-    Word* tok = dynamic_cast<Word*>(look);
-    if(tok != nullptr) 
-        cout << tok->lexeme;
 }
 
 void TParser::Parse(){
@@ -32,6 +33,7 @@ void TParser::Parse(){
      * ifStmt => 
      */
     move();
+    cerr << "Parse()\n";
     ParseBlock();
 }
 
@@ -53,33 +55,41 @@ void TParser::ParseFunctionParam(){
     switch(look->tag){
         case Tags::ID:
             move(); //consume it
+            cerr << "ParseFunctionParam::ID ()\n";
+            break;
             //We have a single parameter
         case Tags::PARAM:
-            while(look->line == currentLine){
+            while(look->tag == Tags::PARAM){
                 //get the next token
                 move();
+                cerr << "ParseFunctionParam::PARAM ()\n";
                 //is it a () grouping
                 if(look->tag == Tags::BCIO){
                     move(); //consume the (
+                    cerr << "ParseFunctionParam::BCIO ()\n";
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) ParseFunctionParam();
                     // TODO may be it's an expression
                     move(); //consume the )
+                    cerr << "ParseFunctionParam::BCIO()\n";
                 }
                 else if(look->tag == Tags::BCIC){
                     //I am in a recursive function. Lets leave
                     //consume the )
                     move();
                     break;
+                    cerr << "ParseFunctionParam::BCIC()\n";
                 }
                 else{
                     //its a simple id
                     move();
+                    cerr << "ParseFunctionParam::ELSE ()\n";
                 }
             }
+            break;
             //we have a parameter
         default:
-            cout << "Error!!!";
+            cerr << "Error!!!";
             //throw an error. Function is malformed
     }
 }
@@ -96,23 +106,73 @@ void TParser::ParseFunctionStmt(){
      */
     //consume defun
     move(); 
+    cerr << "ParseFunctionStmt ()\n";
     ParseFunctionParam();
     ParseBlock();
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid
     move();
+    cerr << "ParseFunctionStmt ()\n";
 }
 
-void TParser::ParseBlock(){
+void TParser::ParseSingleStmt(){
+    uint currentLine = look->line;
+    while(currentLine == look->line){
+        move();
+        cerr << "ParseSingleStmt ()\n";
+    }
+}
+
+void TParser::ParseExpr(){
+    // Expr -> id
+    // Expr -> Val 
+    // Expr -> (Expr op epxr)
+    // abc = 2 + 2
     switch(look->tag){
-        case Tags::BLK:
-            Word* word = (Word*)look;
-            if(word->lexeme == "defun") ParseFunctionStmt(); 
-            else if(word->lexeme == "defclass") ParseFunctionStmt(); 
-            else if(word->lexeme == "if") ParseFunctionStmt(); 
-            else if(word->lexeme == "for") ParseFunctionStmt(); 
-            else if(word->lexeme == "try") ParseFunctionStmt(); 
-            else if(word->lexeme == "while") ParseFunctionStmt(); 
+        case Tags::BCIO:
+            move(); //consume (
+            ParseExpr();
+        case Tags::BCIC:
+            move(); //consume )
+            return;
+        case Tags::ID: case Tags::NUM: case Tags::REAL:
+            return;
+        default:
+    }
+}
+
+void TParser::ParseIfStmt(){
+    //ifStmt -> if (bool) block [elif block] [else block] endif
+    //consume if
+    move();
+    if(look->tag == Tags::BCIO){
+        ParseExpr();
+    }
+}
+void TParser::ParseForStmt(){}
+void TParser::ParseTryStmt(){}
+void TParser::ParseClassStmt(){}
+void TParser::ParseWhileStmt(){}
+
+void TParser::ParseBlock(){
+    //Block -> Stmts...
+    while(true){
+        switch(look->tag){
+            case Tags::BLK:{
+                Word* word = (Word*)look;
+                if(word->lexeme == "defun") ParseFunctionStmt(); 
+                else if(word->lexeme == "defclass") ParseClassStmt(); 
+                else if(word->lexeme == "if") ParseIfStmt(); 
+                else if(word->lexeme == "for") ParseForStmt(); 
+                else if(word->lexeme == "try") ParseTryStmt(); 
+                else if(word->lexeme == "while") ParseWhileStmt(); 
+                break;
+            }
+            case Tags::SEOF: case Tags::ENDBLK:
+                return;
+            default:
+                ParseSingleStmt();
+        }
     }
 }
 

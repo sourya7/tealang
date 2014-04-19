@@ -123,7 +123,7 @@ Lexer::Lexer(istream* i){
 
 void Lexer::ReadChar(){ 
     bool res = inputStream->get(peek); 
-    if(!res) peek = -1;
+    if(!res || inputStream->eof()) peek = -1;
 }
 
 bool Lexer::ReadAndMatch(char ch){ 

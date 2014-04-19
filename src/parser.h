@@ -23,6 +23,12 @@ public:
     void move();
     void Parse();
     void ParseBlock();
+    void ParseIfStmt();
+    void ParseForStmt();
+    void ParseTryStmt();
+    void ParseClassStmt();
+    void ParseWhileStmt();
+    void ParseSingleStmt();
     void ParseFunctionStmt();
     void ParseFunctionParam();
 };

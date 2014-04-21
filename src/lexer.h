@@ -7,16 +7,6 @@
 #include "ltoken.h"
 #include "lword.h"
 
-#define IFMATCHELSE(match, ifMatch, elseMatch) \
-    if(ReadAndMatch(match)){ return new Token(ifMatch, line); } \
-    else{ return new Token(elseMatch, line); }
-
-#define IFMATCHELIFELSE(match, ifMatch, matchElif, elifMatch, elseMatch) \
-    if(ReadAndMatch(match)){ return new Token(ifMatch, line); } \
-    else if(peek == matchElif) { return new Token(elifMatch, line); } \
-    else{ return new Token(elseMatch, line); }
-
-
 using std::string;
 using std::istream;
 

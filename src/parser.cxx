@@ -35,6 +35,7 @@ void TParser::Parse(){
     move();
     cerr << "Parse()\n";
     ParseBlock();
+    cerr << "\n";
 }
 
 void TParser::ParseFunctionParam(){
@@ -131,13 +132,20 @@ void TParser::ParseExpr(){
     switch(look->tag){
         case Tags::BCIO:
             move(); //consume (
+            cerr << "ParseExpr::BCIO ()\n";
             ParseExpr();
         case Tags::BCIC:
             move(); //consume )
+            cerr << "ParseExpr::BCIC ()\n";
             return;
         case Tags::ID: case Tags::NUM: case Tags::REAL:
+            move(); //consume it
+            cerr << "ParseExpr::ID ()\n";
             return;
         default:
+            return;
+
+            //'a' '==' 'b'
     }
 }
 
@@ -145,9 +153,11 @@ void TParser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
-    if(look->tag == Tags::BCIO){
-        ParseExpr();
-    }
+    cerr << "ParseIfStmt ()\n";
+    ParseExpr();
+    ParseBlock();
+    //consume endif
+    move();
 }
 void TParser::ParseForStmt(){}
 void TParser::ParseTryStmt(){}

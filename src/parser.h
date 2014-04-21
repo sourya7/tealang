@@ -22,6 +22,7 @@ public:
     TParser(istream* i);
     void move();
     void Parse();
+    void ParseExpr();
     void ParseBlock();
     void ParseIfStmt();
     void ParseForStmt();

@@ -133,6 +133,20 @@ bool Lexer::ReadAndMatch(char ch){
     return true;
 } 
 
+#define IFMATCHELSE(ifMatch, elseMatch) \
+    if(!ReadAndMatch(ifMatch)){ return new Word(ifMatch, Tags::OP, line); } \
+    else{ return new Word(elseMatch, Tags::OP, line); }
+
+#define IFMATCHELIFELSE(ifMatch, elifMatch, elseMatch) \
+    if(ReadAndMatch(match)){ return new Word(match, Tags::OP, line); } \
+    else if(peek == elifMatch) { return new Token(elifMatch, Tags::OP, line); } \
+    else{ return new Token(elseMatch, Tags::OP, line); }
+
+#define IFMATCH2ELSE(match, fmatch) \
+  ReadChar(); string ret(1,match); \
+  if(peek == fmatch || peek == match) ret += peek; \
+  return new Word(ret, Tags::OP, line);
+
 /*
  * TODO - Handle comments
  * TODO - Use a symbol table to store the identifiers, strings, and numbers
@@ -147,28 +161,29 @@ Token* Lexer::Scan(){
     }
 
     switch(peek){
-        case '&': IFMATCHELSE('&', Tags::AND, Tags::BAND);
-        case '|': IFMATCHELSE('|', Tags::OR, Tags::BOR);
-        case '-': IFMATCHELSE('-', Tags::DECR, Tags::MINUS);
-        case '+': IFMATCHELSE('+', Tags::INCR, Tags::PLUS);
-        case '*': IFMATCHELSE('*', Tags::POW, Tags::MULT);
-        case '/': ReadChar(); return new Token(Tags::DIV, line);
-        case '!': IFMATCHELSE('=', Tags::NEQ, Tags::NOT);
-        case '~': ReadChar(); return new Token(Tags::BNOT, line);
-        case '^': ReadChar(); return new Token(Tags::BXOR, line);
-        case '<': IFMATCHELIFELSE('=', Tags::LTE, '<', Tags::LSHIFT, Tags::LT);
-        case '>': IFMATCHELIFELSE('=', Tags::GTE, '>', Tags::RSHIFT, Tags::GT);
-        case '=': IFMATCHELSE('=', Tags::EQ, Tags::ASSIGN);
-        case '[': ReadChar(); return new Token(Tags::BSQO, line);
-        case ']': ReadChar(); return new Token(Tags::BSQC, line);
-        case '(': ReadChar(); return new Token(Tags::BCIO, line);
-        case ')': ReadChar(); return new Token(Tags::BCIC, line);
-        case '{': ReadChar(); return new Token(Tags::BCUO, line);
-        case '}': ReadChar(); return new Token(Tags::BCUC, line);
-        case '"': case '\'': return ParseStringLiteral();
-        case -1: return new Token(Tags::SEOF, line);
-        default:
-            return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken();
+        case '&': { IFMATCHELSE('&', "&&"); }
+        case '|': { IFMATCHELSE('|', "||"); }
+        case '-': { IFMATCHELSE('-', "--"); }
+        case '+': { IFMATCHELSE('+', "++"); }
+        case '*': { IFMATCHELSE('*', "**"); }
+        case '!': { IFMATCHELSE('=', "!="); }
+        case '<': { IFMATCH2ELSE('=', '<'); }
+        case '>': { IFMATCH2ELSE('=', '>'); }
+        case '/': { ReadChar(); return new Word('/', Tags::OP, line); }
+        case '~': { ReadChar(); return new Word('~', Tags::OP,line);  }
+        case '^': { ReadChar(); return new Word('^', Tags::OP, line); }
+        case '[': { ReadChar(); return new Token(Tags::BSQO, line);   }
+        case ']': { ReadChar(); return new Token(Tags::BSQC, line);   }
+        case '(': { ReadChar(); return new Token(Tags::BCIO, line);   }
+        case ')': { ReadChar(); return new Token(Tags::BCIC, line);   }
+        case '{': { ReadChar(); return new Token(Tags::BCUO, line);   }
+        case '}': { ReadChar(); return new Token(Tags::BCUC, line);   }
+        case '"': case '\'': { return ParseStringLiteral(); } 
+        case -1: { return new Token(Tags::SEOF, line); }
+        case '=': { if(ReadAndMatch('=')) return new Word("==", Tags::OP, line);
+                    else return new Word('=', Tags::ASSIGN, line); }
+        default: {
+            return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken(); }
     }
 }
 

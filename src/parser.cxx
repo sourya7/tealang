@@ -21,7 +21,11 @@ void TParser::move(){
     Word* word = dynamic_cast<Word*>(look);
     if(word != nullptr){
         cerr << "Line: " << look->line << " "; 
-        cerr << " <" << word->lexeme << ">\t";
+        cerr << " <id," << word->lexeme << ">  \t";
+    }
+    else if(look != nullptr) {
+        cerr << "Line: " << look->line << " "; 
+        cerr << " <tok," << (int)look->tag << ">  \t";
     }
     look = lexer->Scan();
 }
@@ -143,12 +147,15 @@ void TParser::ParseExpr(){
             case Tags::ID: case Tags::NUM: case Tags::REAL:
                 move(); //consume it
                 cerr << "ParseExpr::ID ()\n";
+                break;
             case Tags::OP:
                 move();
                 cerr << "ParseExpr::OP ()\n";
+                break;
             default:
                 move();
                 cerr << "ParseExpr::DEF()\n";
+                break;
                 //'a' '==' 'b'
         }
     }

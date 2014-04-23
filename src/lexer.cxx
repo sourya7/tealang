@@ -55,8 +55,9 @@ double floatFromFloat(string floatStr){
 
 Token* Lexer::ParseSpecialNumber(){
     bool isHex = peek == 'x';
-    bool isOctal = peek == isdigit(peek);
+    bool isOctal = isdigit(peek);
     bool isBinary = peek == 'b';
+    if(isHex || isBinary) ReadChar();
     if(isHex || isOctal || isBinary){
         string tmp;
         do {
@@ -64,7 +65,7 @@ Token* Lexer::ParseSpecialNumber(){
             ReadChar();
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
-                (isBinary && (peek == 0 || peek == 1)));
+                (isBinary && (peek == '0' || peek == '1')));
         return new Word(tmp, Tags::ID, line);
 
         /* TODO use these instead

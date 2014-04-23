@@ -35,6 +35,7 @@ int main(int argc, char* argv[]){
         parser = new TParser(&cin);                          
     }                                                  
     parser->Parse();
+    cout << endl;
 }                                                      
 
 

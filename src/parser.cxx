@@ -129,23 +129,28 @@ void TParser::ParseExpr(){
     // Expr -> Val 
     // Expr -> (Expr op epxr)
     // abc = 2 + 2
-    switch(look->tag){
-        case Tags::BCIO:
-            move(); //consume (
-            cerr << "ParseExpr::BCIO ()\n";
-            ParseExpr();
-        case Tags::BCIC:
-            move(); //consume )
-            cerr << "ParseExpr::BCIC ()\n";
-            return;
-        case Tags::ID: case Tags::NUM: case Tags::REAL:
-            move(); //consume it
-            cerr << "ParseExpr::ID ()\n";
-            return;
-        default:
-            return;
-
-            //'a' '==' 'b'
+    uint currentLine = look->line;
+    while(currentLine == look->line){
+        switch(look->tag){
+            case Tags::BCIO:
+                move(); //consume (
+                cerr << "ParseExpr::BCIO ()\n";
+                ParseExpr();
+            case Tags::BCIC:
+                move(); //consume )
+                cerr << "ParseExpr::BCIC ()\n";
+                return;
+            case Tags::ID: case Tags::NUM: case Tags::REAL:
+                move(); //consume it
+                cerr << "ParseExpr::ID ()\n";
+            case Tags::OP:
+                move();
+                cerr << "ParseExpr::OP ()\n";
+            default:
+                move();
+                cerr << "ParseExpr::DEF()\n";
+                //'a' '==' 'b'
+        }
     }
 }
 

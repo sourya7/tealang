@@ -20,11 +20,11 @@ TParser::TParser(istream* i) {
 void TParser::move(){
     Word* word = dynamic_cast<Word*>(look);
     if(word != nullptr){
-        cerr << "Line: " << look->line << " "; 
+        cerr << "\nLine: " << look->line << " "; 
         cerr << " <id," << word->lexeme << ">  \t";
     }
     else if(look != nullptr) {
-        cerr << "Line: " << look->line << " "; 
+        cerr << "\nLine: " << look->line << " "; 
         cerr << " <tok," << (int)look->tag << ">  \t";
     }
     look = lexer->Scan();
@@ -37,9 +37,9 @@ void TParser::Parse(){
      * ifStmt => 
      */
     move();
-    cerr << "Parse()\n";
+    cerr << "Parse()";
     ParseBlock();
-    cerr << "\n";
+    cerr << "";
 }
 
 void TParser::ParseFunctionParam(){
@@ -60,35 +60,35 @@ void TParser::ParseFunctionParam(){
     switch(look->tag){
         case Tags::ID:
             move(); //consume it
-            cerr << "ParseFunctionParam::ID ()\n";
+            cerr << "ParseFunctionParam::ID ()";
             break;
             //We have a single parameter
         case Tags::PARAM:
             while(look->tag == Tags::PARAM){
                 //get the next token
                 move();
-                cerr << "ParseFunctionParam::PARAM ()\n";
+                cerr << "ParseFunctionParam::PARAM ()";
                 //is it a () grouping
                 if(look->tag == Tags::BCIO){
                     move(); //consume the (
-                    cerr << "ParseFunctionParam::BCIO ()\n";
+                    cerr << "ParseFunctionParam::BCIO ()";
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) ParseFunctionParam();
                     // TODO may be it's an expression
                     move(); //consume the )
-                    cerr << "ParseFunctionParam::BCIO()\n";
+                    cerr << "ParseFunctionParam::BCIO()";
                 }
                 else if(look->tag == Tags::BCIC){
                     //I am in a recursive function. Lets leave
                     //consume the )
                     move();
                     break;
-                    cerr << "ParseFunctionParam::BCIC()\n";
+                    cerr << "ParseFunctionParam::BCIC()";
                 }
                 else{
                     //its a simple id
                     move();
-                    cerr << "ParseFunctionParam::ELSE ()\n";
+                    cerr << "ParseFunctionParam::ELSE ()";
                 }
             }
             break;
@@ -111,20 +111,20 @@ void TParser::ParseFunctionStmt(){
      */
     //consume defun
     move(); 
-    cerr << "ParseFunctionStmt ()\n";
+    cerr << "ParseFunctionStmt ()";
     ParseFunctionParam();
     ParseBlock();
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid
     move();
-    cerr << "ParseFunctionStmt ()\n";
+    cerr << "ParseFunctionStmt ()";
 }
 
 void TParser::ParseSingleStmt(){
     uint currentLine = look->line;
     while(currentLine == look->line){
         move();
-        cerr << "ParseSingleStmt ()\n";
+        cerr << "ParseSingleStmt ()";
     }
 }
 
@@ -138,23 +138,24 @@ void TParser::ParseExpr(){
         switch(look->tag){
             case Tags::BCIO:
                 move(); //consume (
-                cerr << "ParseExpr::BCIO ()\n";
+                cerr << "ParseExpr::BCIO ()";
                 ParseExpr();
+                break;
             case Tags::BCIC:
                 move(); //consume )
-                cerr << "ParseExpr::BCIC ()\n";
+                cerr << "ParseExpr::BCIC ()";
                 return;
             case Tags::ID: case Tags::NUM: case Tags::REAL:
                 move(); //consume it
-                cerr << "ParseExpr::ID ()\n";
+                cerr << "ParseExpr::ID ()";
                 break;
             case Tags::OP:
                 move();
-                cerr << "ParseExpr::OP ()\n";
+                cerr << "ParseExpr::OP ()";
                 break;
             default:
                 move();
-                cerr << "ParseExpr::DEF()\n";
+                cerr << "ParseExpr::DEF()";
                 break;
                 //'a' '==' 'b'
         }
@@ -165,7 +166,7 @@ void TParser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
-    cerr << "ParseIfStmt ()\n";
+    cerr << "ParseIfStmt ()";
     ParseExpr();
     ParseBlock();
     //consume endif

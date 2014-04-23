@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <map>
+#include <cassert>
 #include "ltoken.h"
 #include "lword.h"
 #include "lnumber.h"
@@ -59,20 +60,24 @@ Token* Lexer::ParseSpecialNumber(){
     if(isHex || isOctal || isBinary){
         string tmp;
         do {
-            ReadChar();
             tmp += peek;
+            ReadChar();
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
                 (isBinary && (peek == 0 || peek == 1)));
+        return new Word(tmp, Tags::ID, line);
+
+        /* TODO use these instead
         if(isHex) return new Number(decFromHex(tmp), line);
         else if(isHex) return new Number(decFromOct(tmp), line);
         else return new Number(decFromBin(tmp), line);
+        */
     }
     return new Number(0, line);
 }
 
 Token* Lexer::ParseNumericToken(){
-    if(peek == 0){
+    if(peek == '0'){
         ReadChar();
         return ParseSpecialNumber();
     }
@@ -80,18 +85,17 @@ Token* Lexer::ParseNumericToken(){
     //handle decimal numbers
     string tmp;
     do{
-        ReadChar();
         tmp += peek;
+        ReadChar();
     }while(isdigit(peek));
-    if(peek != '.') return new Number(decFromDec(tmp), line);
+    if(peek != '.') return new Word(tmp, Tags::ID, line); ////return new Number(decFromDec(tmp), line);
 
     //handle real numbers
-    tmp += ".";
     do{
-        ReadChar();
         tmp += peek;
+        ReadChar();
     }while(isdigit(peek));
-    return new Real(floatFromFloat(tmp), line);
+    return new Word(tmp, Tags::ID, line); //Real(floatFromFloat(tmp), line);
 }
 
 Token* Lexer::ParseIdentifierToken(){
@@ -159,6 +163,7 @@ Token* Lexer::Scan(){
         else if(isspace(peek)){ continue; }
         else { break; }
     }
+    assert(peek != 10);
 
     switch(peek){
         case '&': { IFMATCHELSE('&', "&&"); }

@@ -7,6 +7,8 @@
  */
 #include <istream>
 #include <iostream>
+#include <vector>
+#include <cassert>
 #include "parser.h"
 #include "lexer.h"
 #include "ltoken.h"
@@ -15,6 +17,16 @@ using namespace std;
 
 TParser::TParser(istream* i) {
     lexer = new Lexer(i);
+    precedence = { 
+        {"<", 10}, {"<=", 10}, {">", 10}, {"!=", 10}, {"==", 10}, {">=", 10},
+        {"|", 20},
+        {"^", 30},
+        {"&", 40},
+        {"<<", 50}, {">>", 50},
+        {"+", 60}, {"-", 60},
+        {"*", 70}, {"/", 70}, {"%", 70},
+        {"**",80},
+        {"~", 90}};
 }
 
 void TParser::move(){
@@ -123,43 +135,75 @@ void TParser::ParseFunctionStmt(){
 void TParser::ParseSingleStmt(){
     uint currentLine = look->line;
     while(currentLine == look->line){
-        move();
-        cerr << "ParseSingleStmt ()";
+        switch(look->tag){
+            case Tags::VAR:
+                move();
+                cerr << "ParseSingleStmt::VAR ()";
+                break;
+            case Tags::ASSIGN:
+                move();
+                cerr << "ParseSingleStmt::Assign ()";
+                ParseExpr();
+                break;
+            default:
+                move();
+                cerr << "ParseSingleStmt::Default ()";
+        }
     }
 }
 
-void TParser::ParseExpr(){
+/*
+ * Using the Shunting yard algorithm to turn the infix expr
+ * to RPN
+ */
+vector<Token*> TParser::ParseExpr(){
     // Expr -> id
     // Expr -> Val 
     // Expr -> (Expr op epxr)
     // abc = 2 + 2
     uint currentLine = look->line;
+    vector<Token*> opstack;
+    vector<Token*> outstack;
     while(currentLine == look->line){
         switch(look->tag){
             case Tags::BCIO:
+                opstack.push_back(look);
                 move(); //consume (
                 cerr << "ParseExpr::BCIO ()";
-                ParseExpr();
                 break;
             case Tags::BCIC:
-                move(); //consume )
+                while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
+                    outstack.push_back(opstack.back());
+                    opstack.pop_back();
+                }
+                assert(!opstack.empty()); //unmatched paren
+                opstack.pop_back();
+                move(); 
                 cerr << "ParseExpr::BCIC ()";
-                return;
-            case Tags::ID: case Tags::NUM: case Tags::REAL:
-                move(); //consume it
-                cerr << "ParseExpr::ID ()";
-                break;
+            case Tags::ID: case Tags::NUM: case Tags::REAL: 
+                outstack.push_back(look); move(); break;
             case Tags::OP:
+                while(!opstack.empty()){
+                    if(GetPrecedence(look) <= GetPrecedence(opstack.back())){
+                        outstack.push_back(opstack.back());
+                        opstack.pop_back();
+                    }
+                }
+                opstack.push_back(look);
                 move();
                 cerr << "ParseExpr::OP ()";
                 break;
             default:
-                move();
-                cerr << "ParseExpr::DEF()";
-                break;
-                //'a' '==' 'b'
+                move(); cerr << "ParseExpr::DEF()"; assert(false);
         }
     }
+    return outstack;
+}
+
+short TParser::GetPrecedence(Token* t) { 
+    Word* w = dynamic_cast<Word*>(t);
+    if(w != nullptr) return precedence[w->lexeme];
+    else return 0;
 }
 
 void TParser::ParseIfStmt(){

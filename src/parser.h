@@ -9,6 +9,9 @@
  */
 #include <istream>
 #include <iostream>
+#include <vector>
+#include <string>
+#include <map>
 #include "lexer.h"
 #include "ltoken.h"
 
@@ -18,11 +21,11 @@ class TParser {
 private:
     Token* look;
     Lexer* lexer;
+    map<string, short> precedence;
 public:
     TParser(istream* i);
     void move();
     void Parse();
-    void ParseExpr();
     void ParseBlock();
     void ParseIfStmt();
     void ParseForStmt();
@@ -32,6 +35,9 @@ public:
     void ParseSingleStmt();
     void ParseFunctionStmt();
     void ParseFunctionParam();
+
+    short GetPrecedence(Token* t);
+    vector<Token*> ParseExpr();
 };
 
 #endif

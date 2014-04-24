@@ -160,7 +160,6 @@ vector<Token*> TParser::ParseExpr(){
     // Expr -> id
     // Expr -> Val 
     // Expr -> (Expr op epxr)
-    // abc = 2 + 2
     uint currentLine = look->line;
     vector<Token*> opstack;
     vector<Token*> outstack;
@@ -180,10 +179,14 @@ vector<Token*> TParser::ParseExpr(){
                 opstack.pop_back();
                 move(); 
                 cerr << "ParseExpr::BCIC ()";
+                break;
             case Tags::ID: case Tags::NUM: case Tags::REAL: 
-                outstack.push_back(look); move(); break;
+                outstack.push_back(look); 
+                move(); 
+                cerr << "ParseExpr::ID ()";
+                break;
             case Tags::OP:
-                while(!opstack.empty()){
+                while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
                     if(GetPrecedence(look) <= GetPrecedence(opstack.back())){
                         outstack.push_back(opstack.back());
                         opstack.pop_back();
@@ -197,6 +200,7 @@ vector<Token*> TParser::ParseExpr(){
                 move(); cerr << "ParseExpr::DEF()"; assert(false);
         }
     }
+    for(auto v : opstack) outstack.push_back(v);
     return outstack;
 }
 

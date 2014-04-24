@@ -35,6 +35,7 @@ public:
     void ParseSingleStmt();
     void ParseFunctionStmt();
     void ParseFunctionParam();
+    void ParseFunctionCall();
 
     short GetPrecedence(Token* t);
     vector<Token*> ParseExpr();

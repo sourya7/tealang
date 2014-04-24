@@ -111,6 +111,24 @@ void TParser::ParseFunctionParam(){
     }
 }
 
+void TParser::ParseFunctionCall(){
+    move(); //consume [
+    switch(look->tag){
+        case Tags::PARAM:  //[call:a withb:]
+            ParseFunctionParam();
+            break;
+        case Tags::BSQO: //[[obj init] doSmth:a]
+            ParseFunctionCall();
+            break;
+        case Tags::ID:
+            move(); //consume the object
+            ParseFunctionParam(); //[obj some]
+        default:
+            assert(false);
+    }
+    move(); //consume the ending ']'
+}
+
 void TParser::ParseFunctionStmt(){
     /*
      * defun bla

@@ -36,6 +36,9 @@ public:
         if(left != nullptr) left->Display(level+1);
         if(right != nullptr) right->Display(level+1);
     }
+
+    virtual void GenOpCode() {
+    }
 };
 
 #endif

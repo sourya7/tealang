@@ -1,3 +1,0 @@
-
-class Stmt : public Node {
-};

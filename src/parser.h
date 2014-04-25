@@ -12,6 +12,8 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "seq.h"
+#include "node.h"
 #include "lexer.h"
 #include "ltoken.h"
 
@@ -25,20 +27,21 @@ private:
 public:
     TParser(istream* i);
     void move();
-    void Parse();
-    void ParseBlock();
-    void ParseIfStmt();
-    void ParseForStmt();
-    void ParseTryStmt();
-    void ParseClassStmt();
-    void ParseWhileStmt();
-    void ParseSingleStmt();
-    void ParseFunctionStmt();
-    void ParseFunctionParam();
-    void ParseFunctionCall();
+
+    Node* Parse();
+    Node* ParseBlock();
+    Node* ParseIfStmt();
+    Node* ParseForStmt();
+    Node* ParseTryStmt();
+    Node* ParseClassStmt();
+    Node* ParseWhileStmt();
+    Node* ParseSingleStmt();
+    Node* ParseFunctionStmt();
+    Node* ParseFunctionParam(bool isCall);
+    Node* ParseFunctionCall();
 
     short GetPrecedence(Token* t);
-    vector<Token*> ParseExpr();
+    Node* ParseExpr();
 };
 
 #endif

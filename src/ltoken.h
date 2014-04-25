@@ -1,6 +1,7 @@
 #ifndef T_TOKEN_H
 #define T_TOKEN_H
 #include "common.h"
+#include "node.h"
 
 /*
 enum class Tags { BAND = 256, BOR, BNOT, BXOR, PLUS, MINUS, MULT, POW,
@@ -18,7 +19,7 @@ enum class Tags { OP = 256, NUM, DEFCLASS, ENDCLASS, DEFFUN, ENDFUN,
             REAL, ID, BSQO, BSQC, SEOF, STR, BCIO, BCIC,
             BCUC, BCUO, BLK,ENDBLK,FLWBLK, CMD, PARAM, ASSIGN };
 
-class Token {
+class Token : public Node {
 private:
 public:
     const Tags tag;

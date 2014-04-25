@@ -12,7 +12,9 @@
 #include "parser.h"
 #include "lexer.h"
 #include "ltoken.h"
-
+#include "seq.h"
+#include "if_stmt.h"
+#include "call.h" 
 using namespace std;
 
 TParser::TParser(istream* i) {
@@ -42,7 +44,7 @@ void TParser::move(){
     look = lexer->Scan();
 }
 
-void TParser::Parse(){
+Node* TParser::Parse(){
     /*
      * Block => [Stmt]*
      * Stmt => ifStmt, tryStmt, forStmt, whileStmt...
@@ -50,11 +52,10 @@ void TParser::Parse(){
      */
     move();
     cerr << "Parse()";
-    ParseBlock();
-    cerr << "";
+    return ParseBlock();
 }
 
-void TParser::ParseFunctionParam(){
+Node* TParser::ParseFunctionParam(bool isCall = false){
     //1. Functions can have no parameter
     //   defun bla 
     //      [print: Hello]
@@ -70,26 +71,32 @@ void TParser::ParseFunctionParam(){
     //      //do something
     //   endfun
     uint currentLine = look->line;
+    Seq* seq = new Seq();
+    Seq* tseq = seq;
+    Node* param;
+
     switch(look->tag){
         case Tags::ID:
+            seq = new Seq(seq, look, nullptr);
             move(); //consume it
             cerr << "ParseFunctionParam::ID ()";
-            break;
+            return param;
             //We have a single parameter
         case Tags::PARAM:
             while(look->tag == Tags::PARAM){
+                param = look;
                 //get the next token
                 move();
                 cerr << "ParseFunctionParam::PARAM ()";
                 //is it a () grouping
                 if(look->tag == Tags::BCIO){
-                    move(); //consume the (
+                    if(!isCall) move(); //consume the (
                     cerr << "ParseFunctionParam::BCIO ()";
                     //Seems to be a function
-                    if(look->tag == Tags::PARAM) ParseFunctionParam();
-                    else ParseExpr();
-                    // TODO may be it's an expression
-                    move(); //consume the )
+                    if(look->tag == Tags::PARAM) 
+                        seq = new Seq(seq, param, ParseFunctionParam());
+                    else seq = new Seq(seq, param, ParseExpr());
+                    if(!isCall) move(); //consume the ))
                     cerr << "ParseFunctionParam::BCIO()";
                 }
                 else if(look->tag == Tags::BCIC){
@@ -98,6 +105,7 @@ void TParser::ParseFunctionParam(){
                 }
                 else{
                     //its a simple id
+                    seq = new Seq(seq, param, look);
                     move();
                     cerr << "ParseFunctionParam::ELSE ()";
                 }
@@ -108,27 +116,32 @@ void TParser::ParseFunctionParam(){
             cerr << "Error!!!";
             //throw an error. Function is malformed
     }
+    return tseq;
 }
 
-void TParser::ParseFunctionCall(){
+Node* TParser::ParseFunctionCall(){
     move(); //consume [
+    Call* call = new Call();
     switch(look->tag){
         case Tags::PARAM:  //[call:2 withb:]
-            ParseFunctionParam();
+            call->SetParam(ParseFunctionParam(true));
             break;
         case Tags::BSQO: //[[obj init] doSmth:a]
-            ParseFunctionCall();
+            call->SetObj(ParseFunctionCall());
+            call->SetParam(ParseFunctionParam());
             break;
         case Tags::ID:
+            call->SetObj(look);
             move(); //consume the object
-            ParseFunctionParam(); //[obj some]
+            call->SetParam(ParseFunctionParam()); //[obj some]
         default:
             assert(false);
     }
     move(); //consume the ending ']'
+    return call;
 }
 
-void TParser::ParseFunctionStmt(){
+Node* TParser::ParseFunctionStmt(){
     /*
      * defun bla
      *    [print: something]
@@ -142,41 +155,66 @@ void TParser::ParseFunctionStmt(){
     move(); 
     cerr << "ParseFunctionStmt ()";
     ParseFunctionParam();
-    ParseBlock();
+
+    Node* block = ParseBlock();
+
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid
     move();
     cerr << "ParseFunctionStmt ()";
+    return block;
 }
 
-void TParser::ParseSingleStmt(){
+Node* TParser::ParseSingleStmt(){
     uint currentLine = look->line;
+    Node* node;
     while(currentLine == look->line){
-        switch(look->tag){
-            case Tags::VAR:
+        /*
+         * var a;
+         * var b = (2 + 2)
+         * [smth]
+         *
+         */
+        if(look->tag == Tags::VAR){
+            move();
+            //DeclVariable(look);
+            Token* tmp = look;
+            move(); //move over the variable;
+            if(look->tag == Tags::ASSIGN){
                 move();
-                cerr << "ParseSingleStmt::VAR ()";
-                break;
-            case Tags::ASSIGN:
+                node->SetLeft(look);
+                node->SetRight(ParseExpr());
+            }
+        }
+        if(look->tag == Tags::VAR){
+            move();
+            //DeclVariable(look);
+        }
+        if(look->tag == Tags::ID){
+            Token* tmp = look;
+            move(); //move over the variable;
+            if(look->tag == Tags::ASSIGN){
                 move();
-                cerr << "ParseSingleStmt::Assign ()";
-                ParseExpr();
-                break;
-            case Tags::BSQO:
-                ParseFunctionCall();
-                break;
-            default:
-                move();
-                cerr << "ParseSingleStmt::Default ()";
+                node = look;
+                node->SetLeft(tmp);
+                node->SetRight(ParseExpr());
+            }
+        }
+        else if(look->tag == Tags::BSQO){
+            node = ParseFunctionCall();
+        }
+        else{
+            assert(false);
         }
     }
+    return node;
 }
 
 /*
  * Using the Shunting yard algorithm to turn the infix expr
  * to RPN
  */
-vector<Token*> TParser::ParseExpr(){
+Node* TParser::ParseExpr(){
     // Expr -> id
     // Expr -> Val 
     // Expr -> (Expr op epxr)
@@ -225,7 +263,7 @@ vector<Token*> TParser::ParseExpr(){
         }
     }
     for(auto v : opstack) outstack.push_back(v);
-    return outstack;
+    return new Expr(outstack);
 }
 
 short TParser::GetPrecedence(Token* t) { 
@@ -234,40 +272,56 @@ short TParser::GetPrecedence(Token* t) {
     else return 0;
 }
 
-void TParser::ParseIfStmt(){
+Node* TParser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
     cerr << "ParseIfStmt ()";
-    ParseExpr();
-    ParseBlock();
+    IfStmt* stmt = new IfStmt(ParseExpr(), ParseBlock());
+    //TODO: Parse the elif and else stmts
     //consume endif
     move();
+    return stmt;
 }
-void TParser::ParseForStmt(){}
-void TParser::ParseTryStmt(){}
-void TParser::ParseClassStmt(){}
-void TParser::ParseWhileStmt(){}
 
-void TParser::ParseBlock(){
+Node* TParser::ParseForStmt(){ return nullptr; } 
+
+Node* TParser::ParseTryStmt(){ return nullptr; }
+
+Node* TParser::ParseClassStmt(){ return nullptr; }
+
+Node* TParser::ParseWhileStmt(){ return nullptr; }
+
+/*
+ *
+ */
+Node* TParser::ParseBlock(){
     //Block -> Stmts...
+    Seq* s = new Seq(nullptr);
+    Node* tmp;
     while(true){
         switch(look->tag){
             case Tags::BLK:{
                 Word* word = (Word*)look;
-                if(word->lexeme == "defun") ParseFunctionStmt(); 
-                else if(word->lexeme == "defclass") ParseClassStmt(); 
-                else if(word->lexeme == "if") ParseIfStmt(); 
-                else if(word->lexeme == "for") ParseForStmt(); 
-                else if(word->lexeme == "try") ParseTryStmt(); 
-                else if(word->lexeme == "while") ParseWhileStmt(); 
+                if(word->lexeme == "defun") tmp = ParseFunctionStmt(); 
+                else if(word->lexeme == "defclass") tmp = ParseClassStmt(); 
+                else if(word->lexeme == "if") tmp = ParseIfStmt(); 
+                else if(word->lexeme == "for") tmp = ParseForStmt(); 
+                else if(word->lexeme == "try") tmp = ParseTryStmt(); 
+                else if(word->lexeme == "while") tmp = ParseWhileStmt(); 
                 break;
             }
             case Tags::SEOF: case Tags::ENDBLK:
-                return;
+                return s;
             default:
-                ParseSingleStmt();
+                tmp = ParseSingleStmt();
         }
     }
+    
+    Seq* ns = new Seq(s);
+    s->SetLeft(tmp);
+    s->SetRight(ns);
+
+    return s;
 }
 

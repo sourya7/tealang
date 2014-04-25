@@ -62,6 +62,7 @@ void TParser::ParseFunctionParam(){
     //2. Functions can have one or more parameter
     //   defun blaWithA:a andB:b
     //      [print: a+b]
+    //      [print: a + b andB:
     //   endfun
     //
     //3. Functions can have other functions as param
@@ -86,15 +87,13 @@ void TParser::ParseFunctionParam(){
                     cerr << "ParseFunctionParam::BCIO ()";
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) ParseFunctionParam();
+                    else ParseExpr();
                     // TODO may be it's an expression
                     move(); //consume the )
                     cerr << "ParseFunctionParam::BCIO()";
                 }
                 else if(look->tag == Tags::BCIC){
-                    //I am in a recursive function. Lets leave
-                    //consume the )
-                    move();
-                    break;
+                    move(); break;
                     cerr << "ParseFunctionParam::BCIC()";
                 }
                 else{
@@ -114,7 +113,7 @@ void TParser::ParseFunctionParam(){
 void TParser::ParseFunctionCall(){
     move(); //consume [
     switch(look->tag){
-        case Tags::PARAM:  //[call:a withb:]
+        case Tags::PARAM:  //[call:2 withb:]
             ParseFunctionParam();
             break;
         case Tags::BSQO: //[[obj init] doSmth:a]
@@ -163,6 +162,9 @@ void TParser::ParseSingleStmt(){
                 cerr << "ParseSingleStmt::Assign ()";
                 ParseExpr();
                 break;
+            case Tags::BSQO:
+                ParseFunctionCall();
+                break;
             default:
                 move();
                 cerr << "ParseSingleStmt::Default ()";
@@ -181,7 +183,12 @@ vector<Token*> TParser::ParseExpr(){
     uint currentLine = look->line;
     vector<Token*> opstack;
     vector<Token*> outstack;
-    while(currentLine == look->line){
+    bool stop = false;
+    // Stop is needed for cases when the expression does not extend whole line
+    // Eg. [someFunc: (a+b) ano:b] 
+    // Here we dont stop at the end of the line, but when we reach the 
+    // "ano:" PARAM
+    while(!stop && (currentLine == look->line)){
         switch(look->tag){
             case Tags::BCIO:
                 opstack.push_back(look);
@@ -193,8 +200,6 @@ vector<Token*> TParser::ParseExpr(){
                     outstack.push_back(opstack.back());
                     opstack.pop_back();
                 }
-                assert(!opstack.empty()); //unmatched paren
-                opstack.pop_back();
                 move(); 
                 cerr << "ParseExpr::BCIC ()";
                 break;
@@ -209,13 +214,14 @@ vector<Token*> TParser::ParseExpr(){
                         outstack.push_back(opstack.back());
                         opstack.pop_back();
                     }
+                    else break;
                 }
                 opstack.push_back(look);
                 move();
                 cerr << "ParseExpr::OP ()";
                 break;
             default:
-                move(); cerr << "ParseExpr::DEF()"; assert(false);
+                stop = true; break;
         }
     }
     for(auto v : opstack) outstack.push_back(v);

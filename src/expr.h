@@ -8,7 +8,7 @@ class Expr : public Node
 private:
     vector<Token*> expr;
 public:
-    Expr(vector<Token*> e) : expr(e) {}
+    Expr(vector<Token*> e) : Node(NodeType::EXPR), expr(e) {}
 };
 
 #endif

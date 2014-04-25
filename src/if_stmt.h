@@ -6,7 +6,7 @@
 
 class IfStmt : public Node {
 public:
-    IfStmt(Node* c, Node* ib) : Node(c,ib) {};
+    IfStmt(Node* c, Node* ib) : Node(NodeType::IFSTMT,c,ib) {};
 
     void SetElseBlock(Seq* eb) {
     }

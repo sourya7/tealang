@@ -6,15 +6,19 @@
 
 class Seq : public Node {
 private:
-    Node* parent;
+    Node* parent = nullptr;
 public:
-    Seq(Node* p) : parent(p) {}
-    Seq() {}
+    Seq() : Node(NodeType::SEQ) {}
+    Seq(Node* p) : Seq() { parent = p; }
     Seq* AddSeq(Node* n) {
         left = n;
         Seq* rs = new Seq(this);
         right = rs;
         return rs;
+    }
+
+    void Display(int level){
+        if(left) Node::Display(level);
     }
 };
 

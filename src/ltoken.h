@@ -24,7 +24,7 @@ private:
 public:
     const Tags tag;
     const ulong line;
-    Token(Tags t, ulong l) : tag(t), line(l) {}
+    Token(Tags t, ulong l) : Node(NodeType::TOKEN), tag(t), line(l) {}
     virtual ~Token() {}
 
 };

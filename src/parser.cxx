@@ -33,12 +33,12 @@ TParser::TParser(istream* i) {
 void TParser::move(){
     Word* word = dynamic_cast<Word*>(look);
     if(word != nullptr){
-        cerr << "\nLine: " << look->line << " "; 
-        cerr << " <id," << word->lexeme << ">  \t";
+        //cerr << "\nLine: " << look->line << " "; 
+        //cerr << " <id," << word->lexeme << ">  \t";
     }
     else if(look != nullptr) {
-        cerr << "\nLine: " << look->line << " "; 
-        cerr << " <tok," << (int)look->tag << ">  \t";
+        //cerr << "\nLine: " << look->line << " "; 
+        //cerr << " <tok," << (int)look->tag << ">  \t";
     }
     look = lexer->Scan();
 }
@@ -50,8 +50,10 @@ Node* TParser::Parse(){
      * ifStmt => 
      */
     move();
-    cerr << "Parse()";
-    return ParseBlock();
+    //cerr << "Parse()";
+    Node* block = ParseBlock();
+    block->Display();
+    return block;
 }
 
 Node* TParser::ParseFunctionParam(bool isCall = false){
@@ -80,7 +82,7 @@ Node* TParser::ParseFunctionParam(bool isCall = false){
         case Tags::ID:
             seq = seq->AddSeq(look);
             move(); //consume it
-            cerr << "ParseFunctionParam::ID ()";
+            //cerr << "ParseFunctionParam::ID ()";
             return param;
             //We have a single parameter
         case Tags::PARAM:
@@ -88,27 +90,27 @@ Node* TParser::ParseFunctionParam(bool isCall = false){
                 param = look;
                 //get the next token
                 move();
-                cerr << "ParseFunctionParam::PARAM ()";
+                //cerr << "ParseFunctionParam::PARAM ()";
                 //is it a () grouping
                 if(look->tag == Tags::BCIO){
                     if(!isCall) move(); //consume the (
-                    cerr << "ParseFunctionParam::BCIO ()";
+                    //cerr << "ParseFunctionParam::BCIO ()";
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) 
-                        seq = seq->AddSeq(new Node(param, ParseFunctionParam()));
-                    else seq = seq->AddSeq(new Node(param, ParseExpr()));
+                        seq = seq->AddSeq(new Node(NodeType::PARAM, param, ParseFunctionParam()));
+                    else seq = seq->AddSeq(new Node(NodeType::PARAM, param, ParseExpr()));
                     if(!isCall) move(); //consume the ))
-                    cerr << "ParseFunctionParam::BCIO()";
+                    //cerr << "ParseFunctionParam::BCIO()";
                 }
                 else if(look->tag == Tags::BCIC){
                     move(); break;
-                    cerr << "ParseFunctionParam::BCIC()";
+                    //cerr << "ParseFunctionParam::BCIC()";
                 }
                 else{
                     //its a simple id
-                    seq = seq->AddSeq(new Node(param, look));
+                    seq = seq->AddSeq(new Node(NodeType::PARAM, param, look));
                     move();
-                    cerr << "ParseFunctionParam::ELSE ()";
+                    //cerr << "ParseFunctionParam::ELSE ()";
                 }
             }
             break;
@@ -166,12 +168,12 @@ Node* TParser::ParseFunctionStmt(){
     move(); 
 
     Node* funcDef = new Node(NodeType::FSTMT, ParseFunctionParam(), ParseBlock());
-    cerr << "ParseFunctionStmt ()";
+    //cerr << "ParseFunctionStmt ()";
 
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid
     move();
-    cerr << "ParseFunctionStmt ()";
+    //cerr << "ParseFunctionStmt ()";
     return funcDef;
 }
 
@@ -228,7 +230,7 @@ Node* TParser::ParseExpr(){
             case Tags::BCIO:
                 opstack.push_back(look);
                 move(); //consume (
-                cerr << "ParseExpr::BCIO ()";
+                //cerr << "ParseExpr::BCIO ()";
                 break;
             case Tags::BCIC:
                 while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
@@ -236,12 +238,12 @@ Node* TParser::ParseExpr(){
                     opstack.pop_back();
                 }
                 move(); 
-                cerr << "ParseExpr::BCIC ()";
+                //cerr << "ParseExpr::BCIC ()";
                 break;
             case Tags::ID: case Tags::NUM: case Tags::REAL: 
                 outstack.push_back(look); 
                 move(); 
-                cerr << "ParseExpr::ID ()";
+                //cerr << "ParseExpr::ID ()";
                 break;
             case Tags::OP:
                 while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
@@ -253,7 +255,7 @@ Node* TParser::ParseExpr(){
                 }
                 opstack.push_back(look);
                 move();
-                cerr << "ParseExpr::OP ()";
+                //cerr << "ParseExpr::OP ()";
                 break;
             default:
                 stop = true; break;
@@ -273,7 +275,7 @@ Node* TParser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
-    cerr << "ParseIfStmt ()";
+    //cerr << "ParseIfStmt ()";
     IfStmt* stmt = new IfStmt(ParseExpr(), ParseBlock());
     //TODO: Parse the elif and else stmts
     //consume endif
@@ -313,13 +315,12 @@ Node* TParser::ParseBlock(){
                 break;
             }
             case Tags::SEOF: case Tags::ENDBLK:
-                return s;
+                return ts;
             default:
                 tmp = ParseSingleStmt();
         }
         s = s->AddSeq(tmp);
     }
-
     return ts;
 }
 

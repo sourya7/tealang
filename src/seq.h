@@ -7,11 +7,15 @@
 class Seq : public Node {
 private:
     Node* parent;
-    Node* next;
 public:
-    Seq(Node* p, Node* l, Node* r) : Node(l,r), parent(p) {}
     Seq(Node* p) : parent(p) {}
     Seq() {}
+    Seq* AddSeq(Node* n) {
+        left = n;
+        Seq* rs = new Seq(this);
+        right = rs;
+        return rs;
+    }
 };
 
 #endif

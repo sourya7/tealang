@@ -9,14 +9,14 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
-#include "parser.h"
-#include "lexer.h"
-#include "ltoken.h"
-#include "seq.h"
-#include "if_stmt.h"
+#include "Parser.h"
+#include "Lexer.h"
+#include "Token.h"
+#include "SeqAST.h"
+#include "IfStmtAST.h"
 using namespace std;
 
-TParser::TParser(istream* i) {
+Parser::Parser(istream* i) {
     lexer = new Lexer(i);
     precedence = { 
         {"<", 10}, {"<=", 10}, {">", 10}, {"!=", 10}, {"==", 10}, {">=", 10},
@@ -30,8 +30,8 @@ TParser::TParser(istream* i) {
         {"~", 90}};
 }
 
-void TParser::move(){
-    Word* word = dynamic_cast<Word*>(look);
+void Parser::move(){
+    WordTok* word = dynamic_cast<WordTok*>(look);
     if(word != nullptr){
         //cerr << "\nLine: " << look->line << " "; 
         //cerr << " <id," << word->lexeme << ">  \t";
@@ -43,7 +43,7 @@ void TParser::move(){
     look = lexer->Scan();
 }
 
-Node* TParser::Parse(){
+NodeAST* Parser::Parse(){
     /*
      * Block => [Stmt]*
      * Stmt => ifStmt, tryStmt, forStmt, whileStmt...
@@ -51,12 +51,12 @@ Node* TParser::Parse(){
      */
     move();
     //cerr << "Parse()";
-    Node* block = ParseBlock();
+    NodeAST* block = ParseBlock();
     block->Display();
     return block;
 }
 
-Node* TParser::ParseFunctionParam(bool isCall = false){
+NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     //1. Functions can have no parameter
     //   defun bla 
     //      [print: Hello]
@@ -72,9 +72,9 @@ Node* TParser::ParseFunctionParam(bool isCall = false){
     //      //do something
     //   endfun
     uint currentLine = look->line;
-    Seq* seq = new Seq();
-    Seq* tseq = seq;
-    Node* param;
+    SeqAST* seq = new SeqAST();
+    SeqAST* tseq = seq;
+    NodeAST* param;
     
     /*
     */
@@ -97,8 +97,8 @@ Node* TParser::ParseFunctionParam(bool isCall = false){
                     //cerr << "ParseFunctionParam::BCIO ()";
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) 
-                        seq = seq->AddSeq(new Node(NodeType::PARAM, param, ParseFunctionParam()));
-                    else seq = seq->AddSeq(new Node(NodeType::PARAM, param, ParseExpr()));
+                        seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, ParseFunctionParam()));
+                    else seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, ParseExpr()));
                     if(!isCall) move(); //consume the ))
                     //cerr << "ParseFunctionParam::BCIO()";
                 }
@@ -108,7 +108,7 @@ Node* TParser::ParseFunctionParam(bool isCall = false){
                 }
                 else{
                     //its a simple id
-                    seq = seq->AddSeq(new Node(NodeType::PARAM, param, look));
+                    seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, look));
                     move();
                     //cerr << "ParseFunctionParam::ELSE ()";
                 }
@@ -127,9 +127,9 @@ Node* TParser::ParseFunctionParam(bool isCall = false){
  *       OBJ_N    PARAM_N
  *  
  */
-Node* TParser::ParseFunctionCall(){
+NodeAST* Parser::ParseFunctionCall(){
     move(); //consume [
-    Node* call = new Node(NodeType::CALL);
+    NodeAST* call = new NodeAST(NodeType::CALL);
     switch(look->tag){
         case Tags::PARAM:  //[call:2 withb:]
             call->SetRight(ParseFunctionParam(true));
@@ -154,7 +154,7 @@ Node* TParser::ParseFunctionCall(){
  *   FPAR_N  F_BLOCK
  *
  */
-Node* TParser::ParseFunctionStmt(){
+NodeAST* Parser::ParseFunctionStmt(){
     /*
      * defun bla
      *    [print: something]
@@ -167,7 +167,7 @@ Node* TParser::ParseFunctionStmt(){
     //consume defun
     move(); 
 
-    Node* funcDef = new Node(NodeType::FSTMT, ParseFunctionParam(), ParseBlock());
+    NodeAST* funcDef = new NodeAST(NodeType::FSTMT, ParseFunctionParam(), ParseBlock());
     //cerr << "ParseFunctionStmt ()";
 
     //consume the endfun 
@@ -177,8 +177,8 @@ Node* TParser::ParseFunctionStmt(){
     return funcDef;
 }
 
-Node* TParser::ParseSingleStmt(){
-    Node* node;
+NodeAST* Parser::ParseSingleStmt(){
+    NodeAST* node;
     /*
      * var a = 2
      * var b = (2 + 2)
@@ -196,7 +196,7 @@ Node* TParser::ParseSingleStmt(){
         move(); //move over the variable;
         if(look->tag == Tags::ASSIGN){
             move();
-            node = new Node(NodeType::ASSIGN, tmp, ParseExpr());
+            node = new NodeAST(NodeType::ASSIGN, tmp, ParseExpr());
         }
     }
     else if(look->tag == Tags::BSQO){
@@ -214,7 +214,7 @@ Node* TParser::ParseSingleStmt(){
  * Using the Shunting yard algorithm to turn the infix expr
  * to RPN
  */
-Node* TParser::ParseExpr(){
+NodeAST* Parser::ParseExpr(){
     // Expr -> id
     // Expr -> Val 
     // Expr -> (Expr op epxr)
@@ -263,50 +263,50 @@ Node* TParser::ParseExpr(){
         }
     }
     for(auto v : opstack) outstack.push_back(v);
-    return new Expr(outstack);
+    return new ExprAST(outstack);
 }
 
-short TParser::GetPrecedence(Token* t) { 
-    Word* w = dynamic_cast<Word*>(t);
+short Parser::GetPrecedence(Token* t) { 
+    WordTok* w = dynamic_cast<WordTok*>(t);
     if(w != nullptr) return precedence[w->lexeme];
     else return 0;
 }
 
-Node* TParser::ParseIfStmt(){
+NodeAST* Parser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
     //cerr << "ParseIfStmt ()";
-    IfStmt* stmt = new IfStmt(ParseExpr(), ParseBlock());
+    IfStmtAST* stmt = new IfStmtAST(ParseExpr(), ParseBlock());
     //TODO: Parse the elif and else stmts
     //consume endif
     move();
     return stmt;
 }
 
-Node* TParser::ParseForStmt(){ return nullptr; } 
+NodeAST* Parser::ParseForStmt(){ return nullptr; } 
 
-Node* TParser::ParseTryStmt(){ return nullptr; }
+NodeAST* Parser::ParseTryStmt(){ return nullptr; }
 
-Node* TParser::ParseClassStmt(){ return nullptr; }
+NodeAST* Parser::ParseClassStmt(){ return nullptr; }
 
-Node* TParser::ParseWhileStmt(){ return nullptr; }
+NodeAST* Parser::ParseWhileStmt(){ return nullptr; }
 
 /*
- *                             SEQ
+ *                             SeqAST
  *                         STMT   SEQ
  *                              STMT  SEQ
  *                                 ...
  */
-Node* TParser::ParseBlock(){
+NodeAST* Parser::ParseBlock(){
     //Block -> Stmts...
-    Seq* s = new Seq();
-    Seq* ts = s;
-    Node* tmp;
+    SeqAST* s = new SeqAST();
+    SeqAST* ts = s;
+    NodeAST* tmp;
     while(true){
         switch(look->tag){
             case Tags::BLK:{
-                Word* word = static_cast<Word*>(look);
+                WordTok* word = static_cast<WordTok*>(look);
                 if(word->lexeme == "defun") tmp = ParseFunctionStmt(); 
                 else if(word->lexeme == "defclass") tmp = ParseClassStmt(); 
                 else if(word->lexeme == "if") tmp = ParseIfStmt(); 

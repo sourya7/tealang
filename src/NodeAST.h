@@ -7,18 +7,18 @@ using std::string;
 using std::cerr;
 
 enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT, ASSIGN, EXPR, TOKEN};
-class Node {
+class NodeAST {
 protected:
-    Node* left = nullptr;
-    Node* right = nullptr; 
+    NodeAST* left = nullptr;
+    NodeAST* right = nullptr; 
     NodeType type = NodeType::NODE;
 public:
-    Node() {}
-    Node(NodeType t) : type(t) {} 
-    Node(Node* l, Node* r) : left(l), right(r) {} 
-    Node(NodeType t, Node *l, Node* r) : type(t), left(l), right(r) {} 
-    void SetLeft(Node* l) { left = l; }
-    void SetRight(Node* r) { right = r; }
+    NodeAST() {}
+    NodeAST(NodeType t) : type(t) {} 
+    NodeAST(NodeAST* l, NodeAST* r) : left(l), right(r) {} 
+    NodeAST(NodeType t, NodeAST *l, NodeAST* r) : type(t), left(l), right(r) {} 
+    void SetLeft(NodeAST* l) { left = l; }
+    void SetRight(NodeAST* r) { right = r; }
     virtual void Display(int level=0) {
         cerr << string(level*2, ' ');
         switch(type){

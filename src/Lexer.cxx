@@ -4,11 +4,11 @@
 #include <algorithm>
 #include <map>
 #include <cassert>
-#include "ltoken.h"
-#include "lword.h"
-#include "lnumber.h"
-#include "lreal.h"
-#include "lexer.h"
+#include "Token.h"
+#include "WordTok.h"
+#include "NumberTok.h"
+#include "RealTok.h"
+#include "Lexer.h"
 
 using namespace std;
 
@@ -66,15 +66,15 @@ Token* Lexer::ParseSpecialNumber(){
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
                 (isBinary && (peek == '0' || peek == '1')));
-        return new Word(tmp, Tags::ID, line);
+        return new WordTok(tmp, Tags::ID, line);
 
         /* TODO use these instead
-        if(isHex) return new Number(decFromHex(tmp), line);
-        else if(isHex) return new Number(decFromOct(tmp), line);
-        else return new Number(decFromBin(tmp), line);
+        if(isHex) return new NumberTok(decFromHex(tmp), line);
+        else if(isHex) return new NumberTok(decFromOct(tmp), line);
+        else return new NumberTok(decFromBin(tmp), line);
         */
     }
-    return new Number(0, line);
+    return new NumberTok(0, line);
 }
 
 Token* Lexer::ParseNumericToken(){
@@ -89,14 +89,14 @@ Token* Lexer::ParseNumericToken(){
         tmp += peek;
         ReadChar();
     }while(isdigit(peek));
-    if(peek != '.') return new Word(tmp, Tags::ID, line); ////return new Number(decFromDec(tmp), line);
+    if(peek != '.') return new WordTok(tmp, Tags::ID, line); ////return new NumberTok(decFromDec(tmp), line);
 
     //handle real numbers
     do{
         tmp += peek;
         ReadChar();
     }while(isdigit(peek));
-    return new Word(tmp, Tags::ID, line); //Real(floatFromFloat(tmp), line);
+    return new WordTok(tmp, Tags::ID, line); //RealTok(floatFromFloat(tmp), line);
 }
 
 Token* Lexer::ParseIdentifierToken(){
@@ -118,7 +118,7 @@ Token* Lexer::ParseIdentifierToken(){
     else
         tag = Tags::ID;
 
-    return new Word(tmp, tag, line);
+    return new WordTok(tmp, tag, line);
 }
 
 Lexer::Lexer(istream* i){ 
@@ -139,18 +139,18 @@ bool Lexer::ReadAndMatch(char ch){
 } 
 
 #define IFMATCHELSE(ifMatch, elseMatch) \
-    if(!ReadAndMatch(ifMatch)){ return new Word(ifMatch, Tags::OP, line); } \
-    else{ return new Word(elseMatch, Tags::OP, line); }
+    if(!ReadAndMatch(ifMatch)){ return new WordTok(ifMatch, Tags::OP, line); } \
+    else{ return new WordTok(elseMatch, Tags::OP, line); }
 
 #define IFMATCHELIFELSE(ifMatch, elifMatch, elseMatch) \
-    if(ReadAndMatch(match)){ return new Word(match, Tags::OP, line); } \
+    if(ReadAndMatch(match)){ return new WordTok(match, Tags::OP, line); } \
     else if(peek == elifMatch) { return new Token(elifMatch, Tags::OP, line); } \
     else{ return new Token(elseMatch, Tags::OP, line); }
 
 #define IFMATCH2ELSE(match, fmatch) \
   ReadChar(); string ret(1,match); \
   if(peek == fmatch || peek == match) ret += peek; \
-  return new Word(ret, Tags::OP, line);
+  return new WordTok(ret, Tags::OP, line);
 
 /*
  * TODO - Handle comments
@@ -175,9 +175,9 @@ Token* Lexer::Scan(){
         case '!': { IFMATCHELSE('=', "!="); }
         case '<': { IFMATCH2ELSE('=', '<'); }
         case '>': { IFMATCH2ELSE('=', '>'); }
-        case '/': { ReadChar(); return new Word('/', Tags::OP, line); }
-        case '~': { ReadChar(); return new Word('~', Tags::OP,line);  }
-        case '^': { ReadChar(); return new Word('^', Tags::OP, line); }
+        case '/': { ReadChar(); return new WordTok('/', Tags::OP, line); }
+        case '~': { ReadChar(); return new WordTok('~', Tags::OP,line);  }
+        case '^': { ReadChar(); return new WordTok('^', Tags::OP, line); }
         case '[': { ReadChar(); return new Token(Tags::BSQO, line);   }
         case ']': { ReadChar(); return new Token(Tags::BSQC, line);   }
         case '(': { ReadChar(); return new Token(Tags::BCIO, line);   }
@@ -186,8 +186,8 @@ Token* Lexer::Scan(){
         case '}': { ReadChar(); return new Token(Tags::BCUC, line);   }
         case '"': case '\'': { return ParseStringLiteral(); } 
         case -1: { return new Token(Tags::SEOF, line); }
-        case '=': { if(ReadAndMatch('=')) return new Word("==", Tags::OP, line);
-                    else return new Word('=', Tags::ASSIGN, line); }
+        case '=': { if(ReadAndMatch('=')) return new WordTok("==", Tags::OP, line);
+                    else return new WordTok('=', Tags::ASSIGN, line); }
         default: {
             return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken(); }
     }
@@ -208,6 +208,6 @@ Token* Lexer::ParseStringLiteral(){
     do{
         tmp += peek;
     } while(!ReadAndMatch(quote));
-    return new Word(tmp, Tags::STR, line);
+    return new WordTok(tmp, Tags::STR, line);
 }
 

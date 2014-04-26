@@ -1,7 +1,7 @@
 #ifndef T_TOKEN_H
 #define T_TOKEN_H
-#include "common.h"
-#include "node.h"
+#include "Common.h"
+#include "NodeAST.h"
 
 /*
 enum class Tags { BAND = 256, BOR, BNOT, BXOR, PLUS, MINUS, MULT, POW,
@@ -19,14 +19,13 @@ enum class Tags { OP = 256, NUM, DEFCLASS, ENDCLASS, DEFFUN, ENDFUN,
             REAL, ID, BSQO, BSQC, SEOF, STR, BCIO, BCIC,
             BCUC, BCUO, BLK,ENDBLK,FLWBLK, CMD, PARAM, ASSIGN };
 
-class Token : public Node {
+class Token : public NodeAST {
 private:
 public:
     const Tags tag;
     const ulong line;
-    Token(Tags t, ulong l) : Node(NodeType::TOKEN), tag(t), line(l) {}
+    Token(Tags t, ulong l) : NodeAST(NodeType::TOKEN), tag(t), line(l) {}
     virtual ~Token() {}
-
 };
 
 #endif

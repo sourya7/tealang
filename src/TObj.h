@@ -1,6 +1,6 @@
 #ifndef T_TOBJECT_H
 #define T_TOBJECT_H
-#include "type.h"
+#include "Type.h"
 class TObj {
 private:
     TValue value;

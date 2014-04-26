@@ -4,8 +4,8 @@
 #include <string>
 #include <istream>
 #include <map>
-#include "ltoken.h"
-#include "lword.h"
+#include "Token.h"
+#include "WordTok.h"
 
 using std::string;
 using std::istream;
@@ -19,7 +19,7 @@ private:
     IDTable words;
     istream* inputStream;
 
-    void Reserve(Word w);
+    void Reserve(WordTok w);
     Token* ParseNumericToken();
     Token* ParseIdentifierToken();
     Token* ParseSpecialNumber();

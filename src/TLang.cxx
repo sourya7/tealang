@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "parser.h"
+#include "Parser.h"
 using namespace std;
 
 /*                                                      
@@ -26,13 +26,13 @@ using namespace std;
  */
 int main(int argc, char* argv[]){
     ifstream src;
-    TParser* parser;
+    Parser* parser;
     if(argc == 2){
         src.open(argv[1], std::ifstream::in);
-        parser = new TParser(&src);
+        parser = new Parser(&src);
     }                                                  
     else{                                              
-        parser = new TParser(&cin);                          
+        parser = new Parser(&cin);                          
     }                                                  
     parser->Parse();
     cout << endl;

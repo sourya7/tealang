@@ -12,36 +12,35 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "seq.h"
-#include "node.h"
-#include "lexer.h"
-#include "ltoken.h"
+#include "NodeAST.h"
+#include "Lexer.h"
+#include "Token.h"
 
 using namespace std;
 
-class TParser {
+class Parser {
 private:
     Token* look;
     Lexer* lexer;
     map<string, short> precedence;
 public:
-    TParser(istream* i);
+    Parser(istream* i);
     void move();
 
-    Node* Parse();
-    Node* ParseBlock();
-    Node* ParseIfStmt();
-    Node* ParseForStmt();
-    Node* ParseTryStmt();
-    Node* ParseClassStmt();
-    Node* ParseWhileStmt();
-    Node* ParseSingleStmt();
-    Node* ParseFunctionStmt();
-    Node* ParseFunctionParam(bool isCall);
-    Node* ParseFunctionCall();
+    NodeAST* Parse();
+    NodeAST* ParseBlock();
+    NodeAST* ParseIfStmt();
+    NodeAST* ParseForStmt();
+    NodeAST* ParseTryStmt();
+    NodeAST* ParseClassStmt();
+    NodeAST* ParseWhileStmt();
+    NodeAST* ParseSingleStmt();
+    NodeAST* ParseFunctionStmt();
+    NodeAST* ParseFunctionParam(bool isCall);
+    NodeAST* ParseFunctionCall();
 
     short GetPrecedence(Token* t);
-    Node* ParseExpr();
+    NodeAST* ParseExpr();
 };
 
 #endif

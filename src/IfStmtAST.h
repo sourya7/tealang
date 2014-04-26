@@ -1,18 +1,14 @@
 #ifndef T_IF_STMT_H
 #define T_IF_STMT_H
 
-#include "node.h"
-#include "expr.h"
+#include "NodeAST.h"
+#include "ExprAST.h"
 
-class IfStmt : public Node {
+class IfStmtAST : public NodeAST {
 public:
-    IfStmt(Node* c, Node* ib) : Node(NodeType::IFSTMT,c,ib) {};
-
-    void SetElseBlock(Seq* eb) {
-    }
-
-    void SetElifBlock(Seq* elb) {
-    }
+    IfStmtAST(NodeAST* c, NodeAST* ib) : NodeAST(NodeType::IFSTMT,c,ib) {};
+    void SetElseBlock(SeqAST* eb) { } 
+    void SetElifBlock(SeqAST* elb) { }
 };
 
 #endif

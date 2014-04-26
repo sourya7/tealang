@@ -1,11 +1,11 @@
 #ifndef T_PARAM_H
 #define T_PARAM_H
 
-#include "node.h"
+#include "NodeAST.h"
 
-class Param : Node {
+class ParamAST : NodeAST {
 private:
     Token* name;
 public :
-    Param(Token* n, Node* v) : 
+    ParamAST(Token* n, NodeAST* v) : 
 }

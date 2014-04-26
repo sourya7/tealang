@@ -53,6 +53,8 @@ NodeAST* Parser::Parse(){
     //cerr << "Parse()";
     NodeAST* block = ParseBlock();
     block->Display();
+    cerr << "----------------" << endl;
+    cerr << block->GenOpCode() << endl;
     return block;
 }
 

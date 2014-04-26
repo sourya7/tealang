@@ -1,3 +1,1 @@
-if a == 2 && d == 3
-    [print: x]
-endif
+a = 5 + 2 * 2 - 2

@@ -178,34 +178,35 @@ Node* TParser::ParseFunctionStmt(){
 }
 
 Node* TParser::ParseSingleStmt(){
-    uint currentLine = look->line;
     Node* node;
-    while(currentLine == look->line){
-        /*
-         * var a;
-         * var b = (2 + 2)
-         * [smth]
-         *
-         */
-        if(look->tag == Tags::VAR){
+    /*
+     * var a = 2
+     * var b = (2 + 2)
+     * ac  = 2 //Error ac has not been declared
+     * [smth]
+     *
+     */
+    // Var* var = nullptr;
+    if(look->tag == Tags::VAR){
+        move();
+        //var = new Var(look);
+    }
+    if(look->tag == Tags::ID){
+        Token* tmp = look;
+        move(); //move over the variable;
+        if(look->tag == Tags::ASSIGN){
             move();
-            //DeclVariable(look);
-        }
-        if(look->tag == Tags::ID){
-            Token* tmp = look;
-            move(); //move over the variable;
-            if(look->tag == Tags::ASSIGN){
-                move();
-                node = new Node(NodeType::ASSIGN, tmp, ParseExpr());
-            }
-        }
-        else if(look->tag == Tags::BSQO){
-            node = ParseFunctionCall();
-        }
-        else{
-            assert(false);
+            node = new Node(NodeType::ASSIGN, tmp, ParseExpr());
         }
     }
+    else if(look->tag == Tags::BSQO){
+        node = ParseFunctionCall();
+    }
+    else{
+        assert(false);
+    }
+
+    //if(var != nullptr) var->scope(node);
     return node;
 }
 

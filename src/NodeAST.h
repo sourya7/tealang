@@ -36,13 +36,6 @@ public:
         if(left != nullptr) left->Display(level+1);
         if(right != nullptr) right->Display(level+1);
     }
-
-    virtual string GenOpCode() {
-        string ret = "";
-        if(left != nullptr) ret+= left->GenOpCode();
-        if(right != nullptr) ret+= right->GenOpCode();
-        return ret;
-    }
 };
 
 #endif

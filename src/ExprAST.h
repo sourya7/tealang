@@ -10,7 +10,18 @@ private:
 public:
     ExprAST(vector<Token*> e) : NodeAST(NodeType::EXPR), expr(e) {}
 
-    virtual string GenOpCode() {
+
+    void Display(int level){ 
+        cerr << string(level*2, ' ');
+        for(auto t: expr){
+            WordTok* w = static_cast<WordTok*>(t);
+            cerr << w->lexeme << " ";
+        }
+        cerr << "\n";
+    }
+
+    /*
+    string GenOpCode() {
         vector<string> stack;
         string reg = "r0";
 
@@ -27,9 +38,11 @@ public:
             else {
                 stack.push_back(w->lexeme);
             }
+            //ret += w->lexeme + " ";
         }
         return ret;
     }
+    */
 };
 
 #endif

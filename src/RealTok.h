@@ -3,9 +3,9 @@
 #include "Token.h"
 
 class RealTok : public Token {
-    double number;
 public:
-    RealTok(double n, uint l) : Token(Tags::REAL,l), number(n) {}
+    double value;
+    RealTok(double n, uint l) : Token(Tags::REAL,l), value(n) {}
 };
 
 #endif

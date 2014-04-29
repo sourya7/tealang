@@ -270,7 +270,7 @@ NodeAST* Parser::ParseExpr(){
 
 short Parser::GetPrecedence(Token* t) { 
     WordTok* w = dynamic_cast<WordTok*>(t);
-    if(w != nullptr) return precedence[w->lexeme];
+    if(w != nullptr) return precedence[w->value];
     else return 0;
 }
 
@@ -309,12 +309,12 @@ NodeAST* Parser::ParseBlock(){
         switch(look->tag){
             case Tags::BLK:{
                 WordTok* word = static_cast<WordTok*>(look);
-                if(word->lexeme == "defun") tmp = ParseFunctionStmt(); 
-                else if(word->lexeme == "defclass") tmp = ParseClassStmt(); 
-                else if(word->lexeme == "if") tmp = ParseIfStmt(); 
-                else if(word->lexeme == "for") tmp = ParseForStmt(); 
-                else if(word->lexeme == "try") tmp = ParseTryStmt(); 
-                else if(word->lexeme == "while") tmp = ParseWhileStmt(); 
+                if(word->value == "defun") tmp = ParseFunctionStmt(); 
+                else if(word->value == "defclass") tmp = ParseClassStmt(); 
+                else if(word->value == "if") tmp = ParseIfStmt(); 
+                else if(word->value == "for") tmp = ParseForStmt(); 
+                else if(word->value == "try") tmp = ParseTryStmt(); 
+                else if(word->value == "while") tmp = ParseWhileStmt(); 
                 break;
             }
             case Tags::SEOF: case Tags::ENDBLK:

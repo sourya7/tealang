@@ -33,7 +33,7 @@ void NodeAST::GenerateIR() {
             //eval the right node
             right->GenerateIR();
             //store the val
-            //builder->StoreValue((*)left);
+            builder->StoreValue((Token*)left);
             break;
         default:
             assert(false && "This should not be called!");

@@ -11,7 +11,7 @@ public:
     static IRBuilder* GetBuilder();
     uint GetOPSize(Token* t);
     void PerformOP(Token* t);
-    void PushParams(Token* t);
+    void PushValue(Token* t);
     void StoreValue(Token* t);
 };
 

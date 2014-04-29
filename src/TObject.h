@@ -8,7 +8,8 @@ using std::string;
  * 
  */
 
-class TObj;
+class TObject;
+class Token;
 
 enum class TType {
     INTEGER = 1,
@@ -21,19 +22,19 @@ enum class TType {
 
 union TValue {
     long i;
-    double r;
+    double d;
     bool b;
-    string* str;
-    TObj* object;
+    char* s;
+    TObject* o;
 };
 
-class TObj {
+class TObject {
 private:
     TType type = TType::NIL;
     TValue* value = nullptr;
-    TObj() {} 
+    TObject() { value = new TValue(); } 
 public:
-    static const TObj NIL;
+    static const TObject NIL;
     bool IsBool() { return false; }
     bool IsInteger() { return false; }
     bool IsString() { return false; }
@@ -41,25 +42,32 @@ public:
     bool IsNil() { return false; }
     bool IsTrue() { return false; }
 
-    TObj(long i){
+    explicit TObject(long i){
         type = TType::INTEGER;
+        value->i = i;
     }
 
-    TObj(double d){
+    explicit TObject(double d){
         type = TType::DOUBLE;
+        value->d = d;
     }
 
-    TObj(bool b){
+    TObject(bool b){
         type = TType::BOOLEAN;
+        value->b = b;
     }
 
-    TObj(string* s){
+    TObject(char* s){
         type = TType::STRING;
+        value->s = s;
     }
 
-    TObj(TObj* o){
+    TObject(TObject* o){
         type = TType::OBJECT;
+        value->o = o;
     }
+
+    static TObject* FromToken(Token* t);
 };
 
 #endif

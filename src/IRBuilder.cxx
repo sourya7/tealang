@@ -1,3 +1,4 @@
+
 #include "Debug.h"
 #include "IRBuilder.h"
 
@@ -22,7 +23,7 @@ void IRBuilder::PerformOP(Token* t){
 /*
  *
  */
-void IRBuilder::PushParams(Token* t){
+void IRBuilder::PushValue(Token* t){
     DEBUG("IRBuilder::PushParams()");
 }
 
@@ -30,6 +31,8 @@ void IRBuilder::PushParams(Token* t){
  *
  */
 void IRBuilder::StoreValue(Token* t){
+    //Pop value from the stack
+    //Store t in a map with the assiciated value
     DEBUG("IRBuilder::StoreValue()");
 }
 

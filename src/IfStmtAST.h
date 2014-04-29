@@ -10,6 +10,7 @@ public:
     IfStmtAST(NodeAST* c, NodeAST* ib) : NodeAST(NodeType::IFSTMT,c,ib) {};
     void SetElseBlock(SeqAST* eb);
     void SetElifBlock(SeqAST* elb);
+    void GenerateIR();
 };
 
 #endif

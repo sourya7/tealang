@@ -1,8 +1,8 @@
 #ifndef T_WORD_H
 #define T_WORD_H
 
-#include "Token.h"
 #include <string>
+#include "Token.h"
 
 using std::string;
 

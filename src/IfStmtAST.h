@@ -2,13 +2,14 @@
 #define T_IF_STMT_H
 
 #include "NodeAST.h"
-#include "ExprAST.h"
+class SeqAST;
+enum class NodeType;
 
 class IfStmtAST : public NodeAST {
 public:
     IfStmtAST(NodeAST* c, NodeAST* ib) : NodeAST(NodeType::IFSTMT,c,ib) {};
-    void SetElseBlock(SeqAST* eb) { } 
-    void SetElifBlock(SeqAST* elb) { }
+    void SetElseBlock(SeqAST* eb);
+    void SetElifBlock(SeqAST* elb);
 };
 
 #endif

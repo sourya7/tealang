@@ -14,6 +14,7 @@
 #include "Token.h"
 #include "SeqAST.h"
 #include "IfStmtAST.h"
+#include "ExprAST.h"
 using namespace std;
 
 Parser::Parser(istream* i) {
@@ -53,8 +54,7 @@ NodeAST* Parser::Parse(){
     //cerr << "Parse()";
     NodeAST* block = ParseBlock();
     block->Display();
-    cerr << "----------------" << endl;
-    cerr << block->GenOpCode() << endl;
+    block->GenerateIR();
     return block;
 }
 

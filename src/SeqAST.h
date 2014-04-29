@@ -10,16 +10,9 @@ private:
 public:
     SeqAST() : NodeAST(NodeType::SEQ) {}
     SeqAST(NodeAST* p) : SeqAST() { parent = p; }
-    SeqAST* AddSeq(NodeAST* n) {
-        left = n;
-        SeqAST* rs = new SeqAST(this);
-        right = rs;
-        return rs;
-    }
-
-    void Display(int level){
-        if(left) NodeAST::Display(level);
-    }
+    SeqAST* AddSeq(NodeAST* n);
+    void Display(int level);
+    void GenerateIR();
 };
 
 #endif

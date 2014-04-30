@@ -2,18 +2,15 @@
 #include "Debug.h"
 #include "IRBuilder.h"
 #include "Token.h"
-#include "TObject.h"
+#include "Object.h"
 #include "OPTok.h"
 #include "OPCode.h"
+#include "CodeBuilder.h"
 
 IRBuilder* IRBuilder::builder = nullptr;
 IRBuilder* IRBuilder::GetBuilder(){
     if(builder == nullptr) builder = new IRBuilder();
     return builder;
-}
-
-uint IRBuilder::GetOPSize(Token* t){
-    return 0;
 }
 
 /*
@@ -22,6 +19,7 @@ uint IRBuilder::GetOPSize(Token* t){
 void IRBuilder::PerformOP(Token* t){
     assert(t->tag == Tags::OP);
     OPTok* op = (OPTok*)t;
+    //codeObj->DoOP(op);
     DEBUG("IRBuilder::PerformOP()");
 }
 
@@ -30,9 +28,14 @@ void IRBuilder::PerformOP(Token* t){
  *
  */
 void IRBuilder::PushValue(Token* t){
-    TObject* o = TObject::FromToken(t);
     //check if t is a variable vs a constant
-    //codeObj->PushValue(o);
+    if(t->tag != Tags::ID){
+        Object* o = Object::FromToken(t);
+        //codeObj->PushValue(o);   
+    }
+    else{
+        //codeObj->PushID((WordTok*)t->value);  
+    }
     DEBUG("IRBuilder::PushParams()");
 }
 

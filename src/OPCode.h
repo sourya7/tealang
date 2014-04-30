@@ -3,7 +3,7 @@
 
 enum class OP {
     /* User controlled OPs */
-    AND,BAND,OR,BOR,DECR,SUB,INCR,ADD,POWER,MULT,NEQ,
+    AND = 200,BAND,OR,BOR,DECR,SUB,INCR,ADD,POWER,MULT,NEQ,
     NOT,LEQ,LSHIFT,LT,GEQ,RSHIFT,GT,DIV,INV,XOR,EQ
 
     /* Internal OP's */

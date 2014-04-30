@@ -21,9 +21,11 @@ class Token;
 class IRBuilder {
 private:
     static IRBuilder* builder;
+    CodeObject* cobj;
+    
     IRBuilder() {
+        cobj = new CodeObject();
         //create a  new scope by creating a codeobject 
-        
     }
 public:
     static IRBuilder* GetBuilder();

@@ -8,6 +8,8 @@
 #include "WordTok.h"
 #include "NumberTok.h"
 #include "RealTok.h"
+#include "OPTok.h"
+#include "OPCode.h"
 #include "Lexer.h"
 
 using namespace std;
@@ -138,19 +140,14 @@ bool Lexer::ReadAndMatch(char ch){
     return true;
 } 
 
-#define IFMATCHELSE(ifMatch, elseMatch) \
-    if(!ReadAndMatch(ifMatch)){ return new WordTok(ifMatch, Tags::OP, line); } \
-    else{ return new WordTok(elseMatch, Tags::OP, line); }
+#define IFMATCHELSE(ifMatch,ifTok,elseTok) \
+    if(ReadAndMatch(ifMatch)){return new OPTok(ifTok,line);} \
+    else{return new OPTok(elseTok,line);}
 
-#define IFMATCHELIFELSE(ifMatch, elifMatch, elseMatch) \
-    if(ReadAndMatch(match)){ return new WordTok(match, Tags::OP, line); } \
-    else if(peek == elifMatch) { return new Token(elifMatch, Tags::OP, line); } \
-    else{ return new Token(elseMatch, Tags::OP, line); }
-
-#define IFMATCH2ELSE(match, fmatch) \
-  ReadChar(); string ret(1,match); \
-  if(peek == fmatch || peek == match) ret += peek; \
-  return new WordTok(ret, Tags::OP, line);
+#define IFMATCH2ELSE(ifMatch,ifTok,elifMatch,elifTok,elseTok) \
+    if(ReadAndMatch(ifMatch)){return new OPTok(ifTok, line);} \
+    else if(peek == elifMatch){return new OPTok(elifTok, line);}\
+    else{return new OPTok(elseTok, line); }
 
 /*
  * TODO - Handle comments
@@ -167,17 +164,17 @@ Token* Lexer::Scan(){
     assert(peek != 10);
 
     switch(peek){
-        case '&': { IFMATCHELSE('&', "&&"); }
-        case '|': { IFMATCHELSE('|', "||"); }
-        case '-': { IFMATCHELSE('-', "--"); }
-        case '+': { IFMATCHELSE('+', "++"); }
-        case '*': { IFMATCHELSE('*', "**"); }
-        case '!': { IFMATCHELSE('=', "!="); }
-        case '<': { IFMATCH2ELSE('=', '<'); }
-        case '>': { IFMATCH2ELSE('=', '>'); }
-        case '/': { ReadChar(); return new WordTok('/', Tags::OP, line); }
-        case '~': { ReadChar(); return new WordTok('~', Tags::OP,line);  }
-        case '^': { ReadChar(); return new WordTok('^', Tags::OP, line); }
+        case '&': { IFMATCHELSE('&', OP::AND, OP::BAND); } 
+        case '|': { IFMATCHELSE('|', OP::OR, OP::BOR); } 
+        case '-': { IFMATCHELSE('-', OP::DECR, OP::SUB); }
+        case '+': { IFMATCHELSE('+', OP::INCR, OP::ADD); }
+        case '*': { IFMATCHELSE('*', OP::POWER, OP::MULT); }
+        case '!': { IFMATCHELSE('=', OP::NEQ, OP::NOT); }
+        case '<': { IFMATCH2ELSE('=', OP::LEQ, '<', OP::LSHIFT, OP::LT); }
+        case '>': { IFMATCH2ELSE('=', OP::GEQ, '>', OP::RSHIFT, OP::GT); }
+        case '/': { ReadChar(); return new OPTok(OP::DIV, line); }
+        case '~': { ReadChar(); return new OPTok(OP::INV, line);  }
+        case '^': { ReadChar(); return new OPTok(OP::XOR, line); }
         case '[': { ReadChar(); return new Token(Tags::BSQO, line);   }
         case ']': { ReadChar(); return new Token(Tags::BSQC, line);   }
         case '(': { ReadChar(); return new Token(Tags::BCIO, line);   }
@@ -186,7 +183,7 @@ Token* Lexer::Scan(){
         case '}': { ReadChar(); return new Token(Tags::BCUC, line);   }
         case '"': case '\'': { return ParseStringLiteral(); } 
         case -1: { return new Token(Tags::SEOF, line); }
-        case '=': { if(ReadAndMatch('=')) return new WordTok("==", Tags::OP, line);
+        case '=': { if(ReadAndMatch('=')) return new OPTok(OP::EQ, line);
                     else return new WordTok('=', Tags::ASSIGN, line); }
         default: {
             return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken(); }

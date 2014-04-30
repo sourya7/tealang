@@ -12,8 +12,7 @@ using std::string;
  * 
  */
 
-
-static TObject* FromToken(Token* t){
+TObject* TObject::FromToken(Token* t){
     TObject* o;
     switch(t->tag){
         case Tags::NUM:

@@ -1,6 +1,7 @@
 #ifndef T_IRBUILDER_H
 #define T_IRBUILDER_H
 
+class CodeObject;
 class Token;
 
 /*
@@ -22,11 +23,7 @@ class IRBuilder {
 private:
     static IRBuilder* builder;
     CodeObject* cobj;
-    
-    IRBuilder() {
-        cobj = new CodeObject();
-        //create a  new scope by creating a codeobject 
-    }
+    IRBuilder();
 public:
     static IRBuilder* GetBuilder();
     uint GetOPSize(Token* t);

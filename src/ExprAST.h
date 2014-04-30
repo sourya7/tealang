@@ -13,7 +13,6 @@ private:
     std::vector<Token*> expr;
 public:
     ExprAST(std::vector<Token*> e) : NodeAST(NodeType::EXPR), expr(e) {}
-    void Display(int level);
     void GenerateIR();
 };
 

@@ -1,9 +1,19 @@
+CC = clang++
+CC_FLAGS = --std=c++11 -ggdb -m32
 
-CC=clang++
-CFLAGS=-std=c++11 -m32 -ggdb
-all:
-	$(CC) $(CFLAGS) TLang.cxx Parser.cxx Lexer.cxx ExprAST.cxx IfStmtAST.cxx IRBuilder.cxx NodeAST.cxx SeqAST.cxx Object.cxx VM.cxx
+# File names
+EXEC = tlang
+SOURCES = $(wildcard *.cxx)
+OBJECTS = $(SOURCES:.cxx=.o)
+
+# Main target
+$(EXEC): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXEC)
+
+# To obtain object files
+%.o: %.cxx
+	$(CC) -c $(CC_FLAGS) $< -o $@
+
+# To remove generated files
 clean:
-	rm -f a.out *.o
-run:
-	./a.out current.test
+	rm -f $(EXEC) $(OBJECTS)

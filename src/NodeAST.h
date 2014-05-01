@@ -16,7 +16,7 @@ public:
     void SetLeft(NodeAST* l) { left = l; }
     void SetRight(NodeAST* r) { right = r; }
     virtual void Display(int level=0);
-    virtual void GenerateIR();
+    virtual void GenerateIR(IRBuilder* builder);
 };
 
 #endif

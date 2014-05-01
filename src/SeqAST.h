@@ -4,6 +4,7 @@
 
 #include "NodeAST.h"
 
+class IRBuilder;
 class SeqAST : public NodeAST {
 private:
     NodeAST* parent = nullptr;
@@ -12,7 +13,7 @@ public:
     SeqAST(NodeAST* p) : SeqAST() { parent = p; }
     SeqAST* AddSeq(NodeAST* n);
     void Display(int level);
-    void GenerateIR();
+    void GenerateIR(IRBuilder* builder);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <vector>
 #include "NodeAST.h"
 class Token;
+class IRBuilder;
 enum class Tags;
 enum class NodeType;
 
@@ -13,7 +14,7 @@ private:
     std::vector<Token*> expr;
 public:
     ExprAST(std::vector<Token*> e) : NodeAST(NodeType::EXPR), expr(e) {}
-    void GenerateIR();
+    void GenerateIR(IRBuilder* builder);
 };
 
 #endif

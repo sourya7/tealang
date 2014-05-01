@@ -63,12 +63,7 @@ NodeAST* Parser::Parse(){
      * ifStmt => 
      */
     move();
-    //cerr << "Parse()";
-    NodeAST* block = ParseBlock();
-    block->Display();
-    block->GenerateIR();
-    IRBuilder::GetBuilder()->DumpCodeObject();
-    return block;
+    return ParseBlock();
 }
 
 NodeAST* Parser::ParseFunctionParam(bool isCall = false){

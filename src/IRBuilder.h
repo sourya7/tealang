@@ -32,6 +32,7 @@ public:
     void StoreValue(Token* t);
     //TODO For debug
     void DumpCodeObject();
+    CodeObject* GetCodeObject();
 };
 
 #endif

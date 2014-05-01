@@ -14,10 +14,10 @@ void SeqAST::Display(int level){
     if(left) NodeAST::Display(level);
 }
 
-void SeqAST::GenerateIR(){
+void SeqAST::GenerateIR(IRBuilder* builder){
     DEBUG("SeqAST::GenerateIR()");
 
-    if(left != nullptr) left->GenerateIR();
-    if(right != nullptr) right ->GenerateIR();
+    if(left != nullptr) left->GenerateIR(builder);
+    if(right != nullptr) right ->GenerateIR(builder);
 }
 

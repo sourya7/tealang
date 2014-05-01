@@ -26,13 +26,12 @@ void NodeAST::Display(int level) {
     if(right != nullptr) right->Display(level+1);
 }
 
-void NodeAST::GenerateIR() {
-    IRBuilder* builder = IRBuilder::GetBuilder();
+void NodeAST::GenerateIR(IRBuilder* builder) {
     switch(type){
         case NodeType::ASSIGN:
             DEBUG("GenerateIR()::ASSIGN");
             //eval the right node
-            right->GenerateIR();
+            right->GenerateIR(builder);
             //store the val
             builder->StoreValue((Token*)left);
             break;

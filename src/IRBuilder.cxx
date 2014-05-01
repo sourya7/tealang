@@ -78,3 +78,10 @@ void IRBuilder::StoreValue(Token* t){
     DEBUG("IRBuilder::StoreValue()");
 }
 
+/*
+ *
+ */
+CodeObject* IRBuilder::GetCodeObject(){
+    return co;
+}
+

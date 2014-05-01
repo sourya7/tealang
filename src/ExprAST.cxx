@@ -8,9 +8,8 @@
 using std::vector;
 using std::cerr;
 
-void ExprAST::GenerateIR(){
+void ExprAST::GenerateIR(IRBuilder* builder){
     DEBUG("ExprAST::GenerateIR()");
-    IRBuilder* builder = IRBuilder::GetBuilder();
     for(auto t : expr){
         assert(builder != nullptr);
         if(t->tag == Tags::OP) builder->PerformOP(t);

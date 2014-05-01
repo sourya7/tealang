@@ -15,7 +15,6 @@ public:
     NodeAST(NodeType t, NodeAST *l, NodeAST* r) : type(t), left(l), right(r) {} 
     void SetLeft(NodeAST* l) { left = l; }
     void SetRight(NodeAST* r) { right = r; }
-    virtual void Display(int level=0);
     virtual void GenerateIR(IRBuilder* builder);
 };
 

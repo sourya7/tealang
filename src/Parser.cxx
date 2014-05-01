@@ -45,14 +45,6 @@ Parser::Parser(istream* i) {
 
 void Parser::move(){
     WordTok* word = dynamic_cast<WordTok*>(look);
-    if(word != nullptr){
-        //cerr << "\nLine: " << look->line << " "; 
-        //cerr << " <id," << word->lexeme << ">  \t";
-    }
-    else if(look != nullptr) {
-        //cerr << "\nLine: " << look->line << " "; 
-        //cerr << " <tok," << (int)look->tag << ">  \t";
-    }
     look = lexer->Scan();
 }
 
@@ -91,42 +83,33 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     switch(look->tag){
         case Tags::ID:
             seq = seq->AddSeq(look);
-            move(); //consume it
-            //cerr << "ParseFunctionParam::ID ()";
+            move();
             return param;
-            //We have a single parameter
         case Tags::PARAM:
             while(look->tag == Tags::PARAM){
                 param = look;
-                //get the next token
                 move();
-                //cerr << "ParseFunctionParam::PARAM ()";
                 //is it a () grouping
                 if(look->tag == Tags::BCIO){
                     if(!isCall) move(); //consume the (
-                    //cerr << "ParseFunctionParam::BCIO ()";
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) 
                         seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, ParseFunctionParam()));
                     else seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, ParseExpr()));
                     if(!isCall) move(); //consume the ))
-                    //cerr << "ParseFunctionParam::BCIO()";
                 }
                 else if(look->tag == Tags::BCIC){
                     move(); break;
-                    //cerr << "ParseFunctionParam::BCIC()";
                 }
                 else{
                     //its a simple id
                     seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, look));
                     move();
-                    //cerr << "ParseFunctionParam::ELSE ()";
                 }
             }
             break;
-            //we have a parameter
         default:
-            cerr << "Error!!!";
+            assert(false);
             //throw an error. Function is malformed
     }
     return tseq;
@@ -178,12 +161,10 @@ NodeAST* Parser::ParseFunctionStmt(){
     move(); 
 
     NodeAST* funcDef = new NodeAST(NodeType::FSTMT, ParseFunctionParam(), ParseBlock());
-    //cerr << "ParseFunctionStmt ()";
 
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid
     move();
-    //cerr << "ParseFunctionStmt ()";
     return funcDef;
 }
 
@@ -241,7 +222,6 @@ NodeAST* Parser::ParseExpr(){
             case Tags::BCIO:
                 opstack.push_back(look);
                 move(); //consume (
-                //cerr << "ParseExpr::BCIO ()";
                 break;
             case Tags::BCIC:
                 while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
@@ -249,12 +229,10 @@ NodeAST* Parser::ParseExpr(){
                     opstack.pop_back();
                 }
                 move(); 
-                //cerr << "ParseExpr::BCIC ()";
                 break;
             case Tags::ID: case Tags::NUM: case Tags::REAL: 
                 outstack.push_back(look); 
                 move(); 
-                //cerr << "ParseExpr::ID ()";
                 break;
             case Tags::OP:
                 while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
@@ -266,7 +244,6 @@ NodeAST* Parser::ParseExpr(){
                 }
                 opstack.push_back(look);
                 move();
-                //cerr << "ParseExpr::OP ()";
                 break;
             default:
                 stop = true; break;
@@ -280,7 +257,6 @@ NodeAST* Parser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
-    //cerr << "ParseIfStmt ()";
     IfStmtAST* stmt = new IfStmtAST(ParseExpr(), ParseBlock());
     //TODO: Parse the elif and else stmts
     //consume endif

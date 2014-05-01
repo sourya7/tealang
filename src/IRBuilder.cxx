@@ -48,7 +48,6 @@ void IRBuilder::PerformOP(Token* t){
     OPTok* op = (OPTok*)t;
     OP opv = op->value;
     co->PushOP(op->value);
-    DEBUG("IRBuilder::PerformOP()");
 }
 
 /*
@@ -66,7 +65,6 @@ void IRBuilder::PushValue(Token* t){
         int id = co->PushID(((WordTok*)t)->value);
         co->PushOP(OP::LOAD_VALUE, id); 
     }
-    DEBUG("IRBuilder::PushValue()");
 }
 
 /*
@@ -75,7 +73,6 @@ void IRBuilder::PushValue(Token* t){
 void IRBuilder::StoreValue(Token* t){
     //Pop value from the stack
     //Store t in a map with the assiciated value
-    DEBUG("IRBuilder::StoreValue()");
 }
 
 /*

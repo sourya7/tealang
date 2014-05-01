@@ -12,7 +12,6 @@ public:
     SeqAST() : NodeAST(NodeType::SEQ) {}
     SeqAST(NodeAST* p) : SeqAST() { parent = p; }
     SeqAST* AddSeq(NodeAST* n);
-    void Display(int level);
     void GenerateIR(IRBuilder* builder);
 };
 

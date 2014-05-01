@@ -173,6 +173,7 @@ Token* Lexer::Scan(){
         case '<': { IFMATCH2ELSE('=', OP::LEQ, '<', OP::LSHIFT, OP::LT); }
         case '>': { IFMATCH2ELSE('=', OP::GEQ, '>', OP::RSHIFT, OP::GT); }
         case '/': { ReadChar(); return new OPTok(OP::DIV, line); }
+        case '%': { ReadChar(); return new OPTok(OP::MOD, line); }
         case '~': { ReadChar(); return new OPTok(OP::INV, line);  }
         case '^': { ReadChar(); return new OPTok(OP::XOR, line); }
         case '[': { ReadChar(); return new Token(Tags::BSQO, line);   }

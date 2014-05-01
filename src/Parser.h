@@ -22,7 +22,6 @@ class Parser {
 private:
     Token* look;
     Lexer* lexer;
-    map<string, short> precedence;
 public:
     Parser(istream* i);
     void move();
@@ -38,8 +37,6 @@ public:
     NodeAST* ParseFunctionStmt();
     NodeAST* ParseFunctionParam(bool isCall);
     NodeAST* ParseFunctionCall();
-
-    short GetPrecedence(Token* t);
     NodeAST* ParseExpr();
 };
 

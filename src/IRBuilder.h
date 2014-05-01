@@ -22,7 +22,7 @@ class Token;
 class IRBuilder {
 private:
     static IRBuilder* builder;
-    CodeObject* cobj;
+    CodeObject* co = nullptr;
     IRBuilder();
 public:
     static IRBuilder* GetBuilder();
@@ -30,6 +30,8 @@ public:
     void PerformOP(Token* t);
     void PushValue(Token* t);
     void StoreValue(Token* t);
+    //TODO For debug
+    void DumpCodeObject();
 };
 
 #endif

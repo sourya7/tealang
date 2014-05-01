@@ -15,21 +15,33 @@
 #include "SeqAST.h"
 #include "IfStmtAST.h"
 #include "ExprAST.h"
+#include "IRBuilder.h"
+#include "OPTok.h"
 using namespace std;
+
+short GetPrecedence(Token* t) { 
+    OPTok* opt = dynamic_cast<OPTok*>(t);
+    if(opt == nullptr) return 0;
+
+    switch(opt->value){
+        case OP::LT: case OP::LEQ: case OP::GT: case OP::GEQ: 
+        case OP::NEQ: case OP::EQ: return 10;
+        case OP::BOR: return 20;
+        case OP::XOR: return 30;
+        case OP::BAND : return 40;
+        case OP::LSHIFT: case OP::RSHIFT:  return 50;
+        case OP::ADD: case OP::SUB:  return 60;
+        case OP::MULT: case OP::DIV: case OP::MOD:  return 70;
+        case OP::POWER: return 80;
+        case OP::INV: return 90;
+        default: return 100;
+    }
+}
+
 
 Parser::Parser(istream* i) {
     lexer = new Lexer(i);
-    precedence = { 
-        {"<", 10}, {"<=", 10}, {">", 10}, {"!=", 10}, {"==", 10}, {">=", 10},
-        {"|", 20},
-        {"^", 30},
-        {"&", 40},
-        {"<<", 50}, {">>", 50},
-        {"+", 60}, {"-", 60},
-        {"*", 70}, {"/", 70}, {"%", 70},
-        {"**",80},
-        {"~", 90}};
-}
+    }
 
 void Parser::move(){
     WordTok* word = dynamic_cast<WordTok*>(look);
@@ -55,6 +67,7 @@ NodeAST* Parser::Parse(){
     NodeAST* block = ParseBlock();
     block->Display();
     block->GenerateIR();
+    IRBuilder::GetBuilder()->DumpCodeObject();
     return block;
 }
 
@@ -266,12 +279,6 @@ NodeAST* Parser::ParseExpr(){
     }
     for(auto v : opstack) outstack.push_back(v);
     return new ExprAST(outstack);
-}
-
-short Parser::GetPrecedence(Token* t) { 
-    WordTok* w = dynamic_cast<WordTok*>(t);
-    if(w != nullptr) return precedence[w->value];
-    else return 0;
 }
 
 NodeAST* Parser::ParseIfStmt(){

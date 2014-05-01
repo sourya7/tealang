@@ -27,6 +27,7 @@ void NodeAST::Display(int level) {
 }
 
 void NodeAST::GenerateIR() {
+    IRBuilder* builder = IRBuilder::GetBuilder();
     switch(type){
         case NodeType::ASSIGN:
             DEBUG("GenerateIR()::ASSIGN");

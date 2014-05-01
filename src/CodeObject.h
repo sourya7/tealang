@@ -19,7 +19,8 @@ private:
     vector<OP> opcode;
 
 public:
-    void PushOP(OP op, int val) { }   
+    void PushOP(OP op, int val) {  opcode.push_back(op);  }   
+    void PushOP(OP op) { opcode.push_back(op); }   
     size_t PushConst(Object* o) {
         consts.push_back(o);
         return consts.size() - 1;
@@ -28,6 +29,9 @@ public:
         ids.push_back(id);
         return ids.size() - 1;
     } 
+    const vector<OP> GetOPS(){
+        return opcode;
+    }
 };
 
 #endif

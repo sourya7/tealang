@@ -5,12 +5,11 @@ class IRBuilder;
 enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT, ASSIGN, EXPR, TOKEN};
 class NodeAST {
 protected:
-    IRBuilder* builder = nullptr;
     NodeAST* left = nullptr;
     NodeAST* right = nullptr; 
     NodeType type = NodeType::NODE;
 public:
-    NodeAST() {}
+    NodeAST() {} 
     NodeAST(NodeType t) : type(t) {} 
     NodeAST(NodeAST* l, NodeAST* r) : left(l), right(r) {} 
     NodeAST(NodeType t, NodeAST *l, NodeAST* r) : type(t), left(l), right(r) {} 

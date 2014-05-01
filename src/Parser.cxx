@@ -24,16 +24,16 @@ short GetPrecedence(Token* t) {
     if(opt == nullptr) return 0;
 
     switch(opt->value){
-        case OP::LT: case OP::LEQ: case OP::GT: case OP::GEQ: 
-        case OP::NEQ: case OP::EQ: return 10;
-        case OP::BOR: return 20;
-        case OP::XOR: return 30;
-        case OP::BAND : return 40;
-        case OP::LSHIFT: case OP::RSHIFT:  return 50;
-        case OP::ADD: case OP::SUB:  return 60;
-        case OP::MULT: case OP::DIV: case OP::MOD:  return 70;
-        case OP::POWER: return 80;
-        case OP::INV: return 90;
+        case OPC::LT: case OPC::LEQ: case OPC::GT: case OPC::GEQ: 
+        case OPC::NEQ: case OPC::EQ: return 10;
+        case OPC::BOR: return 20;
+        case OPC::XOR: return 30;
+        case OPC::BAND : return 40;
+        case OPC::LSHIFT: case OPC::RSHIFT:  return 50;
+        case OPC::ADD: case OPC::SUB:  return 60;
+        case OPC::MULT: case OPC::DIV: case OPC::MOD:  return 70;
+        case OPC::POWER: return 80;
+        case OPC::INV: return 90;
         default: return 100;
     }
 }

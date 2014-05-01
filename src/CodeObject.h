@@ -32,6 +32,11 @@ public:
     const vector<OP> GetOPS(){
         return opcode;
     }
+
+    Object* GetConst(int id){
+        return consts[id];
+    }
+    
 };
 
 #endif

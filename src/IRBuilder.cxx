@@ -23,18 +23,6 @@ IRBuilder::IRBuilder() { co = new CodeObject();  }
 /*
  *
  */
-void IRBuilder::DumpCodeObject(){
-    const vector<OP> ops = co->GetOPS();
-    cerr << "\n";
-    for(OP o : ops){
-        int v = static_cast<int>(o);
-        cerr << "OP " << arr[v - 200] << "\n";
-    }
-}
-
-/*
- *
- */
 IRBuilder* IRBuilder::GetBuilder(){
     if(builder == nullptr) builder = new IRBuilder();
     return builder;
@@ -46,8 +34,8 @@ IRBuilder* IRBuilder::GetBuilder(){
 void IRBuilder::PerformOP(Token* t){
     assert(t->tag == Tags::OP);
     OPTok* op = (OPTok*)t;
-    OP opv = op->value;
-    co->PushOP(op->value);
+    OPC opv = op->value;
+    co->PushOP(OP(opv));
 }
 
 /*
@@ -58,12 +46,12 @@ void IRBuilder::PushValue(Token* t){
     if(t->tag != Tags::ID){
         Object* o = Object::FromToken(t);
         int id = co->PushConst(o);   
-        co->PushOP(OP::LOAD_CONSTANT, id);
+        co->PushOP(OP(OPC::LOAD_CONSTANT, id));
     }
     else{
         WordTok* wt = (WordTok*)t;
         int id = co->PushID(((WordTok*)t)->value);
-        co->PushOP(OP::LOAD_VALUE, id); 
+        co->PushOP(OP(OPC::LOAD_VALUE, id)); 
     }
 }
 

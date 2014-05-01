@@ -26,48 +26,62 @@ union TValue {
     bool b;
     char* s;
     Object* o;
+
+    TValue() {}
+    TValue(long v) : i(v) {}
+    TValue(double v) : d(v) {}
+    TValue(bool v) : b(v) {}
+    TValue(char* v) : s(v) {}
+    TValue(Object* v) : o(v) {}
 };
 
 class Object {
 private:
     TType type = TType::NIL;
     TValue* value = nullptr;
-    Object() { value = new TValue(); } 
+    Object() { }
 public:
     static const Object NIL;
-    bool IsBool() { return false; }
-    bool IsInteger() { return false; }
-    bool IsString() { return false; }
-    bool IsDouble() { return false; } 
-    bool IsNil() { return false; }
-    bool IsTrue() { return false; }
+    bool IsBool() { return  type == TType::BOOLEAN; }
+    bool IsNumeral() { return IsInteger() || IsDouble(); }
+    bool IsInteger() { return type == TType::INTEGER; }
+    bool IsString() { return  type == TType::STRING; }
+    bool IsDouble() { return  type == TType::DOUBLE; } 
+    bool IsNil() { return  type == TType::NIL; }
+    /*TODO*/
+    bool IsTrue() { return false;  }
 
     explicit Object(long i){
         type = TType::INTEGER;
-        value->i = i;
+        value =  new TValue(i);
     }
 
     explicit Object(double d){
         type = TType::DOUBLE;
-        value->d = d;
+        value =  new TValue(d);
     }
 
     Object(bool b){
         type = TType::BOOLEAN;
-        value->b = b;
+        value =  new TValue(b);
     }
 
     Object(char* s){
         type = TType::STRING;
-        value->s = s;
+        value =  new TValue(s);
     }
 
     Object(Object* o){
         type = TType::OBJECT;
-        value->o = o;
+        value =  new TValue(o);
     }
 
+    const TValue* GetValue() { return value; }
     static Object* FromToken(Token* t);
+    Object* operator+(Object rhs);
+    Object* operator*(Object rhs);
+    Object* operator-(Object rhs);
 };
+
 
 #endif

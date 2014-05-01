@@ -1,39 +1,42 @@
-#include <cassert>
-#include <iostream>
 #include "Debug.h"
 #include "VM.h"
+#include "Num.h"
 #include "Frame.h"
 #include "OPCode.h"
 #include "CodeObject.h"
-using std::cerr;
 
 void VM::ExecCode(CodeObject* co){
     VM* vm = new VM();
     vector<OP> ops = co->GetOPS();
     for(OP op : ops){
-    switch(op){
-        case OP::ADD:
+    Object* i;
+    Object* j;
+    switch(op.opc){
+        case OPC::ADD:
             DEBUG("OP::ADD");
-            //get the top
-            //get the top
-            //add them up
+            i = vm->Pop();
+            j = vm->Pop();
+            vm->Push(Num::Add(i, j));
             break;
-        case OP::SUB:
+        case OPC::SUB:
             DEBUG("OP::SUB");
-            //get the top
-            //get the top
-            //add them up
+            i = vm->Pop();
+            j = vm->Pop();
+            vm->Push(Num::Sub(i, j));
             break;
-        case OP::MULT:
+        case OPC::MULT:
             DEBUG("OP::MULT");
-            //get the top
-            //get the top
-            //add them up
+            i = vm->Pop();
+            j = vm->Pop();
+            vm->Push(Num::Mul(i, j));
             break;
-        case OP::LOAD_CONSTANT:
+        case OPC::LOAD_CONSTANT:
             DEBUG("OP::LOAD_CONSTANT");
+            assert(op.HasArg());
+            i = co->GetConst(op.GetArg());
+            vm->Push(i);
             break;
-        case OP::LOAD_VALUE:
+        case OPC::LOAD_VALUE:
             DEBUG("OP::LOAD_VALUE");
             break;
         default:

@@ -1,6 +1,5 @@
 CC = g++
-CC_FLAGS = --std=c++11 -ggdb -m32
-
+CC_FLAGS = -I./Include --std=c++11 -ggdb -m32
 
 # File names
 EXEC = tlang
@@ -9,7 +8,7 @@ OBJECTS = $(SOURCES:.cxx=.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(EXEC)
+	$(CC) $(CC_FLAGS) $(OBJECTS) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cxx

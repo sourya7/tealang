@@ -20,8 +20,12 @@ private:
     vector<Object*> consts;
     //opcodes for this codeobject
     vector<OP> opcode;
+    CodeObject* parent = nullptr;
+    vector<CodeObject*> children;
 
 public:
+    CodeObject(CodeObject* p) : parent(p) {}
+    CodeObject() {}
     int GetID(string var);
     int PushID(string var); 
     int PushConst(Object* o);
@@ -31,6 +35,9 @@ public:
     Object* GetConst(int id){ return consts[id]; }
     const vector<OP> GetOPS(){ return opcode; }
     void PushOP(OP op) { opcode.push_back(op); }   
+    void AddChild(CodeObject* c);
+    int GetChildID(CodeObject* c);
+    CodeObject* GetChild(int id) { return children[id]; }
 };
 
 #endif

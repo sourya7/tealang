@@ -6,11 +6,13 @@ class SeqAST;
 enum class NodeType;
 
 class IfStmtAST : public NodeAST {
+private:
+    NodeAST* elseBlk = nullptr;
+    NodeAST* elifBlk = nullptr;
 public:
     IfStmtAST(NodeAST* c, NodeAST* ib) : NodeAST(NodeType::IFSTMT,c,ib) {};
-    void SetElseBlock(SeqAST* eb);
-    void SetElifBlock(SeqAST* elb);
-    void GenerateIR();
+    void SetElseBlk(NodeAST* elb) { elseBlk = elb; }
+    void GenerateIR(IRBuilder* builder);
 };
 
 #endif

@@ -31,3 +31,13 @@ void CodeObject::StoreIDVal(int id, Object* val) {
     vals[id] = val; 
 }
 
+int CodeObject::GetChildID(CodeObject* c){
+    auto it = find(children.begin(), children.end(), c);
+    if(it != children.end()) return it - children.begin();
+    else return -1;
+}
+
+void CodeObject::AddChild(CodeObject* child) { 
+    children.push_back(child); 
+}
+

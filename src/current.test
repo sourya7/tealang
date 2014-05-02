@@ -1,4 +1,6 @@
-var a = 2 + 2 * 3 + 4
-var b = a * 2
-var d
-d = 2 + 2
+var a = 0
+if a
+    var b = 2
+else 
+    var c = 2
+endif

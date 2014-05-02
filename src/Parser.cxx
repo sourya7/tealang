@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include "Debug.h"
 #include "Parser.h"
 #include "Lexer.h"
 #include "Token.h"
@@ -81,7 +82,7 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     /*
     */
     switch(look->tag){
-        case Tags::ID:
+        case Tags::ID: case Tags::STR:
             seq = seq->AddSeq(look);
             move();
             return param;
@@ -262,12 +263,33 @@ NodeAST* Parser::ParseExpr(){
     return new ExprAST(outstack);
 }
 
+/*
+ *  if a 
+ *      [do something]
+ *  elif b
+ *      [do something]
+ *  else
+ *      [do something]
+ *  endif
+ *
+ *  if a 
+ *
+ *
+ */
 NodeAST* Parser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
     IfStmtAST* stmt = new IfStmtAST(ParseExpr(), ParseBlock());
-    //TODO: Parse the elif and else stmts
+
+    if(look->tag == Tags::ELIF){
+        assert(false && "Not supported");
+    }
+
+    if(look->tag == Tags::ELSE){
+        move();
+        stmt->SetElseBlk(ParseBlock());
+    }
     //consume endif
     move();
     return stmt;
@@ -294,18 +316,17 @@ NodeAST* Parser::ParseBlock(){
     NodeAST* tmp;
     while(true){
         switch(look->tag){
-            case Tags::BLK:{
-                WordTok* word = static_cast<WordTok*>(look);
-                if(word->value == "defun") tmp = ParseFunctionStmt(); 
-                else if(word->value == "defclass") tmp = ParseClassStmt(); 
-                else if(word->value == "if") tmp = ParseIfStmt(); 
-                else if(word->value == "for") tmp = ParseForStmt(); 
-                else if(word->value == "try") tmp = ParseTryStmt(); 
-                else if(word->value == "while") tmp = ParseWhileStmt(); 
-                break;
-            }
-            case Tags::SEOF: case Tags::ENDBLK:
-                return ts;
+            //blocks
+            case Tags::DEFCLASS: tmp = ParseClassStmt(); break;
+            case Tags::DEFUN: tmp = ParseFunctionStmt(); break;
+            case Tags::IF: tmp = ParseIfStmt(); break;
+            case Tags::FOR: tmp = ParseForStmt(); break;
+            case Tags::TRY: tmp = ParseTryStmt(); break;
+            case Tags::WHILE: tmp = ParseWhileStmt(); break;
+            //block ends
+            case Tags::SEOF: case Tags::ENDIF: case Tags::ENDFOR:
+            case Tags::ENDTRY: case Tags::ENDWHILE: case Tags::ENDCLASS:
+            case Tags::ENDFUN: case Tags::ELSE: return ts;
             default:
                 tmp = ParseSingleStmt();
         }

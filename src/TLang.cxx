@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
 
     src.open(argv[1], std::ifstream::in);
 
-    IRBuilder* builder = IRBuilder::GetBuilder();
+    IRBuilder* builder = new IRBuilder();
     parser = new Parser(&src);
 
     NodeAST* root = parser->Parse();

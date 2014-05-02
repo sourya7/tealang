@@ -8,10 +8,11 @@
 void VM::ExecCode(CodeObject* co){
     VM* vm = new VM();
     vector<OP> ops = co->GetOPS();
-    for(OP op : ops){
+    auto op = ops.begin();
+    while(op != ops.end()){  //auto it = ops.begin(); it != ops.end(); ++it){
     Object* i;
     Object* j;
-    switch(op.opc){
+    switch(op->opc){
         case OPC::ADD:
             DEBUG("OP::ADD");
             i = vm->Pop();
@@ -32,22 +33,37 @@ void VM::ExecCode(CodeObject* co){
             break;
         case OPC::LOAD_CONSTANT:
             DEBUG("OP::LOAD_CONSTANT");
-            assert(op.HasArg());
-            i = co->GetConst(op.GetArg());
+            assert(op->HasArg());
+            i = co->GetConst(op->GetArg());
             vm->Push(i);
             break;
         case OPC::LOAD_VALUE:
             DEBUG("OP::LOAD_VALUE");
-            assert(op.HasArg());
-            i = co->GetIDVal(op.GetArg());
+            assert(op->HasArg());
+            i = co->GetIDVal(op->GetArg());
             vm->Push(i);
             break;
         case OPC::STORE_VALUE:
             DEBUG("OP::STORE_VALUE");
-            assert(op.HasArg());
-            co->StoreIDVal(op.GetArg(), vm->Pop());
+            assert(op->HasArg());
+            co->StoreIDVal(op->GetArg(), vm->Pop());
+            break;
+        case OPC::JMP_IF:
+            DEBUG("OP::JMP_IF");
+            assert(op->HasArg());
+            if(vm->Pop()->IsTrue()) VM::ExecCode(co->GetChild(op->GetArg()));
+            break;
+        case OPC::JMP_IF_ELSE:
+            DEBUG("OP::JMP_IF_ELSE");
+            assert(op->HasArg());
+            //For if, we consume the else statment
+            //For else, we consume the if statment
+            if(vm->Pop()->IsTrue()) { VM::ExecCode(co->GetChild(op->GetArg())); op++; }
+            else { ++op; VM::ExecCode(co->GetChild(op->GetArg())); }
             break;
         default:
             assert(false && "Not Implemented Yet!");
-    }} //end switch, end for
+            break;
+    }  ++op; //increment the op
+    } //end switch, end for
 }

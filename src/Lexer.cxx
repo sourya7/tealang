@@ -130,10 +130,9 @@ Token* Lexer::ParseIdentifierToken(){
         ReadChar();
     }
     Tags tag;
-    if(peek == ':') { ReadChar(); tmp += ':'; tag = Tags::PARAM; }
-
     auto it = TokenMap.find(tmp);
-    if(it != TokenMap.end()){
+    if(peek == ':') { ReadChar(); tmp += ':'; tag = Tags::PARAM; }
+    else if(it != TokenMap.end()){
         tag = it->second;
         /*
         switch(it->second){
@@ -161,8 +160,10 @@ Token* Lexer::ParseIdentifierToken(){
         */
         return new Token(tag, line);
     }
+    else {
+        tag = Tags::ID;
+    }
 
-    tag = Tags::ID;
     return new WordTok(tmp, tag, line);
 }
 

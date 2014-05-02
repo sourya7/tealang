@@ -1,9 +1,20 @@
 #include "IfStmtAST.h"
+#include "Debug.h"
+#include "IRBuilder.h"
 
-void IfStmtAST::SetElseBlock(SeqAST* eb) { } 
-void IfStmtAST::SetElifBlock(SeqAST* elb) { }
+void IfStmtAST::GenerateIR(IRBuilder* builder) {
+    IRBuilder* ifBlkBuild = new IRBuilder(builder);
+    
+    left->GenerateIR(builder); //build the expression
+    right->GenerateIR(ifBlkBuild); //build the ifblock
 
-void IfStmtAST::GenerateIR() {
-
+    //If the last expressoin evals to true, jump to the child
+    assert(elseBlk != nullptr);
+    if(elseBlk == nullptr) builder->CondJump(ifBlkBuild); 
+    else {
+        IRBuilder* elBlkBuild = new IRBuilder(builder);
+        elseBlk->GenerateIR(elBlkBuild);
+        builder->CondJump(ifBlkBuild, elBlkBuild);
+    }
 }
 

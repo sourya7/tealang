@@ -9,28 +9,26 @@
 #include "CodeObject.h"
 
 
-string arr[] = {
-    "AND","BAND","OR","BOR","DECR","SUB","INCR","ADD","POWER","MULT","NEQ",
-    "NOT","LEQ","LSHIFT","LT","GEQ","RSHIFT","GT","DIV","INV","XOR","EQ", "MOD",
-
-    /* "Internal OP's */
-    "LOAD_CONSTANT", "LOAD_VALUE"
-};
-
-IRBuilder* IRBuilder::builder = nullptr;
-IRBuilder::IRBuilder() { co = new CodeObject();  }
-
-/*
- *
- */
-IRBuilder* IRBuilder::GetBuilder(){
-    if(builder == nullptr) builder = new IRBuilder();
-    return builder;
+IRBuilder::IRBuilder() { co = new CodeObject(); }
+IRBuilder::IRBuilder(IRBuilder* b) {
+    CodeObject* parent = b->GetCodeObject();
+    co = new CodeObject(parent);
+    parent->AddChild(co);
 }
 
-/*
- *  
- */
+void IRBuilder::CondJump(IRBuilder* ifBlk){
+    int childId = co->GetChildID(ifBlk->GetCodeObject());
+    assert(childId != -1);
+    co->PushOP(OP(OPC::JMP_IF, childId));
+}
+
+void IRBuilder::CondJump(IRBuilder* ifBlk, IRBuilder* elBlk){
+    int ifId = co->GetChildID(ifBlk->GetCodeObject());
+    int elId = co->GetChildID(elBlk->GetCodeObject());
+    co->PushOP(OP(OPC::JMP_IF_ELSE, ifId));
+    co->PushOP(OP(OPC::JMP_IF_ELSE, elId));
+}
+
 void IRBuilder::PerformOP(Token* t){
     assert(t->tag == Tags::OP);
     OPTok* op = (OPTok*)t;
@@ -38,9 +36,6 @@ void IRBuilder::PerformOP(Token* t){
     co->PushOP(OP(opv));
 }
 
-/*
- *
- */
 void IRBuilder::PushValue(Token* t){
     //check if t is a variable vs a constant
     if(t->tag != Tags::ID){
@@ -56,18 +51,12 @@ void IRBuilder::PushValue(Token* t){
     }
 }
 
-//
-// Make sure that it is a word
-//
 WordTok* GUARD_WORD(Token* t){
     WordTok* wt = dynamic_cast<WordTok*>(t);
     assert(wt != nullptr);
     return wt;
 }
 
-//
-//
-//
 void IRBuilder::StoreValue(Token* t){
     WordTok* wt = GUARD_WORD(t);
     int id = co->GetID(wt->value);
@@ -77,14 +66,10 @@ void IRBuilder::StoreValue(Token* t){
 
 void IRBuilder::DeclVar(Token* t){
     WordTok* wt = GUARD_WORD(t);
-    //Is it already declared? 
     assert(co->GetID(wt->value) == -1 && "Variable already declared!");
     co->PushID(wt->value);
 }
 
-/*
- *
- */
 CodeObject* IRBuilder::GetCodeObject(){
     return co;
 }

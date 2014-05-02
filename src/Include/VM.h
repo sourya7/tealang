@@ -9,7 +9,6 @@ class Object;
 
 class VM{
 private:
-    Frame* frame;
     stack<Object*> nstack;
     void Push(Object* a) { nstack.push(a); }
     Object* Pop() { Object* top = nstack.top(); nstack.pop(); return top; }

@@ -21,16 +21,18 @@ class Token;
  */
 class IRBuilder {
 private:
-    static IRBuilder* builder;
     CodeObject* co = nullptr;
-    IRBuilder();
 public:
-    static IRBuilder* GetBuilder();
+    IRBuilder();
+    IRBuilder(IRBuilder* parent);
+
     uint GetOPSize(Token* t);
     void PerformOP(Token* t);
     void PushValue(Token* t);
     void StoreValue(Token* t);
     void DeclVar(Token* t);
+    void CondJump(IRBuilder* ifBlk);
+    void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);
     //TODO For debug
     void DumpCodeObject();
     CodeObject* GetCodeObject();

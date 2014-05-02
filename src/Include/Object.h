@@ -45,6 +45,7 @@ protected:
 public:
     static Object* NIL;
     static Object* FromToken(Token*);
+    virtual bool IsTrue() { return !IsNil(); }
     virtual bool IsBool() { return false; }
     virtual bool IsInteger() { return false; }
     virtual bool IsString() { return false; }

@@ -22,6 +22,18 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
             //store the val
             builder->StoreValue((Token*)left);
             break;
+        case NodeType::CALL: 
+            assert(false && "CALL");
+        case NodeType::PARAM: 
+            assert(false && "PARAM");
+        case NodeType::IFSTMT:
+            assert(false && "IFSTMT");
+        case NodeType::FSTMT:
+            assert(false && "FSTMT");
+        case NodeType::EXPR: 
+            assert(false && "EXPR");
+        case NodeType::TOKEN: 
+            assert(false && "TOKEN");
         default:
             assert(false && "This should not be called!");
     }

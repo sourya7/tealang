@@ -5,6 +5,7 @@ class DoubleObj : public Object {
 public:  
     DoubleObj(double d) : Object(TType::DOUBLE, new TValue(d)) {}
     bool IsDouble() { return true; }
+    bool IsTrue() { return GetValue()->l != 0; }
     Object* operator+(Object rhs);
     Object* operator*(Object rhs);
     Object* operator-(Object rhs);

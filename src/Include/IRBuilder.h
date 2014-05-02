@@ -30,6 +30,7 @@ public:
     void PerformOP(Token* t);
     void PushValue(Token* t);
     void StoreValue(Token* t);
+    void DeclVar(Token* t);
     //TODO For debug
     void DumpCodeObject();
     CodeObject* GetCodeObject();

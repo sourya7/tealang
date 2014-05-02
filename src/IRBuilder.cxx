@@ -50,17 +50,36 @@ void IRBuilder::PushValue(Token* t){
     }
     else{
         WordTok* wt = (WordTok*)t;
-        int id = co->PushID(((WordTok*)t)->value);
+        int id = co->GetID(((WordTok*)t)->value);
+        assert(id != -1);
         co->PushOP(OP(OPC::LOAD_VALUE, id)); 
     }
 }
 
-/*
- *
- */
+//
+// Make sure that it is a word
+//
+WordTok* GUARD_WORD(Token* t){
+    WordTok* wt = dynamic_cast<WordTok*>(t);
+    assert(wt != nullptr);
+    return wt;
+}
+
+//
+//
+//
 void IRBuilder::StoreValue(Token* t){
-    //Pop value from the stack
-    //Store t in a map with the assiciated value
+    WordTok* wt = GUARD_WORD(t);
+    int id = co->GetID(wt->value);
+    assert(id != -1 && "Variable not declared");
+    co->PushOP(OP(OPC::STORE_VALUE, id));
+}
+
+void IRBuilder::DeclVar(Token* t){
+    WordTok* wt = GUARD_WORD(t);
+    //Is it already declared? 
+    assert(co->GetID(wt->value) == -1 && "Variable already declared!");
+    co->PushID(wt->value);
 }
 
 /*

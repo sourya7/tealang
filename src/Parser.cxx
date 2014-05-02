@@ -169,7 +169,6 @@ NodeAST* Parser::ParseFunctionStmt(){
 }
 
 NodeAST* Parser::ParseSingleStmt(){
-    NodeAST* node;
     /*
      * var a = 2
      * var b = (2 + 2)
@@ -177,28 +176,38 @@ NodeAST* Parser::ParseSingleStmt(){
      * [smth]
      *
      */
-    // Var* var = nullptr;
+    //[smth]
+    if(look->tag == Tags::BSQO){ return ParseFunctionCall(); }
+
+    NodeAST* node = nullptr;
+    //var
     if(look->tag == Tags::VAR){
         move();
-        //var = new Var(look);
+        node = new NodeAST(NodeType::VAR, look, nullptr);
+        assert(look->tag == Tags::ID);
     }
+
     if(look->tag == Tags::ID){
         Token* tmp = look;
         move(); //move over the variable;
+        //var a = smth
         if(look->tag == Tags::ASSIGN){
+            assert(false);
             move();
-            node = new NodeAST(NodeType::ASSIGN, tmp, ParseExpr());
-        }
-    }
-    else if(look->tag == Tags::BSQO){
-        node = ParseFunctionCall();
-    }
-    else{
+            NodeAST* n = new NodeAST(NodeType::ASSIGN, tmp, ParseExpr());
+            if(node != nullptr){
+                node->SetRight(n);
+                return node;
+            }
+            else { return n; }
+        } //var a
+        else if(node != nullptr) { return node; }
         assert(false);
+        //This should not be reached
     }
-
-    //if(var != nullptr) var->scope(node);
-    return node;
+    
+    //Should not reach here
+    return nullptr;
 }
 
 /*

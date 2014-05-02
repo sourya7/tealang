@@ -38,9 +38,16 @@ void VM::ExecCode(CodeObject* co){
             break;
         case OPC::LOAD_VALUE:
             DEBUG("OP::LOAD_VALUE");
+            assert(op.HasArg());
+            i = co->GetIDVal(op.GetArg());
+            vm->Push(i);
+            break;
+        case OPC::STORE_VALUE:
+            DEBUG("OP::STORE_VALUE");
+            assert(op.HasArg());
+            co->StoreIDVal(op.GetArg(), vm->Pop());
             break;
         default:
             assert(false && "Not Implemented Yet!");
     }} //end switch, end for
-    cerr << vm->Pop()->GetValue()->l << "\n";
 }

@@ -37,12 +37,13 @@ union TValue {
 
 class Object {
 private:
-    TType type = TType::NIL;
+    TType type;
+    Object() : Object(TType::NIL, nullptr) {}; 
 protected:
     TValue* value;
     Object(TType t, TValue* v) : type(t), value(v) { }
 public:
-    static const Object NIL;
+    static Object* NIL;
     static Object* FromToken(Token*);
     virtual bool IsBool() { return false; }
     virtual bool IsInteger() { return false; }

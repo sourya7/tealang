@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Debug.h"
 #include "Object.h"
 #include "OPCode.h"
 
@@ -13,30 +14,23 @@ class CodeObject{
 private:
     //variables in the codeobject scope
     vector<string> ids;
+    //value for those vars
+    vector<Object*> vals;
     //constants in the codeobject scope
     vector<Object*> consts;
     //opcodes for this codeobject
     vector<OP> opcode;
 
 public:
-    void PushOP(OP op, int val) {  opcode.push_back(op);  }   
-    void PushOP(OP op) { opcode.push_back(op); }   
-    size_t PushConst(Object* o) {
-        consts.push_back(o);
-        return consts.size() - 1;
-    }
-    size_t PushID(string id) {
-        ids.push_back(id);
-        return ids.size() - 1;
-    } 
-    const vector<OP> GetOPS(){
-        return opcode;
-    }
+    int GetID(string var);
+    int PushID(string var); 
+    int PushConst(Object* o);
+    void StoreIDVal(int id, Object* val);
 
-    Object* GetConst(int id){
-        return consts[id];
-    }
-    
+    Object* GetIDVal(int id){ return vals[id]; } 
+    Object* GetConst(int id){ return consts[id]; }
+    const vector<OP> GetOPS(){ return opcode; }
+    void PushOP(OP op) { opcode.push_back(op); }   
 };
 
 #endif

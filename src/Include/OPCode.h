@@ -7,7 +7,7 @@ enum class OPC {
     NOT,LEQ,LSHIFT,LT,GEQ,RSHIFT,GT,DIV,INV,XOR,EQ,MOD,
 
     /* Internal OP's */
-    LOAD_CONSTANT, LOAD_VALUE
+    LOAD_CONSTANT, LOAD_VALUE, STORE_VALUE
 };
 
 class OP {

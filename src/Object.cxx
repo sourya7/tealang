@@ -49,7 +49,7 @@ Object* Object::operator-(Object rhs){
 }
 
 */
-
+Object* Object::NIL;
 Object* Object::FromToken(Token* t){
     Object* o;
     switch(t->tag){

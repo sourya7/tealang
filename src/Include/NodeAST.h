@@ -2,7 +2,7 @@
 #define T_NODE_H
 
 class IRBuilder;
-enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT, ASSIGN, EXPR, TOKEN};
+enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT, ASSIGN, EXPR, TOKEN, VAR};
 class NodeAST {
 protected:
     NodeAST* left = nullptr;

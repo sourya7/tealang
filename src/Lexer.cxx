@@ -15,6 +15,29 @@
 using namespace std;
 
 /* debug stuff */
+map<string, Tags> TokenMap {
+    {"defclass", Tags::DEFCLASS},
+    {"defun", Tags::DEFUN},
+    {"if", Tags::IF},
+    {"for", Tags::FOR},
+    {"try", Tags::TRY},
+    {"while", Tags::WHILE},
+    {"elif", Tags::ELIF},
+    {"catch", Tags::CATCH},
+    {"else", Tags::ELSE},
+    {"endif", Tags::ENDIF},
+    {"endfor", Tags::ENDFOR},
+    {"endtry", Tags::ENDTRY},
+    {"endwhile", Tags::ENDWHILE},
+    {"endclass", Tags::ENDCLASS},
+    {"endfun", Tags::ENDFUN},
+    {"in", Tags::IN},
+    {"var", Tags::VAR},
+    {"isa", Tags::ISA},
+    {"return", Tags::RETURN},
+    {"break", Tags::BREAK }
+};
+
 #define LEN_BLOCKTOKENS 6
 string blockTokens[] = {"defclass", "defun", "if", "for", "try", "while"};
 
@@ -108,17 +131,38 @@ Token* Lexer::ParseIdentifierToken(){
     }
     Tags tag;
     if(peek == ':') { ReadChar(); tmp += ':'; tag = Tags::PARAM; }
-    else if(count(blockTokens, blockTokens + LEN_BLOCKTOKENS, tmp) > 0)
-        tag = Tags::BLK;
-    else if(count(flwBlkTokens, flwBlkTokens + LEN_FLWBLKTOKENS, tmp) > 0)
-        tag = Tags::FLWBLK;
-    else if(count(endTokens, endTokens + LEN_ENDTOKENS, tmp) > 0)
-        tag = Tags::ENDBLK;
-    else if(count(cmdTokens, cmdTokens + LEN_CMDTOKENS, tmp) > 0)
-        tag = Tags::CMD;
-    else
-        tag = Tags::ID;
 
+    auto it = TokenMap.find(tmp);
+    if(it != TokenMap.end()){
+        tag = it->second;
+        /*
+        switch(it->second){
+            case Tags::DEFCLASS:
+            case Tags::DEFUN:
+            case Tags::IF:
+            case Tags::FOR:
+            case Tags::TRY:
+            case Tags::WHILE:
+            case Tags::ELIF:
+            case Tags::CATCH:
+            case Tags::ELSE:
+            case Tags::ENDIF:
+            case Tags::ENDFOR:
+            case Tags::ENDTRY:
+            case Tags::ENDWHILE:
+            case Tags::ENDCLASS:
+            case Tags::ENDFUN:
+            case Tags::IN:
+            case Tags::VAR:
+            case Tags::ISA:
+            case Tags::RETURN:
+            case Tags::BREAK:
+        }
+        */
+        return new Token(tag, line);
+    }
+
+    tag = Tags::ID;
     return new WordTok(tmp, tag, line);
 }
 

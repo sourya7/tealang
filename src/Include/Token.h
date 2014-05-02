@@ -13,11 +13,12 @@ enum class Tags { BAND = 256, BOR, BNOT, BXOR, PLUS, MINUS, MULT, POW,
             BCUC, BCUO, BLK,ENDBLK,FLWBLK, CMD, PARAM };
             */
 
-enum class Tags { OP = 256, NUM, DEFCLASS, ENDCLASS, DEFFUN, ENDFUN, 
+enum class Tags { OP = 256, NUM, DEFCLASS, ENDCLASS, DEFUN, ENDFUN, 
             IF, ELIF, ELSE, ENDIF, WHILE, ENDWHILE, TRY, CATCH, 
             ENDTRY, WITH, ENDWITH, AS, IN, FOR, ENDFOR, VAR, ISA,
-            REAL, ID, BSQO, BSQC, SEOF, STR, BCIO, BCIC,
-            BCUC, BCUO, BLK,ENDBLK,FLWBLK, CMD, PARAM, ASSIGN };
+            REAL, ID, BSQO, BSQC, SEOF, STR, BCIO, BCIC, BCUC, 
+            BCUO, BLK,ENDBLK,FLWBLK, CMD, PARAM, ASSIGN, RETURN,
+            BREAK };
 
 class Token : public NodeAST {
 private:

@@ -192,7 +192,6 @@ NodeAST* Parser::ParseSingleStmt(){
         move(); //move over the variable;
         //var a = smth
         if(look->tag == Tags::ASSIGN){
-            assert(false);
             move();
             NodeAST* n = new NodeAST(NodeType::ASSIGN, tmp, ParseExpr());
             if(node != nullptr){
@@ -207,6 +206,7 @@ NodeAST* Parser::ParseSingleStmt(){
     }
     
     //Should not reach here
+    assert(false);
     return nullptr;
 }
 

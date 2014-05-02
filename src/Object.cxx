@@ -1,6 +1,9 @@
 #include <string>
 #include <cassert>
 #include "Object.h"
+#include "DoubleObj.h"
+#include "StringObj.h"
+#include "IntegerObj.h"
 #include "Token.h"
 #include "RealTok.h"
 #include "NumberTok.h"
@@ -8,6 +11,7 @@
 
 using std::string;
 
+/*
 #define PERFORM_NUM_OP(op)\
 if(IsNumeral() && rhs.IsNumeral()){\
     bool isBothDbl = IsDouble() && rhs.IsDouble();\
@@ -22,12 +26,17 @@ else{\
 }\
 
 
-/*
- * TODO
- * Refactor these code to reduce code duplication
- */
+//
+// TODO
+// Refactor these code to reduce code duplication
+//
 
 Object* Object::operator+(Object rhs){
+    bool isNumeral = IsNumeral() && rhs.IsNumeral();
+    if(isNumeral) {
+        bool isDouble = IsDouble() || rhs.IsDouble();
+        if(isDouble) return new Object(GetDouble() + rhs.GetDouble());
+    }
     PERFORM_NUM_OP(+)
 }
 
@@ -39,20 +48,19 @@ Object* Object::operator-(Object rhs){
     PERFORM_NUM_OP(-)
 }
 
-/*
- * 
- */
+*/
+
 Object* Object::FromToken(Token* t){
     Object* o;
     switch(t->tag){
         case Tags::NUM:
-            o = new Object(static_cast<NumberTok*>(t)->value);
+            o = new IntegerObj(static_cast<NumberTok*>(t)->value);
             break;
         case Tags::REAL:
-            o = new Object(static_cast<RealTok*>(t)->value);
+            o = new DoubleObj(static_cast<RealTok*>(t)->value);
             break;
         case Tags::STR:
-            o = new Object(static_cast<WordTok*>(t)->value.c_str());
+            o = new StringObj(static_cast<WordTok*>(t)->value.c_str());
             break;
         default:
             assert(false && "This should not happen");

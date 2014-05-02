@@ -1,5 +1,6 @@
-CC = clang++
+CC = g++
 CC_FLAGS = --std=c++11 -ggdb -m32
+
 
 # File names
 EXEC = tlang

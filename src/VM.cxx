@@ -42,4 +42,5 @@ void VM::ExecCode(CodeObject* co){
         default:
             assert(false && "Not Implemented Yet!");
     }} //end switch, end for
+    cerr << vm->Pop()->GetValue()->l << "\n";
 }

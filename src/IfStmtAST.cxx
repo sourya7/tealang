@@ -9,7 +9,6 @@ void IfStmtAST::GenerateIR(IRBuilder* builder) {
     right->GenerateIR(ifBlkBuild); //build the ifblock
 
     //If the last expressoin evals to true, jump to the child
-    assert(elseBlk != nullptr);
     if(elseBlk == nullptr) builder->CondJump(ifBlkBuild); 
     else {
         IRBuilder* elBlkBuild = new IRBuilder(builder);

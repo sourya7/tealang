@@ -14,6 +14,7 @@ typedef GV<string>::Vector GCVecString;
 typedef GV<OP>::Vector GCVecOP;
 typedef GV<CodeObject*>::Vector GCVecCodeObjPtr;
 
+enum class CT { FUNCTION, METHOD, NORM };
 class CodeObject : public TGC {
 private:
     //variables in the codeobject scope
@@ -26,6 +27,7 @@ private:
     GCVecOP opcode;
     GCVecCodeObjPtr children;
     CodeObject* parent = nullptr;
+    CT type = CT::NORM;
 public:
     CodeObject(CodeObject* p) : parent(p) {}
     CodeObject() {}

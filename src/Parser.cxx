@@ -15,6 +15,7 @@
 #include "SeqAST.h"
 #include "IfStmtAST.h"
 #include "ExprAST.h"
+#include "FuncStmtAST.h"
 #include "IRBuilder.h"
 #include "OPTok.h"
 using namespace std;
@@ -78,13 +79,11 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     SeqAST* tseq = seq;
     NodeAST* param;
     
-    /*
-    */
     switch(look->tag){
         case Tags::ID: case Tags::STR:
             seq = seq->AddSeq(look);
             move();
-            return param;
+            break;
         case Tags::PARAM:
             while(look->tag == Tags::PARAM){
                 param = look;
@@ -160,7 +159,7 @@ NodeAST* Parser::ParseFunctionStmt(){
     //consume defun
     move(); 
 
-    NodeAST* funcDef = new NodeAST(NodeType::FSTMT, ParseFunctionParam(), ParseBlock());
+    NodeAST* funcDef = new FuncStmtAST(ParseFunctionParam(), ParseBlock());
 
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid

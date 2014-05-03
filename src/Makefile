@@ -1,5 +1,5 @@
 CC = g++
-CC_FLAGS = -I./Include --std=c++11 -ggdb 
+CC_FLAGS = -I./Include --std=c++11 -ggdb -m32
 
 ifeq ($(EGC), 1)
 	GC_FLAGS = -DGC_DEBUG -DALLOW_GC

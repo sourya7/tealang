@@ -1,11 +1,9 @@
-#include <vector>
 #include <iostream>
 #include "IRBuilder.h"
 #include "ExprAST.h"
 #include "WordTok.h"
 #include "Debug.h"
 
-using std::vector;
 using std::cerr;
 
 void ExprAST::GenerateIR(IRBuilder* builder){

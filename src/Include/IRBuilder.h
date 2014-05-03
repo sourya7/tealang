@@ -1,6 +1,7 @@
 #ifndef T_IRBUILDER_H
 #define T_IRBUILDER_H
 
+#include "GC.h"
 class CodeObject;
 class Token;
 
@@ -19,7 +20,7 @@ class Token;
  *      Each frame has a parent frame that it has access to view
  *
  */
-class IRBuilder {
+class IRBuilder : public TGC {
 private:
     CodeObject* co = nullptr;
 public:

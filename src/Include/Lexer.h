@@ -1,22 +1,19 @@
 #ifndef T_LEXER_H
 #define T_LEXER_H
 
+#include "GC.h"
 #include <string>
 #include <istream>
-#include <map>
 #include "Token.h"
 #include "WordTok.h"
 
 using std::string;
 using std::istream;
 
-typedef std::map<string, Token> IDTable;
-
-class Lexer {
+class Lexer : public TGC {
 private:
     char peek;
     unsigned long line;
-    IDTable words;
     istream* inputStream;
 
     void Reserve(WordTok w);

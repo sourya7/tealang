@@ -7,7 +7,7 @@
 
 void VM::ExecCode(CodeObject* co){
     VM* vm = new VM();
-    vector<OP> ops = co->GetOPS();
+    GCVecOP ops = co->GetOPS();
     auto op = ops.begin();
     while(op != ops.end()){  //auto it = ops.begin(); it != ops.end(); ++it){
     Object* i;

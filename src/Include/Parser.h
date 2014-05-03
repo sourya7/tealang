@@ -9,16 +9,16 @@
  */
 #include <istream>
 #include <iostream>
-#include <vector>
 #include <string>
 #include <map>
+#include "GC.h"
 #include "NodeAST.h"
 #include "Lexer.h"
 #include "Token.h"
 
 using namespace std;
 
-class Parser {
+class Parser : public TGC {
 private:
     Token* look;
     Lexer* lexer;

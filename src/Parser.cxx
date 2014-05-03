@@ -7,7 +7,6 @@
  */
 #include <istream>
 #include <iostream>
-#include <vector>
 #include <cassert>
 #include "Debug.h"
 #include "Parser.h"
@@ -220,8 +219,8 @@ NodeAST* Parser::ParseExpr(){
     // Expr -> Val 
     // Expr -> (Expr op epxr)
     uint currentLine = look->line;
-    vector<Token*> opstack;
-    vector<Token*> outstack;
+    GCVecTokPtr opstack;
+    GCVecTokPtr outstack;
     bool stop = false;
     // Stop is needed for cases when the expression does not extend whole line
     // Eg. [someFunc: (a+b) ano:b] 

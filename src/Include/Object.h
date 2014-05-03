@@ -2,6 +2,7 @@
 #ifndef T_TYPE_H
 #define T_TYPE_H
 #include <string>
+#include "GC.h"
 #include "Debug.h"
 using std::string;
 
@@ -35,7 +36,7 @@ union TValue {
     explicit TValue(Object* v) : o(v) {}
 };
 
-class Object {
+class Object : public TGC {
 private:
     TType type;
     Object() : Object(TType::NIL, nullptr) {}; 

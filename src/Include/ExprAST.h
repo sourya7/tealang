@@ -1,19 +1,19 @@
 #ifndef T_EXPR_H
 #define T_EXPR_H
 
-#include <vector>
 #include "NodeAST.h"
 class Token;
 class IRBuilder;
 enum class Tags;
 enum class NodeType;
 
+typedef GV<Token*>::Vector GCVecTokPtr;
 class ExprAST : public NodeAST
 {
 private:
-    std::vector<Token*> expr;
+    GCVecTokPtr expr;
 public:
-    ExprAST(std::vector<Token*> e) : NodeAST(NodeType::EXPR), expr(e) {}
+    ExprAST(GCVecTokPtr e) : NodeAST(NodeType::EXPR), expr(e) {}
     void GenerateIR(IRBuilder* builder);
 };
 

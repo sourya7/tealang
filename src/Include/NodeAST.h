@@ -1,9 +1,11 @@
 #ifndef T_NODE_H
 #define T_NODE_H
 
+#include "GC.h"
+
 class IRBuilder;
 enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT, ASSIGN, EXPR, TOKEN, VAR};
-class NodeAST {
+class NodeAST : public TGC {
 protected:
     NodeAST* left = nullptr;
     NodeAST* right = nullptr; 

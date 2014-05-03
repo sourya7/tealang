@@ -1,7 +1,6 @@
 #include <algorithm>
 #include "CodeObject.h"
 
-using std::vector;
 using std::string;
 using std::find;
 

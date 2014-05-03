@@ -2,27 +2,30 @@
 #define T_CODEOBJECT_H
 
 #include <string>
-#include <vector>
+#include "GC.h"
 #include "Debug.h"
 #include "Object.h"
 #include "OPCode.h"
 
-using std::vector;
 using std::string;
+class CodeObject;
+typedef GV<Object*>::Vector GCVecObjPtr;
+typedef GV<string>::Vector GCVecString;
+typedef GV<OP>::Vector GCVecOP;
+typedef GV<CodeObject*>::Vector GCVecCodeObjPtr;
 
-class CodeObject{
+class CodeObject : public TGC {
 private:
     //variables in the codeobject scope
-    vector<string> ids;
+    GCVecString ids;
     //value for those vars
-    vector<Object*> vals;
+    GCVecObjPtr vals;
     //constants in the codeobject scope
-    vector<Object*> consts;
+    GCVecObjPtr consts;
     //opcodes for this codeobject
-    vector<OP> opcode;
+    GCVecOP opcode;
+    GCVecCodeObjPtr children;
     CodeObject* parent = nullptr;
-    vector<CodeObject*> children;
-
 public:
     CodeObject(CodeObject* p) : parent(p) {}
     CodeObject() {}
@@ -33,7 +36,7 @@ public:
 
     Object* GetIDVal(int id){ return vals[id]; } 
     Object* GetConst(int id){ return consts[id]; }
-    const vector<OP> GetOPS(){ return opcode; }
+    const GCVecOP GetOPS(){ return opcode; }
     void PushOP(OP op) { opcode.push_back(op); }   
     void AddChild(CodeObject* c);
     int GetChildID(CodeObject* c);

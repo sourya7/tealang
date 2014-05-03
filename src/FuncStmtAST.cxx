@@ -17,10 +17,12 @@
  * STORE_VAL a
  * RETURN
  */
+//TODO Handle anon functions
 void FuncStmtAST::GenerateIR(IRBuilder* b){
     NodeAST* root= left;
     NodeAST* tmp = root; 
     string funName;
+    int argc = 0;
 
     IRBuilder* child = new IRBuilder(b);
 
@@ -29,7 +31,8 @@ void FuncStmtAST::GenerateIR(IRBuilder* b){
         if(param->GetType() == NodeType::PARAM){
             //its a param, val pair
             funName += static_cast<WordTok*>(param->GetLeft())->value;
-            child->DeclVar(static_cast<Token*>(param->GetRight()));
+            child->DeclVar(static_cast<WordTok*>(param->GetRight())->value);
+            argc++;
         }
         else{
             //its a simple id
@@ -40,11 +43,6 @@ void FuncStmtAST::GenerateIR(IRBuilder* b){
     }
 
     right->GenerateIR(child);
-    //map<string, int>
-    //b->StoreFunction(funName, child);
-    //[bla:2 andB:3]
-    // push 3
-    // push 2
-    // call 1
+    b->DeclFunc(funName, argc, child);
 }
 

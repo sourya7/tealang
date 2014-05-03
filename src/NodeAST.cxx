@@ -2,6 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include "NodeAST.h"
+#include "WordTok.h"
 #include "IRBuilder.h"
 #include "Debug.h"
 
@@ -12,7 +13,7 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
     switch(type){
         case NodeType::VAR:
             //declare the variable;
-            builder->DeclVar((Token*)left);
+            builder->DeclVar(((WordTok*)left)->value);
             //if the right exists, call it
             if(right != nullptr) right->GenerateIR(builder);
             break;
@@ -20,7 +21,7 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
             //eval the right node
             right->GenerateIR(builder);
             //load the val into the var
-            builder->StoreValue((Token*)left);
+            builder->StoreValue(((WordTok*)left)->value);
             break;
         case NodeType::CALL: 
             assert(false && "CALL");

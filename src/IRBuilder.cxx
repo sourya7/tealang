@@ -1,12 +1,9 @@
-
 #include "Debug.h"
 #include "IRBuilder.h"
-#include "Token.h"
-#include "WordTok.h"
 #include "Object.h"
-#include "OPTok.h"
 #include "OPCode.h"
 #include "CodeObject.h"
+#include "FunctionObj.h"
 
 
 IRBuilder::IRBuilder() { co = new CodeObject(); }
@@ -29,45 +26,51 @@ void IRBuilder::CondJump(IRBuilder* ifBlk, IRBuilder* elBlk){
     co->PushOP(OP(OPC::JMP_IF_ELSE, elId));
 }
 
-void IRBuilder::PerformOP(Token* t){
-    assert(t->tag == Tags::OP);
-    OPTok* op = (OPTok*)t;
-    OPC opv = op->value;
-    co->PushOP(OP(opv));
+void IRBuilder::PerformOP(OPC op){
+    co->PushOP(OP(op));
 }
 
-void IRBuilder::LoadValue(Token* t){
-    //check if t is a variable vs a constant
-    if(t->tag != Tags::ID){
-        Object* o = Object::FromToken(t);
-        int id = co->PushConst(o);   
-        co->PushOP(OP(OPC::LOAD_CONSTANT, id));
-    }
-    else{
-        WordTok* wt = (WordTok*)t;
-        int id = co->GetID(((WordTok*)t)->value);
-        assert(id != -1);
-        co->PushOP(OP(OPC::LOAD_VALUE, id)); 
-    }
+// 2+4
+// LOAD_CONST 1 (2)
+// LOAD_CONST 2 (4)
+// BINARY_ADD 
+void IRBuilder::LoadConst(Object* c){
+    int id = co->PushConst(c);
+    co->PushOP(OP(OPC::LOAD_CONSTANT, id));
 }
 
-WordTok* GUARD_WORD(Token* t){
-    WordTok* wt = dynamic_cast<WordTok*>(t);
-    assert(wt != nullptr);
-    return wt;
+// 2 + a
+// LOAD_CONST 1 (2)
+// LOAD_CONST 1 (a)
+// BINARY_ADD
+void IRBuilder::LoadValue(string v){
+    int id = co->GetID(v);
+    assert(id != -1);
+    co->PushOP(OP(OPC::LOAD_VALUE,id));
 }
 
-void IRBuilder::StoreValue(Token* t){
-    WordTok* wt = GUARD_WORD(t);
-    int id = co->GetID(wt->value);
+// BINARY_ADD     (Operation pushes the value to the stack)
+// STORE_VALUE 0  (Store the value from the stack into a variable)
+void IRBuilder::StoreValue(string v){
+    int id = co->GetID(v);
     assert(id != -1 && "Variable not declared");
     co->PushOP(OP(OPC::STORE_VALUE, id));
 }
 
-void IRBuilder::DeclVar(Token* t){
-    WordTok* wt = GUARD_WORD(t);
-    assert(co->GetID(wt->value) == -1 && "Variable already declared!");
-    co->PushID(wt->value);
+void IRBuilder::DeclVar(string v){
+    assert(co->GetID(v) == -1 && "Variable already declared!");
+    co->PushID(v);
+}
+
+void IRBuilder::DeclVar(string v, Object* o){
+    assert(co->GetID(v) == -1 && "Variable already declared!");
+    int id = co->PushID(v);
+    co->StoreIDVal(id, o);
+}
+
+void IRBuilder::DeclFunc(string n, int ac, IRBuilder* b){
+    auto fo = new FunctionObj(n, ac, b->GetCodeObject());
+    DeclVar(n, fo);
 }
 
 CodeObject* IRBuilder::GetCodeObject(){

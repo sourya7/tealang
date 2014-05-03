@@ -2,9 +2,11 @@
 #define T_IRBUILDER_H
 
 #include "GC.h"
+#include "OPCode.h"
+#include <string>
 class CodeObject;
-class Token;
-
+class Object;
+using std::string;
 /*
  * IRBuilder (IRCompiler?) is a helper function that helps compile the AST
  * into bytecode. It is responsible for creating the frames and codeobjects
@@ -27,15 +29,15 @@ public:
     IRBuilder();
     IRBuilder(IRBuilder* parent);
 
-    uint GetOPSize(Token* t);
-    void PerformOP(Token* t);
-    void StoreValue(Token* t);
-    void LoadValue(Token* t);
-    void DeclVar(Token* t);
+    void PerformOP(OPC v);
+    void StoreValue(string v);
+    void LoadValue(string v);
+    void LoadConst(Object* o);
+    void DeclVar(string v);
+    void DeclVar(string v, Object* o);
+    void DeclFunc(string n, int ac, IRBuilder* f); 
     void CondJump(IRBuilder* ifBlk);
     void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);
-    //TODO For debug
-    void DumpCodeObject();
     CodeObject* GetCodeObject();
 };
 

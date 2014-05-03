@@ -9,6 +9,7 @@ int main(int argc, char* argv[]){
     ifstream src;
     Parser* parser;
 
+    if(argc <= 1) cerr << "Error: Need a file name\n";
     src.open(argv[1], std::ifstream::in);
 
     IRBuilder* builder = new IRBuilder();

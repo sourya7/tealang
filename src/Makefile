@@ -1,5 +1,10 @@
 CC = g++
-CC_FLAGS = -I./Include --std=c++11 -ggdb -m32
+CC_FLAGS = -I./Include --std=c++11 -ggdb 
+
+ifeq ($(EGC), 1)
+	GC_FLAGS = -DGC_DEBUG -DALLOW_GC
+	GC_LIB= -lgc
+endif
 
 # File names
 EXEC = tlang
@@ -8,11 +13,11 @@ OBJECTS = $(SOURCES:.cxx=.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
-	$(CC) $(CC_FLAGS) $(OBJECTS) -o $(EXEC)
+	$(CC) $(CC_FLAGS) $(OBJECTS) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cxx
-	$(CC) -c $(CC_FLAGS) $< -o $@
+	$(CC) $(GC_FLAGS) -c $(CC_FLAGS) $< -o $@
 
 # To remove generated files
 clean:

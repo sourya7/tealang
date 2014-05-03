@@ -1,1 +1,12 @@
 var a = 0
+if a
+    var b = 2
+    if b
+        var d = 3
+        if d
+            var e = 5
+        endif
+    endif
+else 
+    var c = 3
+endif

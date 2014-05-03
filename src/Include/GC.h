@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 
-#if 0
+#ifdef ALLOW_GC
 #include <gc/gc_cpp.h>
 #include <gc/gc_allocator.h>
 class TGC : public gc {

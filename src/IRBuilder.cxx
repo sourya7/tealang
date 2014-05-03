@@ -36,7 +36,7 @@ void IRBuilder::PerformOP(Token* t){
     co->PushOP(OP(opv));
 }
 
-void IRBuilder::PushValue(Token* t){
+void IRBuilder::LoadValue(Token* t){
     //check if t is a variable vs a constant
     if(t->tag != Tags::ID){
         Object* o = Object::FromToken(t);

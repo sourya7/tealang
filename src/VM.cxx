@@ -32,7 +32,7 @@ void VM::ExecCode(CodeObject* co){
             vm->Push(Num::Mul(i, j));
             break;
         case OPC::LOAD_CONSTANT:
-            DEBUG("OP::LOAD_CONSTANT");
+            DEBUG("OP::PUSH_CONSTANT");
             assert(op->HasArg());
             i = co->GetConst(op->GetArg());
             vm->Push(i);

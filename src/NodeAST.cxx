@@ -19,7 +19,7 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
         case NodeType::ASSIGN:
             //eval the right node
             right->GenerateIR(builder);
-            //store the val
+            //load the val into the var
             builder->StoreValue((Token*)left);
             break;
         case NodeType::CALL: 

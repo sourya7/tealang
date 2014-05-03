@@ -29,8 +29,8 @@ public:
 
     uint GetOPSize(Token* t);
     void PerformOP(Token* t);
-    void PushValue(Token* t);
     void StoreValue(Token* t);
+    void LoadValue(Token* t);
     void DeclVar(Token* t);
     void CondJump(IRBuilder* ifBlk);
     void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);

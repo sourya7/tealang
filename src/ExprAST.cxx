@@ -10,6 +10,6 @@ void ExprAST::GenerateIR(IRBuilder* builder){
     for(auto t : expr){
         assert(builder != nullptr);
         if(t->tag == Tags::OP) builder->PerformOP(t);
-        else builder->PushValue(t);
+        else builder->LoadValue(t);
     }
 }

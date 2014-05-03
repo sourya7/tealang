@@ -2,3 +2,6 @@ wiki/
 tmp/
 docs/
 tags
+*.[oa]
+*.exe
+*.stackdump

@@ -10,5 +10,6 @@ public:
     Object* operator*(Object rhs);
     Object* operator-(Object rhs);
     static long ValFromObj(Object val){ return val.GetValue()->l; }
+    string ToString();
 };
 #endif

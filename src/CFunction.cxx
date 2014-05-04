@@ -27,8 +27,9 @@ void CFunction::Call(FunctionObj* obj){
 
 #include <cstdio>
 Object* printWrapper(GCVecObjPtr v){
-    const char* s = v.back()->GetValue()->s;
-    printf(s);
+    string s = v.back()->ToString();
+    cerr << s;
+    //printf(s.c_str());
     return nullptr;
 }
 

@@ -34,11 +34,11 @@ union TValue {
     CodeObject* co;
 
     TValue(long v) : l(v) {}
-    explicit TValue(double v) : d(v) {}
-    explicit TValue(bool v) : b(v) {}
-    explicit TValue(const char* v) : s(v) {}
-    explicit TValue(Object* v) : o(v) {}
-    explicit TValue(CodeObject* v) : co(v) {}
+    TValue(double v) : d(v) {}
+    TValue(bool v) : b(v) {}
+    TValue(const char* v) : s(v) {}
+    TValue(Object* v) : o(v) {}
+    TValue(CodeObject* v) : co(v) {}
 };
 
 class Object : public TGC {
@@ -46,8 +46,9 @@ private:
     TType type;
     Object() : Object(TType::NIL, nullptr) {}; 
 protected:
-    TValue* value;
+    TValue* value = nullptr;
     Object(TType t, TValue* v) : type(t), value(v) { }
+    Object(TType t) : type(t) { }
 public:
     static Object* NIL;
     static Object* FromToken(Token*);

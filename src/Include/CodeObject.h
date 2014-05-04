@@ -10,13 +10,6 @@
 using std::string;
 class CodeObject;
 
-typedef GV<Object*>::Vector GCVecObjPtr;
-typedef GV<string>::Vector GCVecString;
-typedef GV<OP>::Vector GCVecOP;
-typedef GV<CodeObject*>::Vector GCVecCodeObjPtr;
-typedef GV<FunctionObj*>::Vector GCVecFuncObjPtr;
-
-
 enum class CT { FUNCTION, METHOD, NORM };
 class CodeObject : public TGC {
 private:

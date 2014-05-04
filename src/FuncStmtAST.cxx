@@ -25,6 +25,7 @@ void FuncStmtAST::GenerateIR(IRBuilder* b){
     GCVecNodePtr params = paramAST->GetParams();
     for(auto p : params) {
         child->DeclVar(((WordTok*)p)->value);
+        child->StoreValue(((WordTok*)p)->value);
     }
     right->GenerateIR(child);
     b->DeclFunc(paramAST->GetName(),paramAST->GetCount(),child);

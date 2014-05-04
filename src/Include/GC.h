@@ -1,6 +1,8 @@
 #ifndef T_GC_H
 #define T_GC_H
 
+#include <string>
+#include <functional>
 #include <vector>
 #include <map>
 
@@ -34,4 +36,19 @@ struct GM{
         typedef std::map<K, V>  Map;
 };
 #endif
+class Object;
+class OP;
+class CodeObject;
+class FunctionObj;
+
+using namespace std;
+
+typedef GV<Object*>::Vector GCVecObjPtr;
+typedef GV<string>::Vector GCVecString;
+typedef GV<OP>::Vector GCVecOP;
+typedef GV<CodeObject*>::Vector GCVecCodeObjPtr;
+typedef GV<FunctionObj*>::Vector GCVecFuncObjPtr;
+typedef  GM<string, pair<function<Object*(GCVecObjPtr)>, int>>::Map GCMapStrFunc;
+
+
 #endif

@@ -3,6 +3,7 @@
 #include "VM.h"
 #include "Parser.h"
 #include "IRBuilder.h"
+#include "CFunction.h"
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -18,8 +19,7 @@ int main(int argc, char* argv[]){
     NodeAST* root = parser->Parse();
     root->GenerateIR(builder);
 
+    CFunction::Init(builder);
     VM::ExecCode(builder->GetCodeObject());
 }                                                      
-
-
 

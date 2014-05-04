@@ -6,8 +6,6 @@ public:
     StringObj(const char* v) : Object(TType::STRING, new TValue(v)) {}
     bool IsString() { return true; }
     Object* operator+(Object rhs);
-    Object* operator*(Object rhs);
-    Object* operator-(Object rhs);
     string ToString();
 };
 #endif

@@ -88,10 +88,13 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
             while(look->tag == Tags::PARAM){
                 param = look;
                 lw = GUARD_CAST<WordTok*>(look);
-                assert(lw != 0);
                 move();
-                //is it a () grouping
-                if(look->tag == Tags::BCIO){
+                //is it a [] grouping, only possible in a func call
+                if(isCall && look->tag == Tags::BSQO){
+                    p->AddParam(lw->value, ParseFunctionCall());
+                }
+                else if(look->tag == Tags::BCIO){
+                    //is it a () grouping
                     if(!isCall) move(); //consume the (
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) 
@@ -104,8 +107,13 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
                 }
                 else{
                     //its a simple id
-                    p->AddParam(lw->value, ParseExpr());
-                    move();
+                    if(isCall){
+                        p->AddParam(lw->value, ParseExpr());
+                    }
+                    else {
+                        p->AddParam(lw->value,look);
+                        move();
+                    }
                 }
             }
             break;
@@ -169,6 +177,7 @@ NodeAST* Parser::ParseFunctionStmt(){
     return funcDef;
 }
 
+
 NodeAST* Parser::ParseSingleStmt(){
     /*
      * var a = 2
@@ -179,9 +188,8 @@ NodeAST* Parser::ParseSingleStmt(){
      */
     //[smth]
     if(look->tag == Tags::BSQO){ return ParseFunctionCall(); }
-
     NodeAST* node = nullptr;
-    //var
+
     if(look->tag == Tags::VAR){
         move();
         node = new NodeAST(NodeType::VAR, look, nullptr);
@@ -199,14 +207,25 @@ NodeAST* Parser::ParseSingleStmt(){
                 node->SetRight(n);
                 return node;
             }
-            else { return n; }
-        } //var a
-        else if(node != nullptr) { return node; }
+            else { return n; } //a = smth;
+        } 
+        else if(node != nullptr) { return node; } //var a
+
+        //TODO What if the single statement has a single variable only?
         assert(false);
-        //This should not be reached
+    }
+
+    //make sure that that the var keyword has not been found
+    assert(node == nullptr);
+    assert(look->tag != Tags::ASSIGN);
+
+    switch(look->tag){
+        case Tags::RETURN:
+            move();
+            return new NodeAST(NodeType::RETURN,ParseExpr(),nullptr);
+            break;
     }
     
-    //Should not reach here
     assert(false);
     return nullptr;
 }
@@ -270,6 +289,11 @@ NodeAST* Parser::ParseExpr(){
         }
     }
     for(auto v : opstack) outstack.push_back(v);
+    int count = outstack.size();
+    if(count == 1) { 
+        return outstack.back(); 
+    }
+    else if(count == 0) return nullptr;
     return new ExprAST(outstack);
 }
 
@@ -291,11 +315,9 @@ NodeAST* Parser::ParseIfStmt(){
     //consume if
     move();
     IfStmtAST* stmt = new IfStmtAST(ParseExpr(), ParseBlock());
-
     if(look->tag == Tags::ELIF){
         assert(false && "Not supported");
     }
-
     if(look->tag == Tags::ELSE){
         move();
         stmt->SetElseBlk(ParseBlock());

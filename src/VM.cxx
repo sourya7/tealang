@@ -72,16 +72,22 @@ void VM::ExecCode(CodeObject* co){
             assert(op->HasArgB());
             fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op->GetArgA(), op->GetArgB()));
             if(!fn->IsCFunction()){
-                assert(false);
                 VM::ExecCode(fn->GetObjectCode());
                 break;
             }
             //Letting it pass through intended
         }
-        case OPC::C_CALL:{
+        case OPC::C_CALL:
+        {
             CFunction::Call(fn);
             break;
         }
+        case OPC::RETURN:
+        {
+            //TODO, clean the stack
+            return;
+        }
+                         
         default:
             assert(false && "Not Implemented Yet!");
             break;

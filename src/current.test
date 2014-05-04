@@ -1,5 +1,5 @@
-var a = 2
-var b = 3
-var c = a + b
+defun addA:a
+    return a*2
+endfun
 
-[printf: 2-2*2+4]
+[printf: [addA:4]]

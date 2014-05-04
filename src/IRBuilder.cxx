@@ -84,6 +84,10 @@ CodeObject* IRBuilder::GetCodeObject(){
     return co;
 }
 
+void IRBuilder::Return(bool hasArg){
+    co->PushOP(OP(OPC::RETURN, hasArg));
+}
+
 void IRBuilder::CallFunc(string fn){
     int l;
     int id = co->GetID(fn,l);

@@ -40,6 +40,8 @@ public:
     void CondJump(IRBuilder* ifBlk);
     void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);
     void CallFunc(string fn);
+    void Return(bool hasArg = false);
+    void ReturnArg(){ Return(true); }
     CodeObject* GetCodeObject();
 };
 

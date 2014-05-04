@@ -8,7 +8,7 @@ enum class OPC {
 
     /* Internal OP's */
     LOAD_CONSTANT, LOAD_VALUE, STORE_VALUE, JMP_IF, JMP_IF_ELSE,
-    CALL, C_CALL
+    CALL, C_CALL, RETURN
 };
 
 class OP {

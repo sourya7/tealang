@@ -10,7 +10,7 @@
 using std::string;
 using std::cerr;
 
-void NodeAST::GenerateIR(IRBuilder* builder) {
+void NodeAST::GenerateIR(IRBuilder* builder){
     switch(type){
         case NodeType::VAR:
             //declare the variable;
@@ -24,7 +24,8 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
             //load the val into the var
             builder->StoreValue(((WordTok*)left)->value);
             break;
-        case NodeType::TOKEN: {
+        case NodeType::TOKEN: 
+        {
             //TODO, this is a hack
             auto t = GUARD_CAST<Token*>(this);
             if(t->tag == Tags::ID){
@@ -34,19 +35,28 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
             else { builder->LoadConst(Object::FromToken(t)); }
             break;
         }
+        case NodeType::RETURN: 
+        {
+            if(left == nullptr) builder->Return();
+            else{
+                left->GenerateIR(builder);
+                builder->ReturnArg();
+                break;
+            }
+        }
 
         case NodeType::CALL: 
-            assert(false && "CALL");
+        assert(false && "CALL");
         case NodeType::PARAM: 
-            assert(false && "PARAM");
+        assert(false && "PARAM");
         case NodeType::IFSTMT:
-            assert(false && "IFSTMT");
+        assert(false && "IFSTMT");
         case NodeType::FSTMT:
-            assert(false && "FSTMT");
+        assert(false && "FSTMT");
         case NodeType::EXPR: 
-            assert(false && "EXPR");
+        assert(false && "EXPR");
         default:
-            assert(false && "This should not be called!");
+        assert(false && "This should not be called!");
     }
 }
 

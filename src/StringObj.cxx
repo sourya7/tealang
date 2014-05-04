@@ -1,12 +1,9 @@
 #include "StringObj.h"
 
 Object* StringObj::operator+(Object rhs){
-}
-
-Object* StringObj::operator*(Object rhs){
-}
-
-Object* StringObj::operator-(Object rhs){
+    string x = this->ToString();
+    string y = rhs.ToString();
+    return new StringObj((x+y).c_str());
 }
 
 string StringObj::ToString() { 

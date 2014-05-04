@@ -248,7 +248,20 @@ Token* Lexer::ParseStringLiteral(){
     char quote = peek;
     ReadChar();
     do{
-        tmp += peek;
+        if(quote == '"' && tmp.back() == '\\'){
+            tmp.pop_back();
+            switch(peek){
+                case 'a': tmp += 7; break;
+                case 'b': tmp += 8; break;
+                case 'e': tmp += 27; break;
+                case 'f': tmp += 12; break;
+                case 'n': tmp += 10; break;
+                case 'r': tmp += 13; break;
+                case 't': tmp += 9; break;
+                case 'v': tmp += 11; break;
+            }
+        }
+        else tmp += peek;
     } while(!ReadAndMatch(quote));
     return new WordTok(tmp, Tags::STR, line);
 }

@@ -25,11 +25,9 @@ void CFunction::Call(FunctionObj* obj){
     Object* ret = fsp.first(p);
 }
 
-#include <cstdio>
 Object* printWrapper(GCVecObjPtr v){
     string s = v.back()->ToString();
     cerr << s;
-    //printf(s.c_str());
     return nullptr;
 }
 

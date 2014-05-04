@@ -96,7 +96,7 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) 
                         p->AddParam(lw->value, ParseFunctionParam());
-                    else p->AddParam(lw->value, ParseExpr());
+                    else { p->AddParam(lw->value, ParseExpr()); }
                     if(!isCall) move(); //consume the ))
                 }
                 else if(look->tag == Tags::BCIC){
@@ -104,7 +104,7 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
                 }
                 else{
                     //its a simple id
-                    p->AddParam(lw->value, look);
+                    p->AddParam(lw->value, ParseExpr());
                     move();
                 }
             }
@@ -214,6 +214,9 @@ NodeAST* Parser::ParseSingleStmt(){
 /*
  * Using the Shunting yard algorithm to turn the infix expr
  * to RPN
+ *
+ * TODO: Optimization - We can perform open expressions ourselves rather than
+ * having the vm do it
  */
 NodeAST* Parser::ParseExpr(){
     // Expr -> id
@@ -234,7 +237,14 @@ NodeAST* Parser::ParseExpr(){
                 move(); //consume (
                 break;
             case Tags::BCIC:
-                while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
+                /* This might break expression parsing
+                 * while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
+                 */
+                while(!opstack.empty()){
+                    if(opstack.back()->tag == Tags::BCIO){
+                        opstack.pop_back();
+                        break;
+                    }
                     outstack.push_back(opstack.back());
                     opstack.pop_back();
                 }

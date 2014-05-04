@@ -25,6 +25,8 @@ Object* Object::FromToken(Token* t){
             o = new StringObj(GUARD_CAST<WordTok*>(t)->value.c_str());
             break;
         default:
+            assert(t->tag != Tags::BCIO);
+            cerr << (int)t->tag << "\n";
             assert(false && "This should not happen");
             break;
     }

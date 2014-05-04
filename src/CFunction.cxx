@@ -1,5 +1,7 @@
 #include "CFunction.h"
+#include "FunctionObj.h"
 #include "IRBuilder.h"
+#include "VM.h"
 
 GCMapStrFunc funcMap = {
     {"printf:", {printWrapper, 1}},
@@ -14,11 +16,19 @@ void CFunction::Init(IRBuilder* b){
     }
 }
 
-void CFunction::Call(Object* obj){
-    assert(false);
+void CFunction::Call(FunctionObj* obj){
+    GCVecObjPtr p;
+    string funcName = obj->GetName();
+    FuncSizePair fsp = funcMap[funcName];
+    int size = fsp.second;
+    while(size--) p.push_back(VM::Pop());
+    Object* ret = fsp.first(p);
 }
 
-Object* printWrapper(GCVecObjPtr s){
+#include <cstdio>
+Object* printWrapper(GCVecObjPtr v){
+    const char* s = v.back()->GetValue()->s;
+    printf(s);
     return nullptr;
 }
 

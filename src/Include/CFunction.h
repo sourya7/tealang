@@ -5,8 +5,8 @@
 #include <string>
 
 #include "gc.h"
-#include "Object.h"
 using namespace std;
+class FunctionObj;
 
 Object* printWrapper(GCVecObjPtr s);
 Object* printfWrapper(GCVecObjPtr s);
@@ -15,7 +15,7 @@ class IRBuilder;
 class CFunction {
 public:
     static void Init(IRBuilder* b);
-    static void Call(Object* obj);
+    static void Call(FunctionObj* obj);
 };
 
 #endif

@@ -14,12 +14,13 @@ int main(int argc, char* argv[]){
     src.open(argv[1], std::ifstream::in);
 
     IRBuilder* builder = new IRBuilder();
+    CFunction::Init(builder);
+
     parser = new Parser(&src);
 
     NodeAST* root = parser->Parse();
     root->GenerateIR(builder);
 
-    CFunction::Init(builder);
     VM::ExecCode(builder->GetCodeObject());
 }                                                      
 

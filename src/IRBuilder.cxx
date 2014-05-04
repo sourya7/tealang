@@ -76,7 +76,7 @@ void IRBuilder::DeclFunc(string n, int ac, IRBuilder* b){
 }
 
 void IRBuilder::DeclCFunc(string n, int ac){
-    auto fo = new FunctionObj(n, ac, nullptr); 
+    auto fo = new FunctionObj(n, ac); 
     DeclVar(n, fo);
 }
 

@@ -48,7 +48,8 @@ typedef GV<string>::Vector GCVecString;
 typedef GV<OP>::Vector GCVecOP;
 typedef GV<CodeObject*>::Vector GCVecCodeObjPtr;
 typedef GV<FunctionObj*>::Vector GCVecFuncObjPtr;
-typedef  GM<string, pair<function<Object*(GCVecObjPtr)>, int>>::Map GCMapStrFunc;
+typedef pair<function<Object*(GCVecObjPtr)>, int> FuncSizePair;
+typedef  GM<string,FuncSizePair>::Map GCMapStrFunc;
 
 
 #endif

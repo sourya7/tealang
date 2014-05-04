@@ -71,7 +71,8 @@ void VM::ExecCode(CodeObject* co){
             assert(op->HasArgA());
             assert(op->HasArgB());
             fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op->GetArgA(), op->GetArgB()));
-            if(fn->IsCFunction()){
+            if(!fn->IsCFunction()){
+                assert(false);
                 VM::ExecCode(fn->GetObjectCode());
                 break;
             }
@@ -79,6 +80,7 @@ void VM::ExecCode(CodeObject* co){
         }
         case OPC::C_CALL:{
             CFunction::Call(fn);
+            return;
             break;
         }
         default:

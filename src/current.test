@@ -1,3 +1,5 @@
 defun bla:a andB:b
     var c = 2
 endfun
+
+[bla:2 andB:3]

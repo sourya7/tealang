@@ -7,19 +7,25 @@ enum class OPC {
     NOT,LEQ,LSHIFT,LT,GEQ,RSHIFT,GT,DIV,INV,XOR,EQ,MOD,
 
     /* Internal OP's */
-    LOAD_CONSTANT, LOAD_VALUE, STORE_VALUE, JMP_IF, JMP_IF_ELSE
+    LOAD_CONSTANT, LOAD_VALUE, STORE_VALUE, JMP_IF, JMP_IF_ELSE,
+    CALL
 };
 
 class OP {
 private:
-    int arg;
-    bool hasArg = false;
+    int argA, argB;
+    bool hasArgA = false;
+    bool hasArgB = false;
 public:
     OP(OPC o) : opc(o) {}
-    OP(OPC o, int a) : opc(o), hasArg(true), arg(a) {} 
+    OP(OPC o, int a) : opc(o),hasArgA(true),argA(a) {} 
+    OP(OPC o, int a, int b) : opc(o),hasArgA(true),hasArgB(true),argA(a),argB(b) {} 
     const OPC  opc;
-    bool HasArg() { return hasArg; }
-    int GetArg() { return hasArg ? arg : -1; }
+    bool HasArgA() { return hasArgA; }
+    int GetArgA() { return hasArgA ? argA : -1; }
+
+    bool HasArgB() { return hasArgB; }
+    int GetArgB() { return hasArgB ? argB : -1; }
 };
 
 #endif

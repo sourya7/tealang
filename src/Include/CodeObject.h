@@ -34,12 +34,14 @@ private:
 public:
     CodeObject(CodeObject* p) : parent(p) {}
     CodeObject() {}
-    int GetID(string var);
     int PushID(string var); 
     int PushConst(Object* o);
-    void StoreIDVal(int id, Object* val);
 
-    Object* GetIDVal(int id){ return vals[id]; } 
+    int GetID(string var, int &l);
+    int GetID(string var) { int l; return GetID(var, l); } 
+    void StoreIDVal(Object* val, int id, int level=0);
+    Object* GetIDVal(int id, int level=0);
+
     Object* GetConst(int id){ return consts[id]; }
     const GCVecOP GetOPS(){ return opcode; }
     void PushOP(OP op) { opcode.push_back(op); }   

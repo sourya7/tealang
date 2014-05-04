@@ -14,6 +14,7 @@
 #include "Token.h"
 #include "SeqAST.h"
 #include "IfStmtAST.h"
+#include "CallAST.h"
 #include "ExprAST.h"
 #include "ParamAST.h"
 #include "FuncStmtAST.h"
@@ -77,7 +78,6 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     uint currentLine = look->line;
     NodeAST* param;
     ParamAST* p = new ParamAST();
-    
     WordTok* lw = GUARD_CAST<WordTok*>(look);
     switch(look->tag){
         case Tags::ID: case Tags::STR:
@@ -123,19 +123,19 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
  */
 NodeAST* Parser::ParseFunctionCall(){
     move(); //consume [
-    NodeAST* call = new NodeAST(NodeType::CALL);
+    CallAST* call = new CallAST();
     switch(look->tag){
         case Tags::PARAM:  //[call:2 withb:]
             call->SetRight(ParseFunctionParam(true));
             break;
         case Tags::BSQO: //[[obj init] doSmth:a]
             call->SetLeft(ParseFunctionCall());
-            call->SetRight(ParseFunctionParam());
+            call->SetRight(ParseFunctionParam(true));
             break;
         case Tags::ID:
             call->SetLeft(look);
             move(); //consume the object
-            call->SetRight(ParseFunctionParam()); //[obj some]
+            call->SetRight(ParseFunctionParam(true)); //[obj some]
         default:
             assert(false);
     }

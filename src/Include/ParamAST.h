@@ -1,5 +1,6 @@
 #ifndef T_PARAMAST_H
 #define T_PARAMAST_H
+#include "NodeAST.h"
 typedef GV<NodeAST*>::Vector GCVecNodePtr;
 class ParamAST : public NodeAST {
 private:

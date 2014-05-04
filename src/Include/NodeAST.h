@@ -3,6 +3,8 @@
 
 #include "GC.h"
 #include "Debug.h"
+#include <string>
+using std::string;
 
 class IRBuilder;
 enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT, ASSIGN, EXPR, TOKEN, VAR};

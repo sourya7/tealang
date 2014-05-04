@@ -44,17 +44,19 @@ void IRBuilder::LoadConst(Object* c){
 // LOAD_CONST 1 (a)
 // BINARY_ADD
 void IRBuilder::LoadValue(string v){
-    int id = co->GetID(v);
+    int l;
+    int id = co->GetID(v,l);
     assert(id != -1);
-    co->PushOP(OP(OPC::LOAD_VALUE,id));
+    co->PushOP(OP(OPC::LOAD_VALUE,id,l));
 }
 
 // BINARY_ADD     (Operation pushes the value to the stack)
 // STORE_VALUE 0  (Store the value from the stack into a variable)
 void IRBuilder::StoreValue(string v){
-    int id = co->GetID(v);
+    int l = 0;
+    int id = co->GetID(v,l);
     assert(id != -1 && "Variable not declared");
-    co->PushOP(OP(OPC::STORE_VALUE, id));
+    co->PushOP(OP(OPC::STORE_VALUE,id,l));
 }
 
 void IRBuilder::DeclVar(string v){
@@ -65,7 +67,7 @@ void IRBuilder::DeclVar(string v){
 void IRBuilder::DeclVar(string v, Object* o){
     assert(co->GetID(v) == -1 && "Variable already declared!");
     int id = co->PushID(v);
-    co->StoreIDVal(id, o);
+    co->StoreIDVal(o,id);
 }
 
 void IRBuilder::DeclFunc(string n, int ac, IRBuilder* b){
@@ -77,3 +79,9 @@ CodeObject* IRBuilder::GetCodeObject(){
     return co;
 }
 
+void IRBuilder::CallFunc(string fn){
+    int l;
+    int id = co->GetID(fn,l);
+    assert(id != -1);
+    co->PushOP(OP(OPC::CALL,id,l));
+}

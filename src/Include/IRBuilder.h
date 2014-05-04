@@ -38,6 +38,7 @@ public:
     void DeclFunc(string n, int ac, IRBuilder* f); 
     void CondJump(IRBuilder* ifBlk);
     void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);
+    void CallFunc(string fn);
     CodeObject* GetCodeObject();
 };
 

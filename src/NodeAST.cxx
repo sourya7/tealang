@@ -5,6 +5,7 @@
 #include "WordTok.h"
 #include "IRBuilder.h"
 #include "Debug.h"
+#include "Object.h"
 
 using std::string;
 using std::cerr;
@@ -23,6 +24,17 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
             //load the val into the var
             builder->StoreValue(((WordTok*)left)->value);
             break;
+        case NodeType::TOKEN: {
+            //TODO, this is a hack
+            auto t = GUARD_CAST<Token*>(this);
+            if(t->tag == Tags::ID){
+                auto wt = GUARD_CAST<WordTok*>(t);
+                builder->LoadValue(wt->value);
+            }
+            else { builder->LoadConst(Object::FromToken(t)); }
+            break;
+        }
+
         case NodeType::CALL: 
             assert(false && "CALL");
         case NodeType::PARAM: 
@@ -33,8 +45,6 @@ void NodeAST::GenerateIR(IRBuilder* builder) {
             assert(false && "FSTMT");
         case NodeType::EXPR: 
             assert(false && "EXPR");
-        case NodeType::TOKEN: 
-            assert(false && "TOKEN");
         default:
             assert(false && "This should not be called!");
     }

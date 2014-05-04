@@ -1,11 +1,19 @@
-#ifndef T_PARAM_H
-#define T_PARAM_H
-
-#include "NodeAST.h"
-
-class ParamAST : NodeAST {
+#ifndef T_PARAMAST_H
+#define T_PARAMAST_H
+typedef GV<NodeAST*>::Vector GCVecNodePtr;
+class ParamAST : public NodeAST {
 private:
-    Token* name;
-public :
-    ParamAST(Token* n, NodeAST* v) : 
-}
+    GCVecNodePtr params;
+    string name;
+public:
+    ParamAST() : NodeAST(NodeType::PARAM) {}
+    void AddParam(string s, NodeAST* n) { 
+        name += s;
+        if(n != nullptr) params.push_back(n);
+    }
+    string GetName(){ return name; }
+    int GetCount(){ return params.size(); }
+    GCVecNodePtr GetParams() { return params; }
+};
+#endif
+

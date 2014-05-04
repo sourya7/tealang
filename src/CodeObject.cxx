@@ -24,9 +24,10 @@ int CodeObject::GetID(string var){
 
 void CodeObject::StoreIDVal(int id, Object* val) { 
     assert(ids.size() > id); 
-    cerr << "Storing " << val->GetValue()->l 
-         << " into " << ids[id] << "\n";
-         
+    cerr << "Storing ";
+    if(val->IsFunction()) cerr << "<FUNCTION>";
+    else cerr << val->GetValue()->l << " ";
+    cerr << " into " << ids[id] << "\n";
     vals[id] = val; 
 }
 

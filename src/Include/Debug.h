@@ -11,5 +11,10 @@ using std::cerr;
 #define DEBUG(x) 
 #endif
 
-
+template <typename T, typename V>
+T GUARD_CAST(V val) {
+    T tmp = dynamic_cast<T>(val);
+    assert(tmp != 0);
+    return tmp;
+}
 #endif

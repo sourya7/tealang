@@ -16,13 +16,13 @@ Object* Object::FromToken(Token* t){
     Object* o;
     switch(t->tag){
         case Tags::NUM:
-            o = new IntegerObj(static_cast<NumberTok*>(t)->value);
+            o = new IntegerObj(GUARD_CAST<NumberTok*>(t)->value);
             break;
         case Tags::REAL:
-            o = new DoubleObj(static_cast<RealTok*>(t)->value);
+            o = new DoubleObj(GUARD_CAST<RealTok*>(t)->value);
             break;
         case Tags::STR:
-            o = new StringObj(static_cast<WordTok*>(t)->value.c_str());
+            o = new StringObj(GUARD_CAST<WordTok*>(t)->value.c_str());
             break;
         default:
             assert(false && "This should not happen");

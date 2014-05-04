@@ -15,14 +15,14 @@
 #include "SeqAST.h"
 #include "IfStmtAST.h"
 #include "ExprAST.h"
+#include "ParamAST.h"
 #include "FuncStmtAST.h"
 #include "IRBuilder.h"
 #include "OPTok.h"
 using namespace std;
 
 short GetPrecedence(Token* t) { 
-    OPTok* opt = dynamic_cast<OPTok*>(t);
-    if(opt == nullptr) return 0;
+    OPTok* opt = GUARD_CAST<OPTok*>(t);
 
     switch(opt->value){
         case OPC::LT: case OPC::LEQ: case OPC::GT: case OPC::GEQ: 
@@ -39,13 +39,11 @@ short GetPrecedence(Token* t) {
     }
 }
 
-
 Parser::Parser(istream* i) {
     lexer = new Lexer(i);
-    }
+}
 
 void Parser::move(){
-    WordTok* word = dynamic_cast<WordTok*>(look);
     look = lexer->Scan();
 }
 
@@ -58,6 +56,8 @@ NodeAST* Parser::Parse(){
     move();
     return ParseBlock();
 }
+
+
 
 NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     //1. Functions can have no parameter
@@ -75,26 +75,28 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
     //      //do something
     //   endfun
     uint currentLine = look->line;
-    SeqAST* seq = new SeqAST();
-    SeqAST* tseq = seq;
     NodeAST* param;
+    ParamAST* p = new ParamAST();
     
+    WordTok* lw = GUARD_CAST<WordTok*>(look);
     switch(look->tag){
         case Tags::ID: case Tags::STR:
-            seq = seq->AddSeq(look);
+            p->AddParam(lw->value, nullptr);
             move();
             break;
         case Tags::PARAM:
             while(look->tag == Tags::PARAM){
                 param = look;
+                lw = GUARD_CAST<WordTok*>(look);
+                assert(lw != 0);
                 move();
                 //is it a () grouping
                 if(look->tag == Tags::BCIO){
                     if(!isCall) move(); //consume the (
                     //Seems to be a function
                     if(look->tag == Tags::PARAM) 
-                        seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, ParseFunctionParam()));
-                    else seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, ParseExpr()));
+                        p->AddParam(lw->value, ParseFunctionParam());
+                    else p->AddParam(lw->value, ParseExpr());
                     if(!isCall) move(); //consume the ))
                 }
                 else if(look->tag == Tags::BCIC){
@@ -102,7 +104,7 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
                 }
                 else{
                     //its a simple id
-                    seq = seq->AddSeq(new NodeAST(NodeType::PARAM, param, look));
+                    p->AddParam(lw->value, look);
                     move();
                 }
             }
@@ -111,7 +113,7 @@ NodeAST* Parser::ParseFunctionParam(bool isCall = false){
             assert(false);
             //throw an error. Function is malformed
     }
-    return tseq;
+    return p;
 }
 
 /*

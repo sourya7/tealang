@@ -2,6 +2,7 @@
 #include "WordTok.h"
 #include "IRBuilder.h"
 #include "SeqAST.h"
+#include "ParamAST.h"
 
 /*
  * defun bla:a andB:b
@@ -19,30 +20,13 @@
  */
 //TODO Handle anon functions
 void FuncStmtAST::GenerateIR(IRBuilder* b){
-    NodeAST* root= left;
-    NodeAST* tmp = root; 
-    string funName;
-    int argc = 0;
-
+    ParamAST* paramAST = (ParamAST*)left;
     IRBuilder* child = new IRBuilder(b);
-
-    while(tmp->GetLeft() != nullptr){
-        NodeAST* param = tmp->GetLeft();
-        if(param->GetType() == NodeType::PARAM){
-            //its a param, val pair
-            funName += static_cast<WordTok*>(param->GetLeft())->value;
-            child->DeclVar(static_cast<WordTok*>(param->GetRight())->value);
-            argc++;
-        }
-        else{
-            //its a simple id
-            funName += static_cast<WordTok*>(param)->value;
-            break;
-        }
-        tmp = tmp->GetRight();
+    GCVecNodePtr params = paramAST->GetParams();
+    for(auto p : params) {
+        child->DeclVar(((WordTok*)p)->value);
     }
-
     right->GenerateIR(child);
-    b->DeclFunc(funName, argc, child);
+    b->DeclFunc(paramAST->GetName(),paramAST->GetCount(),child);
 }
 

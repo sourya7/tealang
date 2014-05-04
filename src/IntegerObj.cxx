@@ -1,6 +1,6 @@
 #include "IntegerObj.h"
 #include "DoubleObj.h"
-#include "common.h"
+#include "Common.h"
 
 #define PERFORM_OP(op)\
     if(rhs.IsDouble())\

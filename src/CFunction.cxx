@@ -3,7 +3,7 @@
 #include "IRBuilder.h"
 #include "VM.h"
 
-GCMapStrFunc funcMap = {
+MapStrFunc funcMap = {
     {"printf:", {printWrapper, 1}},
     {"printf:withF:", {printfWrapper, 2}},
 };

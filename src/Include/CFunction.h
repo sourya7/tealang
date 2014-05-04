@@ -4,12 +4,14 @@
 #include <functional>
 #include <string>
 
-#include "gc.h"
+#include "GC.h"
 using namespace std;
 class FunctionObj;
 
 Object* printWrapper(GCVecObjPtr s);
 Object* printfWrapper(GCVecObjPtr s);
+
+typedef  map<string,FuncSizePair> MapStrFunc;
 
 class IRBuilder;
 class CFunction {

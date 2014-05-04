@@ -41,10 +41,6 @@ void CodeObject::StoreIDVal(Object* val, int id, int level) {
         root = root->parent;
     }
     assert(root->ids.size() > id); 
-    cerr << "Storing ";
-    if(val->IsFunction()) cerr << "<FUNCTION>";
-    else cerr << val->GetValue()->l << " ";
-    cerr << " into " << root->ids[id] << "\n";
     root->vals[id] = val; 
 }
 

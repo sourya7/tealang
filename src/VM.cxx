@@ -80,7 +80,6 @@ void VM::ExecCode(CodeObject* co){
         }
         case OPC::C_CALL:{
             CFunction::Call(fn);
-            return;
             break;
         }
         default:

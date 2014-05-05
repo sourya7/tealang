@@ -19,7 +19,7 @@ void ExprAST::GenerateIR(IRBuilder* builder){
             call->GenerateIR(builder);
         }
         else if(t->tag == Tags::ID) {
-            WordTok* wt = (WordTok*)t;
+            WordTok* wt = GUARD_CAST<WordTok*>(t);
             builder->LoadValue(wt->value);
         }
         else{

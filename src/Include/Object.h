@@ -60,9 +60,16 @@ public:
     virtual bool IsNumeral() { return IsInteger() || IsDouble(); }
     virtual bool IsDouble() { return  type == TType::DOUBLE; } 
     virtual bool IsNil() { return  type == TType::NIL; }
-    virtual Object* operator+(Object rhs) {}
-    virtual Object* operator*(Object rhs) {}
-    virtual Object* operator-(Object rhs) {}
+    int GetInt() { return value->l; }
+    int GetDouble() { return value->d; }
+    bool GetBool() { return value->b; }
+    const char* GetString() { return value->s; }
+    CodeObject* GetCodeObject() { return value->co; }
+    Object* GetObject() { return value->o; }
+
+    virtual Object* operator+(Object* rhs) {}
+    virtual Object* operator*(Object* rhs) {}
+    virtual Object* operator-(Object* rhs) {}
     virtual string ToString() { return "<OBJECT>"; }
     TValue* GetValue() { return value; } 
 };

@@ -256,9 +256,6 @@ NodeAST* Parser::ParseExpr(){
                 move(); //consume (
                 break;
             case Tags::BCIC:
-                /* This might break expression parsing
-                 * while(!opstack.empty() && (opstack.back()->tag != Tags::BCIO)){
-                 */
                 while(!opstack.empty()){
                     if(opstack.back()->tag == Tags::BCIO){
                         opstack.pop_back();
@@ -276,10 +273,7 @@ NodeAST* Parser::ParseExpr(){
                 outstack.push_back(tmp);
                 break;
             }
-            case Tags::BSQC:
-                move();
-                break;
-            case Tags::ID: case Tags::NUM: case Tags::REAL: 
+            case Tags::ID: case Tags::NUM: case Tags::REAL: case Tags::STR: 
                 outstack.push_back(look); 
                 move(); 
                 break;
@@ -300,10 +294,7 @@ NodeAST* Parser::ParseExpr(){
     }
     for(auto v : opstack) outstack.push_back(v);
     int count = outstack.size();
-    if(count == 1) { 
-        return outstack.back(); 
-    }
-    else if(count == 0) return nullptr;
+    if(count == 0) return nullptr;
     return new ExprAST(outstack);
 }
 

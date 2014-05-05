@@ -1,8 +1,8 @@
 #include "StringObj.h"
 
-Object* StringObj::operator+(Object rhs){
-    string x = this->ToString();
-    string y = rhs.ToString();
+Object* StringObj::operator+(Object* rhs){
+    string x = ToString();
+    string y = rhs->ToString();
     return new StringObj((x+y).c_str());
 }
 

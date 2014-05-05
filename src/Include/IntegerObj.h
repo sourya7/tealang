@@ -6,10 +6,10 @@ public:
     IntegerObj(long l) : Object(TType::INTEGER, new TValue(l)) {}
     bool IsInteger() { return true; }
     bool IsTrue() { return GetValue()->l != 0; }
-    Object* operator+(Object rhs);
-    Object* operator*(Object rhs);
-    Object* operator-(Object rhs);
-    static long ValFromObj(Object val){ return val.GetValue()->l; }
+    Object* operator+(Object* rhs);
+    Object* operator*(Object* rhs);
+    Object* operator-(Object* rhs);
+    static long ValFromObj(Object val){ return val.GetInt(); }
     string ToString();
 };
 #endif

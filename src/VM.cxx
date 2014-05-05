@@ -18,20 +18,20 @@ void VM::ExecCode(CodeObject* co){
     switch(op->opc){
         case OPC::ADD:
             DEBUG("OP::ADD");
-            i = VM::Pop();
             j = VM::Pop();
+            i = VM::Pop();
             VM::Push(Num::Add(i, j));
             break;
         case OPC::SUB:
             DEBUG("OP::SUB");
-            i = VM::Pop();
             j = VM::Pop();
+            i = VM::Pop();
             VM::Push(Num::Sub(i, j));
             break;
         case OPC::MULT:
             DEBUG("OP::MULT");
-            i = VM::Pop();
             j = VM::Pop();
+            i = VM::Pop();
             VM::Push(Num::Mul(i, j));
             break;
         case OPC::LOAD_CONSTANT:
@@ -61,8 +61,8 @@ void VM::ExecCode(CodeObject* co){
         case OPC::JMP_IF_ELSE:
             DEBUG("OP::JMP_IF_ELSE");
             assert(op->HasArgA());
-            //For if, we consume the else statment
-            //For else, we consume the if statment
+            //For if, we skip the else statment
+            //For else, we skip the if statment
             if(VM::Pop()->IsTrue()) { VM::ExecCode(co->GetChild(op->GetArgA())); op++; }
             else { ++op; VM::ExecCode(co->GetChild(op->GetArgA())); }
             break;

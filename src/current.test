@@ -1,8 +1,10 @@
-defun addA:a
-    return a*2
+defun addTwoWith:a andB:b
+    return 2+a+b
 endfun
 
-[printf: 2 + [addA:4]]
+var a = [addTwoWith:2 andB:3]
 
-
+if a==4
+    [printf: a]
+endif
 

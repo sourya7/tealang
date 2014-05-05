@@ -8,18 +8,9 @@
  * of the operations 
  */
 namespace Num {
-    Object* Add(Object* a, Object* b){ 
-        Object* ob = *a + *b;
-        return ob; 
-    }
-    Object* Sub(Object* a, Object* b){
-        Object* ob = *a - *b;
-        return ob;
-    }
-    Object* Mul(Object* a, Object* b){
-        Object* ob = *a * *b;
-        return ob;
-    }
+    Object* Add(Object* a, Object* b);
+    Object* Sub(Object* a, Object* b);
+    Object* Mul(Object* a, Object* b);
 }
 
 #endif

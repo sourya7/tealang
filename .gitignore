@@ -2,6 +2,7 @@ wiki/
 tmp/
 docs/
 tags
+current.test
 *.[oa]
 *.exe
 *.stackdump

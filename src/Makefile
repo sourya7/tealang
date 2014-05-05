@@ -1,4 +1,4 @@
-CC = g++
+CC = ccache g++
 CC_FLAGS = -I./Include --std=c++11 -ggdb
 
 ifeq ($(EGC), 1)
@@ -13,11 +13,11 @@ OBJECTS = $(SOURCES:.cxx=.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
-	$(CC) $(CC_FLAGS) $(OBJECTS) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
+	$(CC) $(PFLAGS) $(CC_FLAGS) $(OBJECTS) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cxx
-	$(CC) $(GC_FLAGS) -c $(CC_FLAGS) $< -o $@
+	$(CC) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o $@
 
 # To remove generated files
 clean:

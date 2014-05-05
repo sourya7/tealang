@@ -1,10 +1,15 @@
 #include "BooleanObj.h"
 
-Object* BooleanObj::operator+(Object rhs){
+Object* const BooleanObj::TRUE = new BooleanObj(true);
+Object* const BooleanObj::FALSE = new BooleanObj(false);
+Object* BooleanObj::operator==(Object* rhs){
+    if(IsTrue() == rhs->IsTrue()){
+        return TRUE;
+    }
+    return FALSE;
 }
 
-Object* BooleanObj::operator*(Object rhs){
-}
-
-Object* BooleanObj::operator-(Object rhs){
+string BooleanObj::ToString(){
+    if(IsTrue()) return "TRUE";
+    return "False";
 }

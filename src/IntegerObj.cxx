@@ -1,4 +1,5 @@
 #include "IntegerObj.h"
+#include "BooleanObj.h"
 #include "DoubleObj.h"
 #include "Common.h"
 
@@ -19,6 +20,10 @@ Object* IntegerObj::operator*(Object* rhs){
 
 Object* IntegerObj::operator-(Object* rhs){
     PERFORM_OP(-)
+}
+
+Object* IntegerObj::operator==(Object* rhs){
+    return GetInt() == rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
 }
 
 string IntegerObj::ToString() {

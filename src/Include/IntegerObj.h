@@ -9,6 +9,7 @@ public:
     Object* operator+(Object* rhs);
     Object* operator*(Object* rhs);
     Object* operator-(Object* rhs);
+    Object* operator==(Object* rhs);
     static long ValFromObj(Object val){ return val.GetInt(); }
     string ToString();
 };

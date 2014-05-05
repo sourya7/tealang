@@ -1,6 +1,6 @@
 #include "Debug.h"
 #include "VM.h"
-#include "Num.h"
+#include "ObjOP.h"
 #include "Frame.h"
 #include "OPCode.h"
 #include "CFunction.h"
@@ -20,19 +20,25 @@ void VM::ExecCode(CodeObject* co){
             DEBUG("OP::ADD");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(Num::Add(i, j));
+            VM::Push(ObjOP::Add(i, j));
             break;
         case OPC::SUB:
             DEBUG("OP::SUB");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(Num::Sub(i, j));
+            VM::Push(ObjOP::Sub(i, j));
+            break;
+        case OPC::EQ:
+            DEBUG("OP::EQ");
+            j = VM::Pop();
+            i = VM::Pop();
+            VM::Push(ObjOP::Equal(i,j));
             break;
         case OPC::MULT:
             DEBUG("OP::MULT");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(Num::Mul(i, j));
+            VM::Push(ObjOP::Mul(i, j));
             break;
         case OPC::LOAD_CONSTANT:
             DEBUG("OP::PUSH_CONSTANT");

@@ -70,6 +70,7 @@ public:
     virtual Object* operator+(Object* rhs) {}
     virtual Object* operator*(Object* rhs) {}
     virtual Object* operator-(Object* rhs) {}
+    virtual Object* operator==(Object* rhs) {}
     virtual string ToString() { return "<OBJECT>"; }
     TValue* GetValue() { return value; } 
 };

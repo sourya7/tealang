@@ -5,7 +5,7 @@
 using std::cerr;
 
 #include <cassert>
-#if 0
+#ifdef PRINTDEBUG
 #define DEBUG(x) do { std::cerr << __FILE__ << ":" << __LINE__ << " " << x << std::endl; } while (0)
 #else
 #define DEBUG(x) 

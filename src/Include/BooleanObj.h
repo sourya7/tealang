@@ -6,8 +6,9 @@ public:
     BooleanObj(bool b) : Object(TType::BOOLEAN,new TValue(b)) {}
     bool IsTrue() { return GetValue()->b; }  
     bool IsBoolean() { return true; }
-    Object* operator+(Object rhs);
-    Object* operator*(Object rhs);
-    Object* operator-(Object rhs);
+    string ToString();
+    Object* operator==(Object* rhs);
+    static Object* const TRUE;
+    static Object* const FALSE;
 };
 #endif

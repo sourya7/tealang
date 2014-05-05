@@ -23,8 +23,8 @@
 using namespace std;
 
 short GetPrecedence(Token* t) { 
+    if(t->tag == Tags::BSQO) return 100;
     OPTok* opt = GUARD_CAST<OPTok*>(t);
-
     switch(opt->value){
         case OPC::LT: case OPC::LEQ: case OPC::GT: case OPC::GEQ: 
         case OPC::NEQ: case OPC::EQ: return 10;
@@ -268,6 +268,16 @@ NodeAST* Parser::ParseExpr(){
                     opstack.pop_back();
                 }
                 move(); 
+                break;
+            case Tags::BSQO:
+            {
+                Token* tmp = look;
+                tmp->SetLeft(ParseFunctionCall());
+                outstack.push_back(tmp);
+                break;
+            }
+            case Tags::BSQC:
+                move();
                 break;
             case Tags::ID: case Tags::NUM: case Tags::REAL: 
                 outstack.push_back(look); 

@@ -2,4 +2,7 @@ defun addA:a
     return a*2
 endfun
 
-[printf: [addA:4]]
+[printf: 2 + [addA:4]]
+
+
+

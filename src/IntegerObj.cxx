@@ -26,6 +26,10 @@ Object* IntegerObj::operator==(Object* rhs){
     return GetInt() == rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
 }
 
+Object* IntegerObj::operator!=(Object* rhs){
+    return GetInt() != rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
+}
+
 string IntegerObj::ToString() {
     long val = value->l;
     string str = COM::toStr(val);

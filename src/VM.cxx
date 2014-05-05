@@ -34,6 +34,12 @@ void VM::ExecCode(CodeObject* co){
             i = VM::Pop();
             VM::Push(ObjOP::Equal(i,j));
             break;
+        case OPC::NEQ:
+            DEBUG("OP::NEQ");
+            j = VM::Pop();
+            i = VM::Pop();
+            VM::Push(ObjOP::Equal(i,j));
+            break;
         case OPC::MULT:
             DEBUG("OP::MULT");
             j = VM::Pop();

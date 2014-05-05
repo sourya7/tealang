@@ -1,12 +1,6 @@
-defun addTwoWith:a andB:b
-    return 2+a+b
-endfun
-
-var a = [addTwoWith:2 andB:1]
-
-if a==4
-    [printf: "Got the value: " + a + "\n"]
-else
-    [printf: "Did not get a 4, instead got a " + a + "\n"]
-endif
+var a = 10
+while a != 0
+    [printf: a]
+    a = a - 1
+endwhile
 

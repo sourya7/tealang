@@ -16,4 +16,10 @@ Object* Equal(Object* a, Object* b){
     Object* ob = *a == b;
     return ob;
 }
+
+Object* NotEqual(Object* a, Object* b){
+    Object* ob = *a != b;
+    return ob;
+}
+
 }

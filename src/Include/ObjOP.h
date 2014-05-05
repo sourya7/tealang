@@ -12,6 +12,7 @@ namespace ObjOP{
     Object* Sub(Object* a, Object* b);
     Object* Mul(Object* a, Object* b);
     Object* Equal(Object* a, Object* b);
+    Object* NotEqual(Object* a, Object* b);
 }
 
 #endif

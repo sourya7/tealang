@@ -21,6 +21,7 @@
 //TODO Handle anon functions
 void FuncStmtAST::GenerateIR(IRBuilder* b){
     ParamAST* paramAST = (ParamAST*)left;
+    b->DeclVar(paramAST->GetName());
     IRBuilder* child = new IRBuilder(b);
     GCVecNodePtr params = paramAST->GetParams();
     for(auto p : params) {

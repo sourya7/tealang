@@ -27,7 +27,8 @@ Object* IntegerObj::operator==(Object* rhs){
 }
 
 Object* IntegerObj::operator!=(Object* rhs){
-    return GetInt() != rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
+    Object* ret = GetInt() != rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
+    return ret;
 }
 
 string IntegerObj::ToString() {

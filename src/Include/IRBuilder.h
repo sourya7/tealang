@@ -37,6 +37,7 @@ public:
     void DeclVar(string v, Object* o);
     void DeclFunc(string n, int ac, IRBuilder* f); 
     void DeclCFunc(string n, int ac); 
+    void DeclWhile(IRBuilder* expr, IRBuilder* body);
     void CondJump(IRBuilder* ifBlk);
     void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);
     void CallFunc(string fn);

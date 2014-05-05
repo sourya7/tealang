@@ -18,6 +18,7 @@
 #include "ExprAST.h"
 #include "ParamAST.h"
 #include "FuncStmtAST.h"
+#include "WhileStmtAST.h"
 #include "IRBuilder.h"
 #include "OPTok.h"
 using namespace std;
@@ -334,7 +335,14 @@ NodeAST* Parser::ParseTryStmt(){ return nullptr; }
 
 NodeAST* Parser::ParseClassStmt(){ return nullptr; }
 
-NodeAST* Parser::ParseWhileStmt(){ return nullptr; }
+NodeAST* Parser::ParseWhileStmt(){ 
+    //consume while
+    move();
+    auto stmt = new WhileStmtAST(ParseExpr(), ParseBlock());
+    //consume endwhile
+    move();
+    return stmt;
+}
 
 /*
  *                             SeqAST

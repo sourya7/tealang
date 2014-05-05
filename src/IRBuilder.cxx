@@ -72,7 +72,9 @@ void IRBuilder::DeclVar(string v, Object* o){
 
 void IRBuilder::DeclFunc(string n, int ac, IRBuilder* b){
     auto fo = new FunctionObj(n, ac, b->GetCodeObject());
-    DeclVar(n, fo);
+    int id = co->GetID(n);
+    assert(id != -1);
+    co->StoreIDVal(fo,id);
 }
 
 void IRBuilder::DeclCFunc(string n, int ac){
@@ -86,6 +88,14 @@ CodeObject* IRBuilder::GetCodeObject(){
 
 void IRBuilder::Return(bool hasArg){
     co->PushOP(OP(OPC::RETURN, hasArg));
+}
+
+void IRBuilder::DeclWhile(IRBuilder* expr, IRBuilder* body){
+    int exprID = co->GetChildID(expr->GetCodeObject());
+    int bodyID = co->GetChildID(body->GetCodeObject());
+    assert(exprID != -1);
+    assert(bodyID != -1);
+    co->PushOP(OP(OPC::WHILE, exprID, bodyID));
 }
 
 void IRBuilder::CallFunc(string fn){

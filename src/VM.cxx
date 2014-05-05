@@ -34,11 +34,21 @@ void VM::ExecCode(CodeObject* co){
             i = VM::Pop();
             VM::Push(ObjOP::Equal(i,j));
             break;
+        case OPC::WHILE:
+            DEBUG("OP::WHILE");
+            assert(op->HasArgA());
+            assert(op->HasArgB());
+            VM::ExecCode(co->GetChild(op->GetArgA()));
+            while(VM::Pop()->IsTrue()){
+                VM::ExecCode(co->GetChild(op->GetArgB()));
+                VM::ExecCode(co->GetChild(op->GetArgA()));
+            }
+            break;
         case OPC::NEQ:
             DEBUG("OP::NEQ");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(ObjOP::Equal(i,j));
+            VM::Push(ObjOP::NotEqual(i,j));
             break;
         case OPC::MULT:
             DEBUG("OP::MULT");

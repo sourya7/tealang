@@ -13,8 +13,7 @@ void VM::ExecCode(CodeObject* co){
     VM::ResetFlags();
     GCVecOP ops = co->GetOPS();
     auto op = ops.begin();
-    auto* ts = &vmStack;
-    while(op != ops.end()){  //auto it = ops.begin(); it != ops.end(); ++it){
+    while(op != ops.end()){
     Object* i;
     Object* j;
     FunctionObj* fn;

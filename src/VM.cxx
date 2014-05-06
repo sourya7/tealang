@@ -106,6 +106,7 @@ void VM::ExecCode(CodeObject* co){
         }
         case OPC::RETURN:
         {
+            DEBUG("OP::RETURN");
             //TODO, clean the stack
             return;
         }

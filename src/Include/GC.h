@@ -3,8 +3,9 @@
 
 #include <string>
 #include <functional>
-#include <vector>
 #include <map>
+#include <stack>
+#include <vector>
 
 #ifdef ALLOW_GC
 #include <gc/gc_cpp.h>
@@ -49,7 +50,8 @@ typedef GV<OP>::Vector GCVecOP;
 typedef GV<CodeObject*>::Vector GCVecCodeObjPtr;
 typedef GV<FunctionObj*>::Vector GCVecFuncObjPtr;
 typedef pair<function<Object*(GCVecObjPtr)>, int> FuncSizePair;
-typedef  GM<string,FuncSizePair>::Map GCMapStrFunc;
+typedef GM<string,FuncSizePair>::Map GCMapStrFunc;
+typedef GV<Object*>::Vector GCStackObjPtr;
 
 
 #endif

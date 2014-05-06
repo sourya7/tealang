@@ -1,8 +1,6 @@
 #ifndef T_VM_H
 #define T_VM_H
-#include <stack>
 #include "GC.h"
-using std::stack;
 class CFunction;
 
 class CodeObject;
@@ -11,11 +9,11 @@ class Object;
 
 class VM : public TGC {
 private:
-    static stack<Object*> vmStack;
-    static void Push(Object* a) { vmStack.push(a); }
+    static GCStackObjPtr vmStack;
+    static void Push(Object* a) { vmStack.push_back(a); }
     static Object* Pop() { 
-        Object* top = vmStack.top(); 
-        vmStack.pop(); 
+        Object* top = vmStack.back(); 
+        vmStack.pop_back(); 
         return top; 
     }
     static bool RetFlag;

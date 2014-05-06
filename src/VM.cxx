@@ -7,7 +7,7 @@
 #include "CodeObject.h"
 #include "FunctionObj.h"
 
-stack<Object*> VM::vmStack;
+GCStackObjPtr VM::vmStack;
 bool VM::RetFlag = false;
 void VM::ExecCode(CodeObject* co){
     VM::ResetFlags();

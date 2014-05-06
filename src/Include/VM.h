@@ -18,6 +18,10 @@ private:
         vmStack.pop(); 
         return top; 
     }
+    static bool RetFlag;
+    static void ResetFlags() {
+        RetFlag = false;
+    }
 public:
     static void ExecCode(CodeObject*);
     friend class CFunction;

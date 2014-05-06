@@ -17,6 +17,8 @@ private:
     GCVecString ids;
     //value for those vars
     GCVecObjPtr vals;
+    GCVecObjPtr params;
+    GCVecString paramIds;
     //constants in the codeobject scope
     GCVecObjPtr consts;
     //opcodes for this codeobject

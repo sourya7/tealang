@@ -8,13 +8,17 @@
 #include "FunctionObj.h"
 
 stack<Object*> VM::vmStack;
+bool VM::RetFlag = false;
 void VM::ExecCode(CodeObject* co){
+    VM::ResetFlags();
     GCVecOP ops = co->GetOPS();
     auto op = ops.begin();
+    auto* ts = &vmStack;
     while(op != ops.end()){  //auto it = ops.begin(); it != ops.end(); ++it){
     Object* i;
     Object* j;
     FunctionObj* fn;
+    if(VM::RetFlag) { VM::ResetFlags();  return; }
     switch(op->opc){
         case OPC::ADD:
             DEBUG("OP::ADD");
@@ -73,7 +77,9 @@ void VM::ExecCode(CodeObject* co){
             DEBUG("OP::STORE_VALUE");
             assert(op->HasArgA());
             assert(op->HasArgB());
-            co->StoreIDVal(VM::Pop(), op->GetArgA(), op->GetArgB());
+            i = VM::Pop();
+            assert(i->GetInt() >= 0);
+            co->StoreIDVal(i, op->GetArgA(), op->GetArgB());
             break;
         case OPC::JMP_IF:
             DEBUG("OP::JMP_IF");
@@ -95,6 +101,7 @@ void VM::ExecCode(CodeObject* co){
             fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op->GetArgA(), op->GetArgB()));
             if(!fn->IsCFunction()){
                 VM::ExecCode(fn->GetObjectCode());
+                VM::ResetFlags();
                 break;
             }
             //Letting it pass through intended
@@ -107,6 +114,7 @@ void VM::ExecCode(CodeObject* co){
         case OPC::RETURN:
         {
             DEBUG("OP::RETURN");
+            VM::RetFlag = true;
             //TODO, clean the stack
             return;
         }

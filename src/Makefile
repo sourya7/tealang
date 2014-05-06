@@ -2,7 +2,7 @@ CC = ccache g++
 CC_FLAGS = -I./Include --std=c++11 -ggdb
 
 ifeq ($(EGC), 1)
-	GC_FLAGS = -DGC_DEBUG -DALLOW_GC
+	GC_FLAGS = -DALLOW_GC
 	GC_LIB= -lgc
 endif
 

@@ -99,7 +99,10 @@ void VM::ExecCode(CodeObject* co){
             assert(op->HasArgB());
             fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op->GetArgA(), op->GetArgB()));
             if(!fn->IsCFunction()){
-                VM::ExecCode(fn->GetObjectCode());
+                CodeObject* co = fn->GetObjectCode();
+                VM::ExecCode(co);
+                //explicitely delete co as its not GC'd
+                delete co;
                 VM::ResetFlags();
                 break;
             }

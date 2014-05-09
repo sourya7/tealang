@@ -9,4 +9,4 @@ def fib(n):
     return l + r
 
 if __name__ == "__main__":
-    print(fib(40))
+    print(fib(30))

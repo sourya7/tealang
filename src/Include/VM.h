@@ -9,17 +9,23 @@ class Object;
 
 class VM : public TGC {
 private:
-    static GCStackObjPtr vmStack;
-    static void Push(Object* a) { vmStack.push_back(a); }
-    static Object* Pop() { 
-        Object* top = vmStack.back(); 
-        vmStack.pop_back(); 
-        return top; 
-    }
+    static GCVecObjPtr vmStack;
+    static GCVecCodeObjPtr coStack;
+    static GCVecPairOPIntPtr opsStack;
+
+    static GCVecOP* ops; //currentOps
+    static int* opid;  //currentopid
+    static CodeObject* co; //currentCo
+
+    static void Push(Object* a);
+    static Object* Pop();
     static bool RetFlag;
     static void ResetFlags() {
         RetFlag = false;
     }
+
+    static void PopCO();
+    static void PushCO(CodeObject* c);
 public:
     static void ExecCode(CodeObject*);
     friend class CFunction;

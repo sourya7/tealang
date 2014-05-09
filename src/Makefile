@@ -1,10 +1,9 @@
 CC = ccache g++
-CC_FLAGS = -I./Include --std=c++11 -pg -O3 
-
-GC_FLAGS = -DALLOW_GC
-GC_LIB= -lgc
+CC_FLAGS = -I./Include --std=c++11 -O3
 
 ifeq ($(EGC), 1)
+GC_FLAGS = -DALLOW_GC
+GC_LIB= -lgc
 endif
 
 # File names

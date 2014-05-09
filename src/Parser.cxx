@@ -223,6 +223,7 @@ NodeAST* Parser::ParseSingleStmt(){
     switch(look->tag){
         case Tags::RETURN:
             move();
+            cerr << "Parsing return\n";
             return new NodeAST(NodeType::RETURN,ParseExpr(),nullptr);
             break;
     }

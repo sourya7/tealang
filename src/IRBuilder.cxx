@@ -71,6 +71,7 @@ void IRBuilder::DeclVar(string v, Object* o){
 }
 
 void IRBuilder::DeclFunc(string n, int ac, IRBuilder* b){
+    b->GetCodeObject()->SetType(CT::FUNCTION);
     auto fo = new FunctionObj(n, ac, b->GetCodeObject());
     int id = co->GetID(n);
     assert(id != -1);

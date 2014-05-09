@@ -18,6 +18,7 @@ private:
     bool hasArgB = false;
 public:
     OP(OPC o) : opc(o) {}
+
     OP(OPC o, int a) : opc(o),hasArgA(true),argA(a) {} 
     OP(OPC o, int a, int b) : opc(o),hasArgA(true),hasArgB(true),argA(a),argB(b) {} 
     const OPC  opc;

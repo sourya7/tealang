@@ -8,17 +8,54 @@
 #include "FunctionObj.h"
 
 GCStackObjPtr VM::vmStack;
+GCVecCodeObjPtr VM::coStack;
+GCVecPairOPIntPtr VM::opsStack;
+#define INCR_OP() (*opid)++;
+GCVecOP* VM::ops;
+int* VM::opid;
+CodeObject* VM::co;
+
 bool VM::RetFlag = false;
-void VM::ExecCode(CodeObject* co){
-    VM::ResetFlags();
-    GCVecOP ops = co->GetOPS();
-    auto op = ops.begin();
-    while(op != ops.end()){
+
+
+void VM::PopCO() {
+    coStack.pop_back();
+    opsStack.pop_back();
+    co = coStack.back();
+    ops = opsStack.back().first;
+    opid = opsStack.back().second;
+}
+
+Object* VM::Pop() { 
+    Object* top = vmStack.back(); 
+    vmStack.pop_back(); 
+    return top; 
+}
+
+void VM::Push(Object* a) { 
+    vmStack.push_back(a); 
+}
+
+void VM::PushCO(CodeObject* c) { 
+    opid = new int(0);
+    co = c;
+    ops = c->GetOPS();
+    coStack.push_back(co);
+    opsStack.push_back(make_pair(ops, opid));
+}
+
+void VM::ExecCode(CodeObject* c){
+    VM::PushCO(c);
+    int count = 30;
+    while(!coStack.empty()) {
+    if(*opid >= ops->size()) { PopCO(); continue; }
+
     Object* i;
     Object* j;
     FunctionObj* fn;
-    if(VM::RetFlag) { VM::ResetFlags();  return; }
-    switch(op->opc){
+    OP op = (*ops)[*opid];
+    OPC opc = op.opc;
+    switch(opc){
         case OPC::ADD:
             DEBUG("OP::ADD");
             j = VM::Pop();
@@ -37,16 +74,19 @@ void VM::ExecCode(CodeObject* co){
             i = VM::Pop();
             VM::Push(ObjOP::Equal(i,j));
             break;
+            /*
         case OPC::WHILE:
             DEBUG("OP::WHILE");
-            assert(op->HasArgA());
-            assert(op->HasArgB());
-            VM::ExecCode(co->GetChild(op->GetArgA()));
+            assert(op.HasArgA());
+            assert(op.HasArgB());
+            assert(false);
+            VM::ExecCode(co->GetChild(op.GetArgA()));
             while(VM::Pop()->IsTrue()){
-                VM::ExecCode(co->GetChild(op->GetArgB()));
-                VM::ExecCode(co->GetChild(op->GetArgA()));
+                VM::ExecCode(co->GetChild(op.GetArgB()));
+                VM::ExecCode(co->GetChild(op.GetArgA()));
             }
             break;
+            */
         case OPC::NEQ:
             DEBUG("OP::NEQ");
             j = VM::Pop();
@@ -61,50 +101,66 @@ void VM::ExecCode(CodeObject* co){
             break;
         case OPC::LOAD_CONSTANT:
             DEBUG("OP::PUSH_CONSTANT");
-            assert(op->HasArgA());
-            i = co->GetConst(op->GetArgA());
+            assert(op.HasArgA());
+            i = co->GetConst(op.GetArgA());
             VM::Push(i);
             break;
         case OPC::LOAD_VALUE:
             DEBUG("OP::LOAD_VALUE");
-            assert(op->HasArgA());
-            assert(op->HasArgB());
-            i = co->GetIDVal(op->GetArgA(), op->GetArgB());
+            assert(op.HasArgA());
+            assert(op.HasArgB());
+            i = co->GetIDVal(op.GetArgA(), op.GetArgB());
             VM::Push(i);
             break;
         case OPC::STORE_VALUE:
             DEBUG("OP::STORE_VALUE");
-            assert(op->HasArgA());
-            assert(op->HasArgB());
+            assert(op.HasArgA());
+            assert(op.HasArgB());
             i = VM::Pop();
             assert(i->GetInt() >= 0);
-            co->StoreIDVal(i, op->GetArgA(), op->GetArgB());
+            co->StoreIDVal(i, op.GetArgA(), op.GetArgB());
             break;
         case OPC::JMP_IF:
             DEBUG("OP::JMP_IF");
-            assert(op->HasArgA());
-            if(VM::Pop()->IsTrue()) VM::ExecCode(co->GetChild(op->GetArgA()));
-            break;
+            assert(op.HasArgA());
+            if(VM::Pop()->IsTrue()) {
+                CodeObject* c = co->GetChild(op.GetArgA());
+                c->SetParent(co);
+                INCR_OP();
+                PushCO(c); 
+            } else { INCR_OP(); }
+            continue;
         case OPC::JMP_IF_ELSE:
             DEBUG("OP::JMP_IF_ELSE");
-            assert(op->HasArgA());
+            assert(op.HasArgA());
             //For if, we skip the else statment
             //For else, we skip the if statment
-            if(VM::Pop()->IsTrue()) { VM::ExecCode(co->GetChild(op->GetArgA())); op++; }
-            else { ++op; VM::ExecCode(co->GetChild(op->GetArgA())); }
-            break;
+            if(VM::Pop()->IsTrue()) { 
+                CodeObject* c = co->GetChild(op.GetArgA());
+                c->SetParent(co);
+                INCR_OP(); //move to the next which is else
+                INCR_OP(); //eat up the else statement
+                PushCO(c);
+            }
+            else { 
+                INCR_OP(); // consume the previous if
+                CodeObject* c = co->GetChild(op.GetArgA());
+                c->SetParent(co);
+                INCR_OP(); //consume the else stmt
+                PushCO(c); 
+            }
+            continue;
         case OPC::CALL:{
             DEBUG("OP::CALL");
-            assert(op->HasArgA());
-            assert(op->HasArgB());
-            fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op->GetArgA(), op->GetArgB()));
+            assert(op.HasArgA());
+            assert(op.HasArgB());
+
+            fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             if(!fn->IsCFunction()){
-                CodeObject* co = fn->GetObjectCode();
-                VM::ExecCode(co);
-                //explicitely delete co as its not GC'd
-                delete co;
-                VM::ResetFlags();
-                break;
+                CodeObject* c = fn->GetObjectCode(); 
+                INCR_OP();
+                PushCO(c);
+                continue;
             }
             //Letting it pass through intended
         }
@@ -115,15 +171,18 @@ void VM::ExecCode(CodeObject* co){
         }
         case OPC::RETURN:
         {
-            DEBUG("OP::RETURN");
-            VM::RetFlag = true;
             //TODO, clean the stack
-            return;
+            DEBUG("OP::RETURN");
+            while(!co->IsFunction()){
+                PopCO();
+            }
+            PopCO();
+            continue;
         }
                          
         default:
             assert(false && "Not Implemented Yet!");
             break;
-    }  ++op; //increment the op
+    }  INCR_OP(); //increment the op
     } //end switch, end for
 }

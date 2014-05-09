@@ -17,8 +17,6 @@ private:
     GCVecString ids;
     //value for those vars
     GCVecObjPtr vals;
-    GCVecObjPtr params;
-    GCVecString paramIds;
     //constants in the codeobject scope
     GCVecObjPtr consts;
     //opcodes for this codeobject
@@ -29,16 +27,23 @@ private:
 public:
     CodeObject(CodeObject* p) : parent(p) {}
     CodeObject() {}
+
+    void SetType(CT t) { type = t; }
+    bool IsFunction() { return type == CT::FUNCTION; }
+    bool IsMethod() { return type == CT::METHOD; }
+    bool IsNorm() { return type == CT::NORM; }
+
     int PushID(string var); 
     int PushConst(Object* o);
 
     int GetID(string var, int &l);
     int GetID(string var) { int l; return GetID(var, l); } 
     void StoreIDVal(Object* val, int id, int level=0);
+    void SetParent(CodeObject* p) { parent = p; }
     Object* GetIDVal(int id, int level=0);
 
     Object* GetConst(int id){ return consts[id]; }
-    const GCVecOP GetOPS(){ return opcode; }
+    GCVecOP* GetOPS(){ return &opcode; }
     void PushOP(OP op) { opcode.push_back(op); }   
     void AddChild(CodeObject* c);
     int GetChildID(CodeObject* c);

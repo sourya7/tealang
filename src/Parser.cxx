@@ -172,7 +172,9 @@ SNodeAST Parser::ParseFunctionStmt(){
     //consume defun
     move(); 
 
-    auto funcDef = make_shared<FuncStmtAST>(ParseFunctionParam(), ParseBlock());
+    auto param = ParseFunctionParam();
+    auto block = ParseBlock();
+    auto funcDef = make_shared<FuncStmtAST>(param, block);
 
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid

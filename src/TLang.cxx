@@ -18,7 +18,6 @@ int main(int argc, char* argv[]){
     CFunction::Init(builder);
 
     parser = make_shared<Parser>(&src);
-
     SNodeAST root = parser->Parse();
     root->GenerateIR(builder);
 

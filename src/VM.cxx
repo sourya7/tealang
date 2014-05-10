@@ -20,6 +20,7 @@ bool VM::RetFlag = false;
 void VM::PopCO() {
     coStack.pop_back();
     opsStack.pop_back();
+    if(coStack.empty()) return;
     co = coStack.back();
     ops = opsStack.back().first;
     opid = opsStack.back().second;
@@ -47,7 +48,9 @@ void VM::ExecCode(SCodeObj c){
     VM::PushCO(c);
     int count = 30;
     while(!coStack.empty()) {
-    if(*opid >= ops->size()) { PopCO(); continue; }
+    if(*opid >= ops->size()) { 
+        PopCO(); continue; 
+    }
 
     SObject i;
     SObject j;

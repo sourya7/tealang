@@ -22,7 +22,7 @@ void CFunction::Call(SFunctionObj obj){
     FuncSizePair fsp = funcMap[funcName];
     int size = fsp.second;
     while(size--) p.push_back(VM::Pop());
-    //Object* ret = fsp.first(p);
+    SObject ret = fsp.first(p);
 }
 
 SObject printWrapper(const VecSObj& v){

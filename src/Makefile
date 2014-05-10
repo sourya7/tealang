@@ -1,5 +1,5 @@
 CC = ccache g++
-CC_FLAGS = -I./Include --std=c++11 -O3
+CC_FLAGS = -I./Include --std=c++11 -ggdb
 
 ifeq ($(EGC), 1)
 GC_FLAGS = -DALLOW_GC

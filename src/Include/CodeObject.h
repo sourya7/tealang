@@ -34,8 +34,8 @@ public:
         children = p.children;
         opcode = p.opcode;
         consts = p.consts;
-        //vals = make_shared<VecSObj>(*p.vals);
-        vals = p.vals;
+        vals = make_shared<VecSObj>(*p.vals);
+        //vals = p.vals;
         ids = p.ids;
         type = p.type;
     }

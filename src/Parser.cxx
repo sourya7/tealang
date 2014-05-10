@@ -320,7 +320,9 @@ SNodeAST Parser::ParseIfStmt(){
     //ifStmt -> if (bool) block [elif block] [else block] endif
     //consume if
     move();
-    auto stmt = make_shared<IfStmtAST>(ParseExpr(), ParseBlock());
+    auto expr = ParseExpr();
+    auto block = ParseBlock();
+    auto stmt = make_shared<IfStmtAST>(expr, block);
     if(look->tag == Tags::ELIF){
         assert(false && "Not supported");
     }
@@ -342,7 +344,9 @@ SNodeAST Parser::ParseClassStmt(){ return nullptr; }
 SNodeAST Parser::ParseWhileStmt(){ 
     //consume while
     move();
-    auto stmt = make_shared<WhileStmtAST>(ParseExpr(), ParseBlock());
+    auto expr = ParseExpr();
+    auto block = ParseBlock();
+    auto stmt = make_shared<WhileStmtAST>(expr, block);
     //consume endwhile
     move();
     return stmt;

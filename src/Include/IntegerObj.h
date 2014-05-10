@@ -3,15 +3,15 @@
 #include "Object.h"
 class IntegerObj : public Object {
 public:  
-    IntegerObj(long l) : Object(TType::INTEGER, new TValue(l)) {}
+    IntegerObj(long l) : Object(Type::INTEGER, make_shared<Value>(l)) {}
     bool IsInteger() { return true; }
     bool IsTrue() { return GetValue()->l != 0; }
-    Object* operator+(Object* rhs);
-    Object* operator*(Object* rhs);
-    Object* operator-(Object* rhs);
-    Object* operator==(Object* rhs);
-    Object* operator!=(Object* rhs);
-    static long ValFromObj(Object val){ return val.GetInt(); }
+    SObject operator+(SObject rhs);
+    SObject operator*(SObject rhs);
+    SObject operator-(SObject rhs);
+    SObject operator==(SObject rhs);
+    SObject operator!=(SObject rhs);
+    static long ValFromObj(SObject val){ return val->GetInt(); }
     string ToString();
 };
 #endif

@@ -4,10 +4,10 @@
 #include "SeqAST.h"
 #include "ParamAST.h"
 
-void WhileStmtAST::GenerateIR(IRBuilder* b){
-    IRBuilder* exprChild = new IRBuilder(b);
+void WhileStmtAST::GenerateIR(SIRBuilder b){
+    auto exprChild = make_shared<IRBuilder>(b);
     left->GenerateIR(exprChild);
-    IRBuilder* bodyChild = new IRBuilder(b);
+    auto bodyChild = make_shared<IRBuilder>(b);
     right->GenerateIR(bodyChild);
     b->DeclWhile(exprChild, bodyChild);
 }

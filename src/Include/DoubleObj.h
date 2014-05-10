@@ -3,12 +3,12 @@
 #include "Object.h"
 class DoubleObj : public Object {
 public:  
-    DoubleObj(double d) : Object(TType::DOUBLE, new TValue(d)) {}
+    DoubleObj(double d) : Object(Type::DOUBLE, make_shared<Value>(d)) {}
     bool IsDouble() { return true; }
     bool IsTrue() { return GetValue()->l != 0; }
-    Object* operator+(Object rhs);
-    Object* operator*(Object rhs);
-    Object* operator-(Object rhs);
-    static double ValFromObj(Object val){ return val.GetValue()->l; }
+    SObject operator+(const Object* rhs);
+    SObject operator*(const Object* rhs);
+    SObject operator-(const Object* rhs);
+    static double ValFromObj(SObject val){ return val->GetValue()->l; }
 };
 #endif

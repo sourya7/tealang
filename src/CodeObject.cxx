@@ -4,7 +4,7 @@
 using std::string;
 using std::find;
 
-int CodeObject::PushConst(Object* o) {
+int CodeObject::PushConst(SObject o) {
     consts->push_back(o);
     return consts->size() - 1;
 }
@@ -27,39 +27,39 @@ int CodeObject::GetID(string var, int &level){
             return it - root->ids->begin();
         }
         level++;
-        root = root->parent;
+        root = root->parent.get();
     }
     //not found in any level
     level = -1;
     return -1;
 }
 
-void CodeObject::StoreIDVal(Object* val, int id, int level) { 
+void CodeObject::StoreIDVal(SObject val, int id, int level) { 
     CodeObject* root = this;
     while(level--){
         assert(root != nullptr);
-        root = root->parent;
+        root = root->parent.get();
     }
     assert(root->ids->size() > id); 
     root->vals->at(id) = val; 
 }
 
-int CodeObject::GetChildID(CodeObject* c){
+int CodeObject::GetChildID(SCodeObj c){
     auto it = find(children->begin(), children->end(), c);
     if(it != children->end()) return it - children->begin();
     else return -1;
 }
 
-Object* CodeObject::GetIDVal(int id, int level){
+SObject CodeObject::GetIDVal(int id, int level){
     CodeObject* root = this;
     while(level--){
         assert(root != nullptr);
-        root = root->parent;
+        root = root->parent.get();
     }
     return root->vals->at(id); 
 }
 
-void CodeObject::AddChild(CodeObject* child) { 
+void CodeObject::AddChild(SCodeObj child) { 
     children->push_back(child); 
 }
 

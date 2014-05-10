@@ -7,14 +7,13 @@ class IRBuilder;
 enum class Tags;
 enum class NodeType;
 
-typedef GV<Token*>::Vector GCVecTokPtr;
 class ExprAST : public NodeAST
 {
 private:
-    GCVecTokPtr expr;
+    VecSTok expr;
 public:
-    ExprAST(GCVecTokPtr e) : NodeAST(NodeType::EXPR), expr(e) {}
-    void GenerateIR(IRBuilder* builder);
+    ExprAST(VecSTok e) : NodeAST(NodeType::EXPR), expr(e) {}
+    void GenerateIR(SIRBuilder builder);
 };
 
 #endif

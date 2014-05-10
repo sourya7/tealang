@@ -3,12 +3,12 @@
 #include "Object.h"
 class BooleanObj : public Object {
 public:  
-    BooleanObj(bool b) : Object(TType::BOOLEAN,new TValue(b)) {}
-    bool IsTrue() { return GetValue()->b; }  
+    BooleanObj(bool b) : Object(Type::BOOLEAN,make_shared<Value>(b)) {}
+    bool IsTrue() const { return GetValue()->b; }  
     bool IsBoolean() { return true; }
     string ToString();
-    Object* operator==(Object* rhs);
-    static Object* const TRUE;
-    static Object* const FALSE;
+    SObject operator==(const Object* rhs);
+    static SObject TRUE;
+    static SObject FALSE;
 };
 #endif

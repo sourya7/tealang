@@ -9,25 +9,24 @@ class Object;
 
 class VM : public TGC {
 private:
-    static GCVecObjPtr vmStack;
-    static GCVecCodeObjPtr coStack;
-    static GCVecPairOPIntPtr opsStack;
+    static VecSObj vmStack;
+    static VecSCodeObj coStack;
+    static VecPairVecOPInt opsStack;
 
-    static GCVecOP* ops; //currentOps
-    static int* opid;  //currentopid
-    static CodeObject* co; //currentCo
+    static SInt opid;  //currentopid
+    static SVecOP ops; //currentOps
+    static SCodeObj co; //currentCo
 
-    static void Push(Object* a);
-    static Object* Pop();
+    static void Push(SObject a);
+    static SObject Pop();
     static bool RetFlag;
     static void ResetFlags() {
         RetFlag = false;
     }
-
     static void PopCO();
-    static void PushCO(CodeObject* c);
+    static void PushCO(SCodeObj c);
 public:
-    static void ExecCode(CodeObject*);
+    static void ExecCode(SCodeObj c);
     friend class CFunction;
 };
 #endif

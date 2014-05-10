@@ -6,20 +6,20 @@
 #include "FunctionObj.h"
 
 
-IRBuilder::IRBuilder() { co = new CodeObject(); }
-IRBuilder::IRBuilder(IRBuilder* b) {
-    CodeObject* parent = b->GetCodeObject();
-    co = new CodeObject(parent);
+IRBuilder::IRBuilder() { co = make_shared<CodeObject>(); }
+IRBuilder::IRBuilder(SIRBuilder b) {
+    auto parent = b->GetCodeObject();
+    co = make_shared<CodeObject>(parent);
     parent->AddChild(co);
 }
 
-void IRBuilder::CondJump(IRBuilder* ifBlk){
+void IRBuilder::CondJump(SIRBuilder ifBlk){
     int childId = co->GetChildID(ifBlk->GetCodeObject());
     assert(childId != -1);
     co->PushOP(OP(OPC::JMP_IF, childId));
 }
 
-void IRBuilder::CondJump(IRBuilder* ifBlk, IRBuilder* elBlk){
+void IRBuilder::CondJump(SIRBuilder ifBlk, SIRBuilder elBlk){
     int ifId = co->GetChildID(ifBlk->GetCodeObject());
     int elId = co->GetChildID(elBlk->GetCodeObject());
     co->PushOP(OP(OPC::JMP_IF_ELSE, ifId));
@@ -34,7 +34,7 @@ void IRBuilder::PerformOP(OPC op){
 // LOAD_CONST 1 (2)
 // LOAD_CONST 2 (4)
 // BINARY_ADD 
-void IRBuilder::LoadConst(Object* c){
+void IRBuilder::LoadConst(SObject c){
     int id = co->PushConst(c);
     co->PushOP(OP(OPC::LOAD_CONSTANT, id));
 }
@@ -64,26 +64,26 @@ void IRBuilder::DeclVar(string v){
     co->PushID(v);
 }
 
-void IRBuilder::DeclVar(string v, Object* o){
+void IRBuilder::DeclVar(string v, SObject o){
     assert(co->GetID(v) == -1 && "Variable already declared!");
     int id = co->PushID(v);
     co->StoreIDVal(o,id);
 }
 
-void IRBuilder::DeclFunc(string n, int ac, IRBuilder* b){
+void IRBuilder::DeclFunc(string n, int ac, SIRBuilder b){
     b->GetCodeObject()->SetType(CT::FUNCTION);
-    auto fo = new FunctionObj(n, ac, b->GetCodeObject());
+    auto fo = make_shared<FunctionObj>(n, ac, b->GetCodeObject());
     int id = co->GetID(n);
     assert(id != -1);
     co->StoreIDVal(fo,id);
 }
 
 void IRBuilder::DeclCFunc(string n, int ac){
-    auto fo = new FunctionObj(n, ac); 
+    auto fo = make_shared<FunctionObj>(n, ac); 
     DeclVar(n, fo);
 }
 
-CodeObject* IRBuilder::GetCodeObject(){
+SCodeObj IRBuilder::GetCodeObject(){
     return co;
 }
 
@@ -91,7 +91,7 @@ void IRBuilder::Return(bool hasArg){
     co->PushOP(OP(OPC::RETURN, hasArg));
 }
 
-void IRBuilder::DeclWhile(IRBuilder* expr, IRBuilder* body){
+void IRBuilder::DeclWhile(SIRBuilder expr, SIRBuilder body){
     int exprID = co->GetChildID(expr->GetCodeObject());
     int bodyID = co->GetChildID(body->GetCodeObject());
     assert(exprID != -1);

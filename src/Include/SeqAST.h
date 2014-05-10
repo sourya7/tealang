@@ -7,12 +7,12 @@
 class IRBuilder;
 class SeqAST : public NodeAST {
 private:
-    NodeAST* parent = nullptr;
+    NodeAST* parent;
 public:
     SeqAST() : NodeAST(NodeType::SEQ) {}
     SeqAST(NodeAST* p) : SeqAST() { parent = p; }
-    SeqAST* AddSeq(NodeAST* n);
-    void GenerateIR(IRBuilder* builder);
+    SSeqAST AddSeq(SNodeAST n);
+    void GenerateIR(SIRBuilder builder);
 };
 
 #endif

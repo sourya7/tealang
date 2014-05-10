@@ -6,7 +6,7 @@ class CallAST : public NodeAST {
 private:
 public:
     CallAST() : NodeAST(NodeType::CALL) {}
-    void GenerateIR(IRBuilder* builder);
+    void GenerateIR(SIRBuilder builder);
 };
 #endif
 

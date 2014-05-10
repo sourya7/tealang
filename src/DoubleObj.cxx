@@ -1,10 +1,10 @@
 #include "DoubleObj.h"
 
-Object* DoubleObj::operator+(Object rhs){
+SObject DoubleObj::operator+(const Object* rhs){
 }
 
-Object* DoubleObj::operator*(Object rhs){
+SObject DoubleObj::operator*(const Object* rhs){
 }
 
-Object* DoubleObj::operator-(Object rhs){
+SObject DoubleObj::operator-(const Object* rhs){
 }

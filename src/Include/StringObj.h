@@ -3,10 +3,10 @@
 #include "Object.h"
 class StringObj : public Object {
 public:  
-    StringObj(const char* v) : Object(TType::STRING, new TValue(v)) {}
+    StringObj(const char* v) : Object(Type::STRING, make_shared<Value>(v)) {}
     bool IsString() { return true; }
-    Object* operator+(Object* rhs);
-    Object* operator==(Object* rhs);
+    SObject operator+(Object* rhs);
+    SObject operator==(Object* rhs);
     string ToString();
 };
 #endif

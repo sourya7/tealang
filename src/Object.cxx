@@ -11,18 +11,18 @@
 
 using std::string;
 
-Object* Object::NIL;
-Object* Object::FromToken(Token* t){
-    Object* o;
+SObject Object::NIL;
+SObject Object::FromToken(Token* t){
+    SObject o;
     switch(t->tag){
         case Tags::NUM:
-            o = new IntegerObj(GUARD_CAST<NumberTok*>(t)->value);
+            o = make_shared<IntegerObj>(GUARD_CAST<NumberTok*>(t)->value);
             break;
         case Tags::REAL:
-            o = new DoubleObj(GUARD_CAST<RealTok*>(t)->value);
+            o = make_shared<DoubleObj>(GUARD_CAST<RealTok*>(t)->value);
             break;
         case Tags::STR:
-            o = new StringObj(GUARD_CAST<WordTok*>(t)->value.c_str());
+            o = make_shared<StringObj>(GUARD_CAST<WordTok*>(t)->value.c_str());
             break;
         default:
             assert(t->tag != Tags::BCIO);
@@ -31,7 +31,6 @@ Object* Object::FromToken(Token* t){
             assert(false && "This should not happen");
             break;
     }
-
     return o;
 }
 

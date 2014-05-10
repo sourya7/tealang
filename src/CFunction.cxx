@@ -8,7 +8,7 @@ MapStrFunc funcMap = {
     {"printf:withF:", {printfWrapper, 2}},
 };
 
-void CFunction::Init(IRBuilder* b){
+void CFunction::Init(SIRBuilder b){
     for(auto f : funcMap){
         int argc = f.second.second;
         string funcName = f.first;
@@ -16,21 +16,21 @@ void CFunction::Init(IRBuilder* b){
     }
 }
 
-void CFunction::Call(FunctionObj* obj){
-    GCVecObjPtr p;
+void CFunction::Call(SFunctionObj obj){
+    VecSObj p;
     string funcName = obj->GetName();
     FuncSizePair fsp = funcMap[funcName];
     int size = fsp.second;
     while(size--) p.push_back(VM::Pop());
-    Object* ret = fsp.first(p);
+    //Object* ret = fsp.first(p);
 }
 
-Object* printWrapper(GCVecObjPtr v){
+SObject printWrapper(const VecSObj& v){
     string s = v.back()->ToString();
     cerr << s;
     return nullptr;
 }
 
-Object* printfWrapper(GCVecObjPtr s){
+SObject printfWrapper(const VecSObj& s){
     return nullptr;
 }

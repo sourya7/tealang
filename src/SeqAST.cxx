@@ -3,15 +3,15 @@
 #include "SeqAST.h"
 
 
-SeqAST* SeqAST::AddSeq(NodeAST* n) {
+SSeqAST SeqAST::AddSeq(SNodeAST n) {
     left = n;
-    SeqAST* rs = new SeqAST(this);
+    auto rs = make_shared<SeqAST>(this);
     right = rs;
     return rs;
 }
 
-void SeqAST::GenerateIR(IRBuilder* builder){
-    if(left != nullptr) left->GenerateIR(builder);
-    if(right != nullptr) right ->GenerateIR(builder);
+void SeqAST::GenerateIR(SIRBuilder builder){
+    if(left.get() != nullptr) left->GenerateIR(builder);
+    if(right.get() != nullptr) right ->GenerateIR(builder);
 }
 

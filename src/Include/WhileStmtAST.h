@@ -4,10 +4,10 @@
 #include "NodeAST.h"
 class IRBuilder;
 class WhileStmtAST : public NodeAST{ 
-    NodeAST* obj;
+    SNodeAST obj;
 public:
-    WhileStmtAST(NodeAST* p,NodeAST* b) : NodeAST(NodeType::WSTMT,p,b){}
-    void GenerateIR(IRBuilder* b);
+    WhileStmtAST(SNodeAST p,SNodeAST b) : NodeAST(NodeType::WSTMT,p,b){}
+    void GenerateIR(SIRBuilder b);
 };
 
 #endif

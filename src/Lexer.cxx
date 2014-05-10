@@ -38,18 +38,6 @@ map<string, Tags> TokenMap {
     {"break", Tags::BREAK }
 };
 
-#define LEN_BLOCKTOKENS 6
-string blockTokens[] = {"defclass", "defun", "if", "for", "try", "while"};
-
-#define LEN_FLWBLKTOKENS 3
-string flwBlkTokens[] = {"elif", "catch", "else"};
-
-#define LEN_ENDTOKENS 6
-string endTokens[] = {"endif","endfor","endtry","endwhile","endclass","endfun"};
-
-#define LEN_CMDTOKENS 5
-string cmdTokens [] = {"in", "var", "isa", "return", "break"};
-
 /* 
 * Some helper functions for converting from numeric string types   
 * TODO
@@ -77,7 +65,7 @@ double floatFromFloat(string floatStr){
     return 0;
 }
 
-Token* Lexer::ParseSpecialNumber(){
+SToken Lexer::ParseSpecialNumber(){
     bool isHex = peek == 'x';
     bool isOctal = isdigit(peek);
     bool isBinary = peek == 'b';
@@ -90,7 +78,7 @@ Token* Lexer::ParseSpecialNumber(){
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
                 (isBinary && (peek == '0' || peek == '1')));
-        return new WordTok(tmp, Tags::ID, line);
+        return make_shared<WordTok>(tmp, Tags::ID, line);
 
         /* TODO use these instead
         if(isHex) return new NumberTok(decFromHex(tmp), line);
@@ -98,10 +86,10 @@ Token* Lexer::ParseSpecialNumber(){
         else return new NumberTok(decFromBin(tmp), line);
         */
     }
-    return new NumberTok(0, line);
+    return make_shared<NumberTok>(0, line);
 }
 
-Token* Lexer::ParseNumericToken(){
+SToken Lexer::ParseNumericToken(){
     if(peek == '0'){
         ReadChar();
         return ParseSpecialNumber();
@@ -113,17 +101,17 @@ Token* Lexer::ParseNumericToken(){
         tmp += peek;
         ReadChar();
     }while(isdigit(peek));
-    if(peek != '.') return new NumberTok(decFromDec(tmp), line);
+    if(peek != '.') return make_shared<NumberTok>(decFromDec(tmp), line);
 
     //handle real numbers
     do{
         tmp += peek;
         ReadChar();
     }while(isdigit(peek));
-    return new WordTok(tmp, Tags::ID, line); //RealTok(floatFromFloat(tmp), line);
+    return make_shared<WordTok>(tmp, Tags::ID, line); 
 }
 
-Token* Lexer::ParseIdentifierToken(){
+SToken Lexer::ParseIdentifierToken(){
     string tmp;
     while(isalpha(peek) || isdigit(peek)){
         tmp += peek;  
@@ -134,37 +122,13 @@ Token* Lexer::ParseIdentifierToken(){
     if(peek == ':') { ReadChar(); tmp += ':'; tag = Tags::PARAM; }
     else if(it != TokenMap.end()){
         tag = it->second;
-        /*
-        switch(it->second){
-            case Tags::DEFCLASS:
-            case Tags::DEFUN:
-            case Tags::IF:
-            case Tags::FOR:
-            case Tags::TRY:
-            case Tags::WHILE:
-            case Tags::ELIF:
-            case Tags::CATCH:
-            case Tags::ELSE:
-            case Tags::ENDIF:
-            case Tags::ENDFOR:
-            case Tags::ENDTRY:
-            case Tags::ENDWHILE:
-            case Tags::ENDCLASS:
-            case Tags::ENDFUN:
-            case Tags::IN:
-            case Tags::VAR:
-            case Tags::ISA:
-            case Tags::RETURN:
-            case Tags::BREAK:
-        }
-        */
-        return new Token(tag, line);
+        return make_shared<Token>(tag, line);
     }
     else {
         tag = Tags::ID;
     }
 
-    return new WordTok(tmp, tag, line);
+    return make_shared<WordTok>(tmp, tag, line);
 }
 
 Lexer::Lexer(istream* i){ 
@@ -185,20 +149,20 @@ bool Lexer::ReadAndMatch(char ch){
 } 
 
 #define IFMATCHELSE(ifMatch,ifTok,elseTok) \
-    if(ReadAndMatch(ifMatch)){return new OPTok(ifTok,line);} \
-    else{return new OPTok(elseTok,line);}
+    if(ReadAndMatch(ifMatch)){return make_shared<OPTok>(ifTok,line);} \
+    else{return make_shared<OPTok>(elseTok,line);}
 
 #define IFMATCH2ELSE(ifMatch,ifTok,elifMatch,elifTok,elseTok) \
-    if(ReadAndMatch(ifMatch)){return new OPTok(ifTok, line);} \
-    else if(peek == elifMatch){return new OPTok(elifTok, line);}\
-    else{return new OPTok(elseTok, line); }
+    if(ReadAndMatch(ifMatch)){return make_shared<OPTok>(ifTok, line);} \
+    else if(peek == elifMatch){return make_shared<OPTok>(elifTok, line);}\
+    else{return make_shared<OPTok>(elseTok, line); }
 
 /*
  * TODO - Handle comments
  * TODO - Use a symbol table to store the identifiers, strings, and numbers
  *
  */
-Token* Lexer::Scan(){
+SToken Lexer::Scan(){
     //Get rid of the white space
     for(;;ReadChar()){
         if(peek == '\n') { line += 1; } //
@@ -216,20 +180,20 @@ Token* Lexer::Scan(){
         case '!': { IFMATCHELSE('=', OPC::NEQ, OPC::NOT); }
         case '<': { IFMATCH2ELSE('=', OPC::LEQ, '<', OPC::LSHIFT, OPC::LT); }
         case '>': { IFMATCH2ELSE('=', OPC::GEQ, '>', OPC::RSHIFT, OPC::GT); }
-        case '/': { ReadChar(); return new OPTok(OPC::DIV, line); }
-        case '%': { ReadChar(); return new OPTok(OPC::MOD, line); }
-        case '~': { ReadChar(); return new OPTok(OPC::INV, line);  }
-        case '^': { ReadChar(); return new OPTok(OPC::XOR, line); }
-        case '[': { ReadChar(); return new Token(Tags::BSQO, line);   }
-        case ']': { ReadChar(); return new Token(Tags::BSQC, line);   }
-        case '(': { ReadChar(); return new Token(Tags::BCIO, line);   }
-        case ')': { ReadChar(); return new Token(Tags::BCIC, line);   }
-        case '{': { ReadChar(); return new Token(Tags::BCUO, line);   }
-        case '}': { ReadChar(); return new Token(Tags::BCUC, line);   }
+        case '/': { ReadChar(); return make_shared<OPTok>(OPC::DIV, line); }
+        case '%': { ReadChar(); return make_shared<OPTok>(OPC::MOD, line); }
+        case '~': { ReadChar(); return make_shared<OPTok>(OPC::INV, line);  }
+        case '^': { ReadChar(); return make_shared<OPTok>(OPC::XOR, line); }
+        case '[': { ReadChar(); return make_shared<Token>(Tags::BSQO, line);   }
+        case ']': { ReadChar(); return make_shared<Token>(Tags::BSQC, line);   }
+        case '(': { ReadChar(); return make_shared<Token>(Tags::BCIO, line);   }
+        case ')': { ReadChar(); return make_shared<Token>(Tags::BCIC, line);   }
+        case '{': { ReadChar(); return make_shared<Token>(Tags::BCUO, line);   }
+        case '}': { ReadChar(); return make_shared<Token>(Tags::BCUC, line);   }
         case '"': case '\'': { return ParseStringLiteral(); } 
-        case -1: { return new Token(Tags::SEOF, line); }
-        case '=': { if(ReadAndMatch('=')) return new OPTok(OPC::EQ, line);
-                    else return new WordTok('=', Tags::ASSIGN, line); }
+        case -1: { return make_shared<Token>(Tags::SEOF, line); }
+        case '=': { if(ReadAndMatch('=')) return make_shared<OPTok>(OPC::EQ, line);
+                    else return make_shared<WordTok>('=', Tags::ASSIGN, line); }
         default: {
             return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken(); }
     }
@@ -243,7 +207,7 @@ Token* Lexer::Scan(){
  * can represent them. Using the single quote, the escape characters are not 
  * interpreted as special characters. 
  */
-Token* Lexer::ParseStringLiteral(){
+SToken Lexer::ParseStringLiteral(){
     string tmp;
     char quote = peek;
     ReadChar();
@@ -263,6 +227,6 @@ Token* Lexer::ParseStringLiteral(){
         }
         else tmp += peek;
     } while(!ReadAndMatch(quote));
-    return new WordTok(tmp, Tags::STR, line);
+    return make_shared<WordTok>(tmp, Tags::STR, line);
 }
 

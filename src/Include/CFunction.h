@@ -8,16 +8,16 @@
 using namespace std;
 class FunctionObj;
 
-Object* printWrapper(GCVecObjPtr s);
-Object* printfWrapper(GCVecObjPtr s);
+SObject printWrapper(const VecSObj& s);
+SObject printfWrapper(const VecSObj& s);
 
 typedef  map<string,FuncSizePair> MapStrFunc;
 
 class IRBuilder;
 class CFunction {
 public:
-    static void Init(IRBuilder* b);
-    static void Call(FunctionObj* obj);
+    static void Init(SIRBuilder b);
+    static void Call(SFunctionObj obj);
 };
 
 #endif

@@ -15,7 +15,7 @@ class Token;
 class CodeObject;
 class FunctionObj;
 
-enum class TType {
+enum class Type {
     INTEGER = 1,
     DOUBLE,
     BOOLEAN,
@@ -25,7 +25,7 @@ enum class TType {
     NIL
 };
 
-union TValue {
+union Value {
     long l;
     double d;
     bool b;
@@ -33,33 +33,37 @@ union TValue {
     Object* o;
     CodeObject* co;
 
-    TValue(long v) : l(v) {}
-    TValue(double v) : d(v) {}
-    TValue(bool v) : b(v) {}
-    TValue(const char* v) : s(v) {}
-    TValue(Object* v) : o(v) {}
-    TValue(CodeObject* v) : co(v) {}
+    Value(long v) : l(v) {}
+    Value(double v) : d(v) {}
+    Value(bool v) : b(v) {}
+    Value(const char* v) : s(v) {}
+    Value(Object* v) : o(v) {}
+    Value(CodeObject* v) : co(v) {}
 };
+
+typedef shared_ptr<Value> SValue;
 
 class Object : public TGC {
 private:
-    TType type;
-    Object() : Object(TType::NIL, nullptr) {}; 
+    Type type;
+    Object() : Object(Type::NIL, nullptr) {}; 
 protected:
-    TValue* value = nullptr;
-    Object(TType t, TValue* v) : type(t), value(v) { }
-    Object(TType t) : type(t) { }
+    SValue value;
+    Object(Type t, SValue v) : type(t) { 
+        value = v;
+    }
+    Object(Type t) : type(t) { }
 public:
-    static Object* NIL;
-    static Object* FromToken(Token*);
-    virtual bool IsTrue() { return !IsNil(); }
-    virtual bool IsBool() { return false; }
-    virtual bool IsInteger() { return false; }
-    virtual bool IsString() { return false; }
-    virtual bool IsFunction() { return false; }
-    virtual bool IsNumeral() { return IsInteger() || IsDouble(); }
-    virtual bool IsDouble() { return  type == TType::DOUBLE; } 
-    virtual bool IsNil() { return  type == TType::NIL; }
+    static SObject NIL;
+    static SObject FromToken(Token*);
+    virtual bool IsTrue() const { return !IsNil(); }
+    virtual bool IsBool() const { return false; }
+    virtual bool IsInteger() const { return false; }
+    virtual bool IsString() const { return false; }
+    virtual bool IsFunction() const { return false; }
+    virtual bool IsNumeral() const { return IsInteger() || IsDouble(); }
+    virtual bool IsDouble() const { return  type == Type::DOUBLE; } 
+    virtual bool IsNil() const { return  type == Type::NIL; }
     int GetInt() { return value->l; }
     int GetDouble() { return value->d; }
     bool GetBool() { return value->b; }
@@ -67,13 +71,13 @@ public:
     CodeObject* GetCodeObject() { return value->co; }
     Object* GetObject() { return value->o; }
 
-    virtual Object* operator+(Object* rhs) {}
-    virtual Object* operator*(Object* rhs) {}
-    virtual Object* operator-(Object* rhs) {}
-    virtual Object* operator==(Object* rhs) {}
-    virtual Object* operator!=(Object* rhs) { assert(false); }
+    virtual SObject operator+(SObject rhs) { return shared_ptr<Object>(); }
+    virtual SObject operator*(SObject rhs) {return shared_ptr<Object>();}
+    virtual SObject operator-(SObject rhs) {return shared_ptr<Object>();}
+    virtual SObject operator==(SObject rhs) {return shared_ptr<Object>();}
+    virtual SObject operator!=(SObject rhs) {return shared_ptr<Object>(); }
     virtual string ToString() { return "<OBJECT>"; }
-    TValue* GetValue() { return value; } 
+    SValue GetValue() const { return value; } 
 };
 
 

@@ -6,19 +6,20 @@
 #include "CFunction.h"
 using namespace std;
 
+typedef shared_ptr<Parser> SParser;
 int main(int argc, char* argv[]){
     ifstream src;
-    Parser* parser;
+    SParser parser;
 
     if(argc <= 1) cerr << "Error: Need a file name\n";
     src.open(argv[1], std::ifstream::in);
 
-    IRBuilder* builder = new IRBuilder();
+    auto builder = std::make_shared<IRBuilder>();
     CFunction::Init(builder);
 
-    parser = new Parser(&src);
+    parser = make_shared<Parser>(&src);
 
-    NodeAST* root = parser->Parse();
+    SNodeAST root = parser->Parse();
     root->GenerateIR(builder);
 
     VM::ExecCode(builder->GetCodeObject());

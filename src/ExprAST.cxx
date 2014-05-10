@@ -7,23 +7,24 @@
 #include "Object.h"
 using std::cerr;
 
-void ExprAST::GenerateIR(IRBuilder* builder){
+
+void ExprAST::GenerateIR(SIRBuilder builder){
     for(auto t : expr){
-        assert(builder != nullptr);
+        assert(builder.get() != nullptr);
         if(t->tag == Tags::OP){
-            OPTok* op = (OPTok*)t;
+            auto op = GUARD_CAST<OPTok*>(t.get());
             builder->PerformOP(op->value);
         }
         else if(t->tag == Tags::BSQO){
-            auto call = GUARD_CAST<CallAST*>(t->GetLeft());
+            auto call = GUARD_CAST<CallAST*>(t->GetLeft().get());
             call->GenerateIR(builder);
         }
         else if(t->tag == Tags::ID) {
-            WordTok* wt = GUARD_CAST<WordTok*>(t);
+            auto wt = GUARD_CAST<WordTok*>(t.get());
             builder->LoadValue(wt->value);
         }
         else{
-            Object* o = Object::FromToken(t);
+            auto o = Object::FromToken(t.get());
             builder->LoadConst(o);
         }
     }

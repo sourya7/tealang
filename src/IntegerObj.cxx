@@ -5,29 +5,29 @@
 
 #define PERFORM_OP(op)\
     if(rhs->IsDouble())\
-        return new DoubleObj(GetInt() op rhs->GetDouble());\
+        return make_shared<DoubleObj>(GetInt() op rhs->GetDouble());\
     else\
-        return new IntegerObj(GetInt() op rhs->GetInt());\
+        return make_shared<IntegerObj>(GetInt() op rhs->GetInt());\
 
         
-Object* IntegerObj::operator+(Object* rhs){
+SObject IntegerObj::operator+(SObject rhs){
     PERFORM_OP(+)
 }
 
-Object* IntegerObj::operator*(Object* rhs){
+SObject IntegerObj::operator*(SObject rhs){
     PERFORM_OP(*)
 }
 
-Object* IntegerObj::operator-(Object* rhs){
+SObject IntegerObj::operator-(SObject rhs){
     PERFORM_OP(-)
 }
 
-Object* IntegerObj::operator==(Object* rhs){
+SObject IntegerObj::operator==(SObject rhs){
     return GetInt() == rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
 }
 
-Object* IntegerObj::operator!=(Object* rhs){
-    Object* ret = GetInt() != rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
+SObject IntegerObj::operator!=(SObject rhs){
+    auto ret = GetInt() != rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
     return ret;
 }
 

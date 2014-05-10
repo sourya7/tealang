@@ -10,19 +10,19 @@
 using std::string;
 using std::cerr;
 
-void NodeAST::GenerateIR(IRBuilder* builder){
+void NodeAST::GenerateIR(SIRBuilder builder){
     switch(type){
         case NodeType::VAR:
             //declare the variable;
-            builder->DeclVar(((WordTok*)left)->value);
+            builder->DeclVar(GUARD_CAST<WordTok*>(left.get())->value);
             //if the right exists, call it
-            if(right != nullptr) right->GenerateIR(builder);
+            if(right.get() != nullptr) right->GenerateIR(builder);
             break;
         case NodeType::ASSIGN:
             //eval the right node
             right->GenerateIR(builder);
             //load the val into the var
-            builder->StoreValue(((WordTok*)left)->value);
+            builder->StoreValue(GUARD_CAST<WordTok*>(left.get())->value);
             break;
         case NodeType::TOKEN: 
         {
@@ -37,7 +37,7 @@ void NodeAST::GenerateIR(IRBuilder* builder){
         }
         case NodeType::RETURN: 
         {
-            if(left == nullptr) builder->Return();
+            if(left.get() == nullptr) builder->Return();
             else{
                 left->GenerateIR(builder);
                 builder->ReturnArg();

@@ -8,14 +8,14 @@ private:
     bool isC = false;
     string funcName;
 public:  
-    FunctionObj(string fn, int ac, CodeObject* co) : 
+    FunctionObj(string fn, int ac, SCodeObj co) : 
                 argc(ac), funcName(fn),
-                Object(TType::FUNCTION,new TValue(co)){}
+                Object(Type::FUNCTION, make_shared<Value>(co.get())){}
     FunctionObj(string fn, int ac) : 
                 argc(ac), funcName(fn), isC(true),
-                Object(TType::FUNCTION){}
+                Object(Type::FUNCTION){}
     bool IsCFunction() { return isC; }
     string GetName() { return funcName; }
-    CodeObject* GetObjectCode() { return new CodeObject(*(value->co)); }
+    SCodeObj GetObjectCode() { return make_shared<CodeObject>(*(value->co)); }
 };
 #endif

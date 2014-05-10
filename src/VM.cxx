@@ -1,19 +1,18 @@
 #include "Debug.h"
 #include "VM.h"
-#include "ObjOP.h"
 #include "Frame.h"
 #include "OPCode.h"
 #include "CFunction.h"
 #include "CodeObject.h"
 #include "FunctionObj.h"
 
-GCStackObjPtr VM::vmStack;
-GCVecCodeObjPtr VM::coStack;
-GCVecPairOPIntPtr VM::opsStack;
+VecSObj VM::vmStack;
+VecSCodeObj VM::coStack;
+VecPairVecOPInt VM::opsStack;
 #define INCR_OP() (*opid)++;
-GCVecOP* VM::ops;
-int* VM::opid;
-CodeObject* VM::co;
+SVecOP VM::ops;
+SInt VM::opid;
+SCodeObj VM::co;
 
 bool VM::RetFlag = false;
 
@@ -26,33 +25,33 @@ void VM::PopCO() {
     opid = opsStack.back().second;
 }
 
-Object* VM::Pop() { 
-    Object* top = vmStack.back(); 
+SObject VM::Pop() { 
+    SObject top = vmStack.back(); 
     vmStack.pop_back(); 
     return top; 
 }
 
-void VM::Push(Object* a) { 
+void VM::Push(SObject a) { 
     vmStack.push_back(a); 
 }
 
-void VM::PushCO(CodeObject* c) { 
-    opid = new int(0);
+void VM::PushCO(SCodeObj c) { 
+    opid = make_shared<int>(0);
     co = c;
     ops = c->GetOPS();
     coStack.push_back(co);
     opsStack.push_back(make_pair(ops, opid));
 }
 
-void VM::ExecCode(CodeObject* c){
+void VM::ExecCode(SCodeObj c){
     VM::PushCO(c);
     int count = 30;
     while(!coStack.empty()) {
     if(*opid >= ops->size()) { PopCO(); continue; }
 
-    Object* i;
-    Object* j;
-    FunctionObj* fn;
+    SObject i;
+    SObject j;
+    SFunctionObj fn;
     OP op = (*ops)[*opid];
     OPC opc = op.opc;
     switch(opc){
@@ -60,19 +59,19 @@ void VM::ExecCode(CodeObject* c){
             DEBUG("OP::ADD");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(ObjOP::Add(i, j));
+            VM::Push(*i + j);
             break;
         case OPC::SUB:
             DEBUG("OP::SUB");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(ObjOP::Sub(i, j));
+            VM::Push(*i - j);
             break;
         case OPC::EQ:
             DEBUG("OP::EQ");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(ObjOP::Equal(i,j));
+            VM::Push(*i == j);
             break;
             /*
         case OPC::WHILE:
@@ -91,13 +90,13 @@ void VM::ExecCode(CodeObject* c){
             DEBUG("OP::NEQ");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(ObjOP::NotEqual(i,j));
+            VM::Push(*i != j);
             break;
         case OPC::MULT:
             DEBUG("OP::MULT");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(ObjOP::Mul(i, j));
+            VM::Push(*i * j);
             break;
         case OPC::LOAD_CONSTANT:
             DEBUG("OP::PUSH_CONSTANT");
@@ -124,7 +123,7 @@ void VM::ExecCode(CodeObject* c){
             DEBUG("OP::JMP_IF");
             assert(op.HasArgA());
             if(VM::Pop()->IsTrue()) {
-                CodeObject* c = co->GetChild(op.GetArgA());
+                SCodeObj c = co->GetChild(op.GetArgA());
                 c->SetParent(co);
                 INCR_OP();
                 PushCO(c); 
@@ -136,7 +135,7 @@ void VM::ExecCode(CodeObject* c){
             //For if, we skip the else statment
             //For else, we skip the if statment
             if(VM::Pop()->IsTrue()) { 
-                CodeObject* c = co->GetChild(op.GetArgA());
+                SCodeObj c = co->GetChild(op.GetArgA());
                 c->SetParent(co);
                 INCR_OP(); //move to the next which is else
                 INCR_OP(); //eat up the else statement
@@ -144,7 +143,7 @@ void VM::ExecCode(CodeObject* c){
             }
             else { 
                 INCR_OP(); // consume the previous if
-                CodeObject* c = co->GetChild(op.GetArgA());
+                SCodeObj c = co->GetChild(op.GetArgA());
                 c->SetParent(co);
                 INCR_OP(); //consume the else stmt
                 PushCO(c); 
@@ -155,9 +154,9 @@ void VM::ExecCode(CodeObject* c){
             assert(op.HasArgA());
             assert(op.HasArgB());
 
-            fn = GUARD_CAST<FunctionObj*>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
+            fn = dynamic_pointer_cast<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             if(!fn->IsCFunction()){
-                CodeObject* c = fn->GetObjectCode(); 
+                SCodeObj c = fn->GetObjectCode(); 
                 INCR_OP();
                 PushCO(c);
                 continue;

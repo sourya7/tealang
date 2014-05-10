@@ -7,12 +7,12 @@ enum class NodeType;
 
 class IfStmtAST : public NodeAST {
 private:
-    NodeAST* elseBlk = nullptr;
-    NodeAST* elifBlk = nullptr;
+    SNodeAST elseBlk;
+    SNodeAST elifBlk;
 public:
-    IfStmtAST(NodeAST* c, NodeAST* ib) : NodeAST(NodeType::IFSTMT,c,ib) {};
-    void SetElseBlk(NodeAST* elb) { elseBlk = elb; }
-    void GenerateIR(IRBuilder* builder);
+    IfStmtAST(SNodeAST c, SNodeAST ib) : NodeAST(NodeType::IFSTMT,c,ib) {};
+    void SetElseBlk(SNodeAST elb) { elseBlk = elb; }
+    void GenerateIR(SIRBuilder builder);
 };
 
 #endif

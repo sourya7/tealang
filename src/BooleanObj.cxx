@@ -1,8 +1,8 @@
 #include "BooleanObj.h"
 
-Object* const BooleanObj::TRUE = new BooleanObj(true);
-Object* const BooleanObj::FALSE = new BooleanObj(false);
-Object* BooleanObj::operator==(Object* rhs){
+SObject BooleanObj::TRUE = make_shared<BooleanObj>(true);
+SObject BooleanObj::FALSE = make_shared<BooleanObj>(false);
+SObject BooleanObj::operator==(const Object* rhs){
     if(IsTrue() == rhs->IsTrue()){
         return TRUE;
     }

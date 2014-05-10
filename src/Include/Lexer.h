@@ -17,14 +17,14 @@ private:
     istream* inputStream;
 
     void Reserve(WordTok w);
-    Token* ParseNumericToken();
-    Token* ParseIdentifierToken();
-    Token* ParseSpecialNumber();
+    SToken ParseNumericToken();
+    SToken ParseIdentifierToken();
+    SToken ParseSpecialNumber();
     void ReadChar();
     bool ReadAndMatch(char ch);
-    Token* ParseStringLiteral();
+    SToken ParseStringLiteral();
 public: 
-    Token* Scan();
+    SToken Scan();
     Lexer(istream* pistream);
 };
 

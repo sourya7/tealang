@@ -19,14 +19,14 @@
  * RETURN
  */
 //TODO Handle anon functions
-void FuncStmtAST::GenerateIR(IRBuilder* b){
-    ParamAST* paramAST = (ParamAST*)left;
+void FuncStmtAST::GenerateIR(SIRBuilder b){
+    auto paramAST = GUARD_CAST<ParamAST*>(left.get());
     b->DeclVar(paramAST->GetName());
-    IRBuilder* child = new IRBuilder(b);
-    GCVecNodePtr params = paramAST->GetParams();
+    auto child = make_shared<IRBuilder>(b);
+    VecSNodeAST params = paramAST->GetParams();
     for(auto p : params) {
-        child->DeclVar(((WordTok*)p)->value);
-        child->StoreValue(((WordTok*)p)->value);
+        child->DeclVar(GUARD_CAST<WordTok*>(p.get())->value);
+        child->StoreValue(GUARD_CAST<WordTok*>(p.get())->value);
     }
     right->GenerateIR(child);
     b->DeclFunc(paramAST->GetName(),paramAST->GetCount(),child);

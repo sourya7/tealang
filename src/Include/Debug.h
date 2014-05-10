@@ -17,4 +17,5 @@ T GUARD_CAST(V val) {
     assert(tmp != 0);
     return tmp;
 }
+
 #endif

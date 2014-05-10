@@ -18,26 +18,27 @@
 
 using namespace std;
 
+typedef shared_ptr<Lexer> SLexer;
 class Parser : public TGC {
 private:
-    Token* look;
-    Lexer* lexer;
+    SToken look;
+    SLexer lexer;
 public:
     Parser(istream* i);
     void move();
 
-    NodeAST* Parse();
-    NodeAST* ParseBlock();
-    NodeAST* ParseIfStmt();
-    NodeAST* ParseForStmt();
-    NodeAST* ParseTryStmt();
-    NodeAST* ParseClassStmt();
-    NodeAST* ParseWhileStmt();
-    NodeAST* ParseSingleStmt();
-    NodeAST* ParseFunctionStmt();
-    NodeAST* ParseFunctionParam(bool isCall);
-    NodeAST* ParseFunctionCall();
-    NodeAST* ParseExpr();
+    SNodeAST Parse();
+    SNodeAST ParseBlock();
+    SNodeAST ParseIfStmt();
+    SNodeAST ParseForStmt();
+    SNodeAST ParseTryStmt();
+    SNodeAST ParseClassStmt();
+    SNodeAST ParseWhileStmt();
+    SNodeAST ParseSingleStmt();
+    SNodeAST ParseFunctionStmt();
+    SNodeAST ParseFunctionParam(bool isCall);
+    SNodeAST ParseFunctionCall();
+    SNodeAST ParseExpr();
 };
 
 #endif

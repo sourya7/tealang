@@ -24,26 +24,26 @@ using std::string;
  */
 class IRBuilder : public TGC {
 private:
-    CodeObject* co = nullptr;
+    SCodeObj co;
 public:
     IRBuilder();
-    IRBuilder(IRBuilder* parent);
+    IRBuilder(SIRBuilder parent);
 
     void PerformOP(OPC v);
     void StoreValue(string v);
     void LoadValue(string v);
-    void LoadConst(Object* o);
+    void LoadConst(SObject o);
     void DeclVar(string v);
-    void DeclVar(string v, Object* o);
-    void DeclFunc(string n, int ac, IRBuilder* f); 
+    void DeclVar(string v, SObject o);
+    void DeclFunc(string n, int ac, SIRBuilder f); 
     void DeclCFunc(string n, int ac); 
-    void DeclWhile(IRBuilder* expr, IRBuilder* body);
-    void CondJump(IRBuilder* ifBlk);
-    void CondJump(IRBuilder* ifBlk, IRBuilder* elBlk);
+    void DeclWhile(SIRBuilder expr, SIRBuilder body);
+    void CondJump(SIRBuilder ifBlk);
+    void CondJump(SIRBuilder ifBlk, SIRBuilder elBlk);
     void CallFunc(string fn);
     void Return(bool hasArg = false);
     void ReturnArg(){ Return(true); }
-    CodeObject* GetCodeObject();
+    SCodeObj GetCodeObject();
 };
 
 #endif

@@ -26,8 +26,8 @@
  *     c. Call "callA:andB:"
  *
  */
-void CallAST::GenerateIR(IRBuilder* builder){
-    if(left != nullptr){
+void CallAST::GenerateIR(SIRBuilder builder){
+    if(left.get() != nullptr){
         //there is an object. 
         if(left->GetType() == NodeType::PARAM){
             //there is a function to generate an object
@@ -39,8 +39,8 @@ void CallAST::GenerateIR(IRBuilder* builder){
         assert(false);
     }
     //its a simple function call
-    ParamAST* paramAST = GUARD_CAST<ParamAST*>(right);
-    GCVecNodePtr params = paramAST->GetParams();
+    auto paramAST = GUARD_CAST<ParamAST*>(right.get());
+    VecSNodeAST params = paramAST->GetParams();
     for(auto it=params.rbegin(), end=params.rend(); it != end; ++it){
         (*it)->GenerateIR(builder);
     }

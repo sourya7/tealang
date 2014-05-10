@@ -10,20 +10,20 @@ class IRBuilder;
 enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT,WSTMT, ASSIGN, EXPR, TOKEN, VAR, RETURN};
 class NodeAST : public TGC {
 protected:
-    NodeAST* left = nullptr;
-    NodeAST* right = nullptr; 
+    SNodeAST left;
+    SNodeAST right;
     NodeType type = NodeType::NODE;
 public:
     NodeAST() {} 
     NodeAST(NodeType t) : type(t) {} 
-    NodeAST(NodeAST* l, NodeAST* r) : left(l), right(r) {} 
-    NodeAST(NodeType t, NodeAST *l, NodeAST* r) : type(t), left(l), right(r) {} 
-    void SetLeft(NodeAST* l) { left = l; }
-    void SetRight(NodeAST* r) { right = r; }
+    NodeAST(SNodeAST l, SNodeAST r) : left(l), right(r) {} 
+    NodeAST(NodeType t, SNodeAST l, SNodeAST r) : type(t), left(l), right(r) {} 
+    void SetLeft(SNodeAST l) { left = l; }
+    void SetRight(SNodeAST r) { right = r; }
     NodeType GetType() { return type; }
-    NodeAST* GetLeft() { return left; }
-    NodeAST* GetRight() { return right; }
-    virtual void GenerateIR(IRBuilder* builder);
+    SNodeAST GetLeft() { return left; }
+    SNodeAST GetRight() { return right; }
+    virtual void GenerateIR(SIRBuilder builder);
 };
 
 #endif

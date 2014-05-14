@@ -1,5 +1,4 @@
 #include <string>
-#include <cassert>
 #include "Object.h"
 #include "DoubleObj.h"
 #include "StringObj.h"

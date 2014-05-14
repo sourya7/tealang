@@ -11,4 +11,4 @@ defun fib:n
 endfun
 
 
-var a = [fib:20]
+[printf: "The value is: " + [fib:30] + "\n"]

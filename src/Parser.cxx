@@ -7,7 +7,6 @@
  */
 #include <istream>
 #include <iostream>
-#include <cassert>
 #include "Debug.h"
 #include "Parser.h"
 #include "Lexer.h"

@@ -1,5 +1,4 @@
 #include <string>
-#include <cassert>
 #include <iostream>
 #include "NodeAST.h"
 #include "WordTok.h"

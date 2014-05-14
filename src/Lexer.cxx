@@ -2,7 +2,6 @@
 #include <istream>
 #include <iostream>
 #include <algorithm>
-#include <cassert>
 #include <sstream>
 #include "Token.h"
 #include "WordTok.h"

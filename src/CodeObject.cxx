@@ -27,7 +27,7 @@ int CodeObject::GetID(string var, int &level){
             return it - root->ids->begin();
         }
         level++;
-        root = root->parent.get();
+        root = POINTER_VAL(root->parent);
     }
     //not found in any level
     level = -1;
@@ -38,7 +38,7 @@ void CodeObject::StoreIDVal(SObject val, int id, int level) {
     CodeObject* root = this;
     while(level--){
         assert(root != nullptr);
-        root = root->parent.get();
+        root = POINTER_VAL(root->parent);
     }
     assert(root->ids->size() > id); 
     root->vals->at(id) = val; 
@@ -54,7 +54,7 @@ SObject CodeObject::GetIDVal(int id, int level){
     CodeObject* root = this;
     while(level--){
         assert(root != nullptr);
-        root = root->parent.get();
+        root = POINTER_VAL(root->parent);
     }
     return root->vals->at(id); 
 }

@@ -16,13 +16,13 @@ SObject Object::FromToken(Token* t){
     SObject o;
     switch(t->tag){
         case Tags::NUM:
-            o = make_shared<IntegerObj>(GUARD_CAST<NumberTok*>(t)->value);
+            o = MakeShared<IntegerObj>(GUARD_CAST<NumberTok*>(t)->value);
             break;
         case Tags::REAL:
-            o = make_shared<DoubleObj>(GUARD_CAST<RealTok*>(t)->value);
+            o = MakeShared<DoubleObj>(GUARD_CAST<RealTok*>(t)->value);
             break;
         case Tags::STR:
-            o = make_shared<StringObj>(GUARD_CAST<WordTok*>(t)->value.c_str());
+            o = MakeShared<StringObj>(GUARD_CAST<WordTok*>(t)->value.c_str());
             break;
         default:
             assert(t->tag != Tags::BCIO);

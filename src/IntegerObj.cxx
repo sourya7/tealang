@@ -5,9 +5,9 @@
 
 #define PERFORM_OP(op)\
     if(rhs->IsDouble())\
-        return make_shared<DoubleObj>(GetInt() op rhs->GetDouble());\
+        return MakeShared<DoubleObj>(GetInt() op rhs->GetDouble());\
     else\
-        return make_shared<IntegerObj>(GetInt() op rhs->GetInt());\
+        return MakeShared<IntegerObj>(GetInt() op rhs->GetInt());\
 
         
 SObject IntegerObj::operator+(SObject rhs){

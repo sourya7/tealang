@@ -17,6 +17,7 @@ using namespace std;
 /* debug stuff */
 map<string, Tags> TokenMap {
     {"defclass", Tags::DEFCLASS},
+    {"defcon", Tags::DEFCON},
     {"defun", Tags::DEFUN},
     {"if", Tags::IF},
     {"for", Tags::FOR},
@@ -31,6 +32,7 @@ map<string, Tags> TokenMap {
     {"endwhile", Tags::ENDWHILE},
     {"endclass", Tags::ENDCLASS},
     {"endfun", Tags::ENDFUN},
+    {"endcon", Tags::ENDCON},
     {"in", Tags::IN},
     {"var", Tags::VAR},
     {"isa", Tags::ISA},
@@ -78,7 +80,7 @@ SToken Lexer::ParseSpecialNumber(){
         } while((isHex && isxdigit(peek))  || 
                 (isOctal && isdigit(peek)) || 
                 (isBinary && (peek == '0' || peek == '1')));
-        return make_shared<WordTok>(tmp, Tags::ID, line);
+        return MakeShared<WordTok>(tmp, Tags::ID, line);
 
         /* TODO use these instead
         if(isHex) return new NumberTok(decFromHex(tmp), line);
@@ -86,7 +88,7 @@ SToken Lexer::ParseSpecialNumber(){
         else return new NumberTok(decFromBin(tmp), line);
         */
     }
-    return make_shared<NumberTok>(0, line);
+    return MakeShared<NumberTok>(0, line);
 }
 
 SToken Lexer::ParseNumericToken(){
@@ -101,14 +103,14 @@ SToken Lexer::ParseNumericToken(){
         tmp += peek;
         ReadChar();
     }while(isdigit(peek));
-    if(peek != '.') return make_shared<NumberTok>(decFromDec(tmp), line);
+    if(peek != '.') return MakeShared<NumberTok>(decFromDec(tmp), line);
 
     //handle real numbers
     do{
         tmp += peek;
         ReadChar();
     }while(isdigit(peek));
-    return make_shared<WordTok>(tmp, Tags::ID, line); 
+    return MakeShared<WordTok>(tmp, Tags::ID, line); 
 }
 
 SToken Lexer::ParseIdentifierToken(){
@@ -122,13 +124,13 @@ SToken Lexer::ParseIdentifierToken(){
     if(peek == ':') { ReadChar(); tmp += ':'; tag = Tags::PARAM; }
     else if(it != TokenMap.end()){
         tag = it->second;
-        return make_shared<Token>(tag, line);
+        return MakeShared<Token>(tag, line);
     }
     else {
         tag = Tags::ID;
     }
 
-    return make_shared<WordTok>(tmp, tag, line);
+    return MakeShared<WordTok>(tmp, tag, line);
 }
 
 Lexer::Lexer(istream* i){ 
@@ -149,13 +151,13 @@ bool Lexer::ReadAndMatch(char ch){
 } 
 
 #define IFMATCHELSE(ifMatch,ifTok,elseTok) \
-    if(ReadAndMatch(ifMatch)){return make_shared<OPTok>(ifTok,line);} \
-    else{return make_shared<OPTok>(elseTok,line);}
+    if(ReadAndMatch(ifMatch)){return MakeShared<OPTok>(ifTok,line);} \
+    else{return MakeShared<OPTok>(elseTok,line);}
 
 #define IFMATCH2ELSE(ifMatch,ifTok,elifMatch,elifTok,elseTok) \
-    if(ReadAndMatch(ifMatch)){return make_shared<OPTok>(ifTok, line);} \
-    else if(peek == elifMatch){return make_shared<OPTok>(elifTok, line);}\
-    else{return make_shared<OPTok>(elseTok, line); }
+    if(ReadAndMatch(ifMatch)){return MakeShared<OPTok>(ifTok, line);} \
+    else if(peek == elifMatch){return MakeShared<OPTok>(elifTok, line);}\
+    else{return MakeShared<OPTok>(elseTok, line); }
 
 /*
  * TODO - Handle comments
@@ -180,20 +182,20 @@ SToken Lexer::Scan(){
         case '!': { IFMATCHELSE('=', OPC::NEQ, OPC::NOT); }
         case '<': { IFMATCH2ELSE('=', OPC::LEQ, '<', OPC::LSHIFT, OPC::LT); }
         case '>': { IFMATCH2ELSE('=', OPC::GEQ, '>', OPC::RSHIFT, OPC::GT); }
-        case '/': { ReadChar(); return make_shared<OPTok>(OPC::DIV, line); }
-        case '%': { ReadChar(); return make_shared<OPTok>(OPC::MOD, line); }
-        case '~': { ReadChar(); return make_shared<OPTok>(OPC::INV, line);  }
-        case '^': { ReadChar(); return make_shared<OPTok>(OPC::XOR, line); }
-        case '[': { ReadChar(); return make_shared<Token>(Tags::BSQO, line);   }
-        case ']': { ReadChar(); return make_shared<Token>(Tags::BSQC, line);   }
-        case '(': { ReadChar(); return make_shared<Token>(Tags::BCIO, line);   }
-        case ')': { ReadChar(); return make_shared<Token>(Tags::BCIC, line);   }
-        case '{': { ReadChar(); return make_shared<Token>(Tags::BCUO, line);   }
-        case '}': { ReadChar(); return make_shared<Token>(Tags::BCUC, line);   }
+        case '/': { ReadChar(); return MakeShared<OPTok>(OPC::DIV, line); }
+        case '%': { ReadChar(); return MakeShared<OPTok>(OPC::MOD, line); }
+        case '~': { ReadChar(); return MakeShared<OPTok>(OPC::INV, line);  }
+        case '^': { ReadChar(); return MakeShared<OPTok>(OPC::XOR, line); }
+        case '[': { ReadChar(); return MakeShared<Token>(Tags::BSQO, line);   }
+        case ']': { ReadChar(); return MakeShared<Token>(Tags::BSQC, line);   }
+        case '(': { ReadChar(); return MakeShared<Token>(Tags::BCIO, line);   }
+        case ')': { ReadChar(); return MakeShared<Token>(Tags::BCIC, line);   }
+        case '{': { ReadChar(); return MakeShared<Token>(Tags::BCUO, line);   }
+        case '}': { ReadChar(); return MakeShared<Token>(Tags::BCUC, line);   }
         case '"': case '\'': { return ParseStringLiteral(); } 
-        case -1: { return make_shared<Token>(Tags::SEOF, line); }
-        case '=': { if(ReadAndMatch('=')) return make_shared<OPTok>(OPC::EQ, line);
-                    else return make_shared<WordTok>('=', Tags::ASSIGN, line); }
+        case -1: { return MakeShared<Token>(Tags::SEOF, line); }
+        case '=': { if(ReadAndMatch('=')) return MakeShared<OPTok>(OPC::EQ, line);
+                    else return MakeShared<WordTok>('=', Tags::ASSIGN, line); }
         default: {
             return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken(); }
     }
@@ -227,6 +229,6 @@ SToken Lexer::ParseStringLiteral(){
         }
         else tmp += peek;
     } while(!ReadAndMatch(quote));
-    return make_shared<WordTok>(tmp, Tags::STR, line);
+    return MakeShared<WordTok>(tmp, Tags::STR, line);
 }
 

@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include "VM.h"
+#include "ObjOP.h"
 #include "Frame.h"
 #include "OPCode.h"
 #include "CFunction.h"
@@ -37,7 +38,7 @@ void VM::Push(SObject a) {
 }
 
 void VM::PushCO(SCodeObj c) { 
-    opid = make_shared<int>(0);
+    opid = MakeShared<int>(0);
     co = c;
     ops = c->GetOPS();
     coStack.push_back(co);
@@ -62,7 +63,7 @@ void VM::ExecCode(SCodeObj c){
             DEBUG("OP::ADD");
             j = VM::Pop();
             i = VM::Pop();
-            VM::Push(*i + j);
+            VM::Push(ObjOP::Add(i, j));
             break;
         case OPC::SUB:
             DEBUG("OP::SUB");
@@ -157,7 +158,7 @@ void VM::ExecCode(SCodeObj c){
             assert(op.HasArgA());
             assert(op.HasArgB());
 
-            fn = dynamic_pointer_cast<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
+            fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             if(!fn->IsCFunction()){
                 SCodeObj c = fn->GetObjectCode(); 
                 INCR_OP();

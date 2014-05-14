@@ -3,11 +3,11 @@
 #include "Object.h"
 class BooleanObj : public Object {
 public:  
-    BooleanObj(bool b) : Object(Type::BOOLEAN,make_shared<Value>(b)) {}
+    BooleanObj(bool b) : Object(Type::BOOLEAN,MakeShared<Value>(b)) {}
     bool IsTrue() const { return GetValue()->b; }  
     bool IsBoolean() { return true; }
     string ToString();
-    SObject operator==(const Object* rhs);
+    SObject operator==(SObject rhs);
     static SObject TRUE;
     static SObject FALSE;
 };

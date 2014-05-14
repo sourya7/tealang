@@ -27,7 +27,7 @@
  *
  */
 void CallAST::GenerateIR(SIRBuilder builder){
-    if(left.get() != nullptr){
+    if(POINTER_VAL(left) != nullptr){
         //there is an object. 
         if(left->GetType() == NodeType::PARAM){
             //there is a function to generate an object
@@ -39,7 +39,7 @@ void CallAST::GenerateIR(SIRBuilder builder){
         assert(false);
     }
     //its a simple function call
-    auto paramAST = GUARD_CAST<ParamAST*>(right.get());
+    auto paramAST = GUARD_CAST<ParamAST*>(POINTER_VAL(right));
     VecSNodeAST params = paramAST->GetParams();
     for(auto it=params.rbegin(), end=params.rend(); it != end; ++it){
         (*it)->GenerateIR(builder);

@@ -14,15 +14,15 @@ void NodeAST::GenerateIR(SIRBuilder builder){
     switch(type){
         case NodeType::VAR:
             //declare the variable;
-            builder->DeclVar(GUARD_CAST<WordTok*>(left.get())->value);
+            builder->DeclVar(GUARD_CAST<WordTok*>(POINTER_VAL(left))->value);
             //if the right exists, call it
-            if(right.get() != nullptr) right->GenerateIR(builder);
+            if(POINTER_VAL(right) != nullptr) right->GenerateIR(builder);
             break;
         case NodeType::ASSIGN:
             //eval the right node
             right->GenerateIR(builder);
             //load the val into the var
-            builder->StoreValue(GUARD_CAST<WordTok*>(left.get())->value);
+            builder->StoreValue(GUARD_CAST<WordTok*>(POINTER_VAL(left))->value);
             break;
         case NodeType::TOKEN: 
         {
@@ -37,7 +37,7 @@ void NodeAST::GenerateIR(SIRBuilder builder){
         }
         case NodeType::RETURN: 
         {
-            if(left.get() == nullptr) builder->Return();
+            if(POINTER_VAL(left) == nullptr) builder->Return();
             else{
                 left->GenerateIR(builder);
                 builder->ReturnArg();

@@ -11,7 +11,7 @@ enum class Tags { OP = 256, NUM,    DEFCLASS, ENDCLASS, DEFUN,
                   SEOF,     STR,    BCIO,     BCIC,     BCUC, 
                   BCUO,     BLK,    ENDBLK,   FLWBLK,   CMD, 
                   PARAM,    ASSIGN, RETURN,   BREAK,   ENDFUN,
-                  ENDWHILE};
+                  ENDWHILE, DEFCON, ENDCON};
 
 class Token : public NodeAST {
 private:

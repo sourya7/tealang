@@ -41,8 +41,6 @@ union Value {
     Value(CodeObject* v) : co(v) {}
 };
 
-typedef shared_ptr<Value> SValue;
-
 class Object : public TGC {
 private:
     Type type;
@@ -71,11 +69,11 @@ public:
     CodeObject* GetCodeObject() { return value->co; }
     Object* GetObject() { return value->o; }
 
-    virtual SObject operator+(SObject rhs) { return shared_ptr<Object>(); }
-    virtual SObject operator*(SObject rhs) {return shared_ptr<Object>();}
-    virtual SObject operator-(SObject rhs) {return shared_ptr<Object>();}
-    virtual SObject operator==(SObject rhs) {return shared_ptr<Object>();}
-    virtual SObject operator!=(SObject rhs) {return shared_ptr<Object>(); }
+    virtual SObject operator+(SObject rhs) {assert(false); return nullptr; }
+    virtual SObject operator*(SObject rhs) {assert(false); return nullptr;}
+    virtual SObject operator-(SObject rhs) {assert(false); return nullptr;}
+    virtual SObject operator==(SObject rhs) {assert(false); return nullptr;}
+    virtual SObject operator!=(SObject rhs) {assert(false); return nullptr; }
     virtual string ToString() { return "<OBJECT>"; }
     SValue GetValue() const { return value; } 
 };

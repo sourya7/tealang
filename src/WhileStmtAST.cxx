@@ -5,9 +5,9 @@
 #include "ParamAST.h"
 
 void WhileStmtAST::GenerateIR(SIRBuilder b){
-    auto exprChild = make_shared<IRBuilder>(b);
+    auto exprChild = MakeShared<IRBuilder>(b);
     left->GenerateIR(exprChild);
-    auto bodyChild = make_shared<IRBuilder>(b);
+    auto bodyChild = MakeShared<IRBuilder>(b);
     right->GenerateIR(bodyChild);
     b->DeclWhile(exprChild, bodyChild);
 }

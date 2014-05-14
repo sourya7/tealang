@@ -10,12 +10,12 @@ private:
 public:  
     FunctionObj(string fn, int ac, SCodeObj co) : 
                 argc(ac), funcName(fn),
-                Object(Type::FUNCTION, make_shared<Value>(co.get())){}
+                Object(Type::FUNCTION, MakeShared<Value>(POINTER_VAL(co))){}
     FunctionObj(string fn, int ac) : 
                 argc(ac), funcName(fn), isC(true),
                 Object(Type::FUNCTION){}
     bool IsCFunction() { return isC; }
     string GetName() { return funcName; }
-    SCodeObj GetObjectCode() { return make_shared<CodeObject>(*(value->co)); }
+    SCodeObj GetObjectCode() { return MakeShared<CodeObject>(*(value->co)); }
 };
 #endif

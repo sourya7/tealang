@@ -34,18 +34,18 @@ public:
         children = p.children;
         opcode = p.opcode;
         consts = p.consts;
-        vals = make_shared<VecSObj>(*p.vals);
+        vals = MakeShared<VecSObj>(*p.vals);
         //vals = p.vals;
         ids = p.ids;
         type = p.type;
     }
 
     CodeObject() {
-        ids = make_shared<VecStr>();
-        vals = make_shared<VecSObj>();
-        consts = make_shared<VecSObj>();
-        opcode = make_shared<VecOP>();
-        children = make_shared<VecSCodeObj>();
+        ids = MakeShared<VecStr>();
+        vals = MakeShared<VecSObj>();
+        consts = MakeShared<VecSObj>();
+        opcode = MakeShared<VecOP>();
+        children = MakeShared<VecSCodeObj>();
     }
 
     void SetType(CT t) { type = t; }

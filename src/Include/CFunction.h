@@ -11,8 +11,6 @@ class FunctionObj;
 SObject printWrapper(const VecSObj& s);
 SObject printfWrapper(const VecSObj& s);
 
-typedef  map<string,FuncSizePair> MapStrFunc;
-
 class IRBuilder;
 class CFunction {
 public:

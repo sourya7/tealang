@@ -20,13 +20,13 @@
  */
 //TODO Handle anon functions
 void FuncStmtAST::GenerateIR(SIRBuilder b){
-    auto paramAST = GUARD_CAST<ParamAST*>(left.get());
+    auto paramAST = GUARD_CAST<ParamAST*>(POINTER_VAL(left));
     b->DeclVar(paramAST->GetName());
-    auto child = make_shared<IRBuilder>(b);
+    auto child = MakeShared<IRBuilder>(b);
     VecSNodeAST params = paramAST->GetParams();
     for(auto p : params) {
-        child->DeclVar(GUARD_CAST<WordTok*>(p.get())->value);
-        child->StoreValue(GUARD_CAST<WordTok*>(p.get())->value);
+        child->DeclVar(GUARD_CAST<WordTok*>(POINTER_VAL(p))->value);
+        child->StoreValue(GUARD_CAST<WordTok*>(POINTER_VAL(p))->value);
     }
     right->GenerateIR(child);
     b->DeclFunc(paramAST->GetName(),paramAST->GetCount(),child);

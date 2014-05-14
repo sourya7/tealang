@@ -1,0 +1,15 @@
+defclass Animal
+    var sound = "Generic"
+    defcon initWithSound:s
+        sound = s
+    endcon
+    defun makeSound
+        [printf: s]
+    endfun
+endclass
+
+var animal = [Animal init]
+[animal makeSound]
+
+var animalWithSound = [Animal initWithSound: "Woof"]
+[animalWithSound makeSound]

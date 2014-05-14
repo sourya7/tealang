@@ -7,7 +7,7 @@
 using std::string;
 
 class IRBuilder;
-enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT,WSTMT, ASSIGN, EXPR, TOKEN, VAR, RETURN};
+enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT,WSTMT, ASSIGN, EXPR, TOKEN, VAR, RETURN, CLASS};
 class NodeAST : public TGC {
 protected:
     SNodeAST left;

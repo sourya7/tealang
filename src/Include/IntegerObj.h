@@ -3,7 +3,7 @@
 #include "Object.h"
 class IntegerObj : public Object {
 public:  
-    IntegerObj(long l) : Object(Type::INTEGER, make_shared<Value>(l)) {}
+    IntegerObj(long l) : Object(Type::INTEGER, MakeShared<Value>(l)) {}
     bool IsInteger() { return true; }
     bool IsTrue() { return GetValue()->l != 0; }
     SObject operator+(SObject rhs);

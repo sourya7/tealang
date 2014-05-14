@@ -18,7 +18,6 @@
 
 using namespace std;
 
-typedef shared_ptr<Lexer> SLexer;
 class Parser : public TGC {
 private:
     SToken look;

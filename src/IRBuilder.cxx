@@ -6,10 +6,10 @@
 #include "FunctionObj.h"
 
 
-IRBuilder::IRBuilder() { co = make_shared<CodeObject>(); }
+IRBuilder::IRBuilder() { co = MakeShared<CodeObject>(); }
 IRBuilder::IRBuilder(SIRBuilder b) {
     auto parent = b->GetCodeObject();
-    co = make_shared<CodeObject>(parent);
+    co = MakeShared<CodeObject>(parent);
     parent->AddChild(co);
 }
 
@@ -72,14 +72,14 @@ void IRBuilder::DeclVar(string v, SObject o){
 
 void IRBuilder::DeclFunc(string n, int ac, SIRBuilder b){
     b->GetCodeObject()->SetType(CT::FUNCTION);
-    auto fo = make_shared<FunctionObj>(n, ac, b->GetCodeObject());
+    auto fo = MakeShared<FunctionObj>(n, ac, b->GetCodeObject());
     int id = co->GetID(n);
     assert(id != -1);
     co->StoreIDVal(fo,id);
 }
 
 void IRBuilder::DeclCFunc(string n, int ac){
-    auto fo = make_shared<FunctionObj>(n, ac); 
+    auto fo = MakeShared<FunctionObj>(n, ac); 
     DeclVar(n, fo);
 }
 

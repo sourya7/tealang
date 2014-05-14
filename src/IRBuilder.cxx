@@ -98,3 +98,17 @@ void IRBuilder::CallFunc(string fn){
 
 void IRBuilder::DeclClass(string n, SIRBuilder body){
 }
+
+void IRBuilder::CallMethod(string object, string method){
+    int objId = co->GetID(object);
+    assert(objId != -1); //The object exists
+    SObject obj = co->GetIDVal(objId);
+    //TODO make sure that this works. Do we check NIL or nullptr?
+    assert(obj != nullptr); //the object is implemented
+    //push the arguments
+    //push the method id
+    //call method with coid
+    //pop the co
+    //pop the method
+    //pop the arguments with the method
+}

@@ -2,6 +2,15 @@
 #include "IRBuilder.h"
 #include "WordTok.h"
 
+/*
+ * var obj = [Animal init] --> CallMethod('Animal', 'init')
+ * [Animal staticFunc]     --> CallMethod('Animal', 'staticFunc')
+ * [Animal method]         --> CallMethod('
+ * [obj method]            --> CallMethod('obj', 'method')
+ * [obj method]        --> CallMethod('obj', 'invalid')
+ * [invalid method]    --> CallMethod('invalid', 'invalid')
+ *
+ */
 void ClassStmtAST::GenerateIR(SIRBuilder b) {
     assert(false);
     auto wt = DYN_GC_CAST<WordTok>(left);

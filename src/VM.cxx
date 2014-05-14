@@ -153,6 +153,19 @@ void VM::ExecCode(SCodeObj c){
                 PushCO(c); 
             }
             continue;
+        case OPC::CALL_METHOD:
+            auto i = VM::Pop();
+            break;
+        case OPC::LOAD_OBJECT: 
+        {
+            DEBUG("OP::LOAD_COBJ");
+            assert(op.HasArgA());
+            assert(op.HasArgB());
+            auto o = co->GetIDVal(op.GetArgA(), op.GetArgB);
+            auto c = o->GetValue()->co;
+            PushCO(c);
+            continue;
+        }
         case OPC::CALL:{
             DEBUG("OP::CALL");
             assert(op.HasArgA());

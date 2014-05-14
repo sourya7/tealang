@@ -36,6 +36,7 @@ public:
     void DeclVar(string v);
     void DeclVar(string v, SObject o);
     void DeclFunc(string n, int ac, SIRBuilder f); 
+    void DeclClass(string n, SIRBuilder b);
     void DeclCFunc(string n, int ac); 
     void DeclWhile(SIRBuilder expr, SIRBuilder body);
     void CondJump(SIRBuilder ifBlk);

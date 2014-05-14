@@ -30,19 +30,11 @@ void IRBuilder::PerformOP(OPC op){
     co->PushOP(OP(op));
 }
 
-// 2+4
-// LOAD_CONST 1 (2)
-// LOAD_CONST 2 (4)
-// BINARY_ADD 
 void IRBuilder::LoadConst(SObject c){
     int id = co->PushConst(c);
     co->PushOP(OP(OPC::LOAD_CONSTANT, id));
 }
 
-// 2 + a
-// LOAD_CONST 1 (2)
-// LOAD_CONST 1 (a)
-// BINARY_ADD
 void IRBuilder::LoadValue(string v){
     int l;
     int id = co->GetID(v,l);
@@ -50,8 +42,6 @@ void IRBuilder::LoadValue(string v){
     co->PushOP(OP(OPC::LOAD_VALUE,id,l));
 }
 
-// BINARY_ADD     (Operation pushes the value to the stack)
-// STORE_VALUE 0  (Store the value from the stack into a variable)
 void IRBuilder::StoreValue(string v){
     int l = 0;
     int id = co->GetID(v,l);
@@ -104,4 +94,7 @@ void IRBuilder::CallFunc(string fn){
     int id = co->GetID(fn,l);
     assert(id != -1);
     co->PushOP(OP(OPC::CALL,id,l));
+}
+
+void IRBuilder::DeclClass(string n, SIRBuilder body){
 }

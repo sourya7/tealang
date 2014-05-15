@@ -154,24 +154,22 @@ void VM::ExecCode(SCodeObj c){
             }
             continue;
         case OPC::CALL_METHOD:
-            auto i = VM::Pop();
-            break;
-        case OPC::LOAD_OBJECT: 
         {
-            DEBUG("OP::LOAD_COBJ");
+            DEBUG("OP::CALL");
             assert(op.HasArgA());
-            assert(op.HasArgB());
-            auto o = co->GetIDVal(op.GetArgA(), op.GetArgB);
-            auto c = o->GetValue()->co;
-            PushCO(c);
+            auto instance = VM::Pop();
+            auto i_co = instance->GetValue()->co;
+            auto fn = DYN_GC_CAST<FunctionObj>(i_co->GetIDVal(op.GetArgA()));
+            auto fn_co = fn->GetObjectCode(MakeShared<CodeObject>(*i_co));
+            INCR_OP();
+            PushCO(fn_co);
             continue;
         }
         case OPC::CALL:{
             DEBUG("OP::CALL");
             assert(op.HasArgA());
             assert(op.HasArgB());
-
-            fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
+            auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             if(!fn->IsCFunction()){
                 SCodeObj c = fn->GetObjectCode(); 
                 INCR_OP();
@@ -182,6 +180,7 @@ void VM::ExecCode(SCodeObj c){
         }
         case OPC::C_CALL:
         {
+            auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             CFunction::Call(fn);
             break;
         }

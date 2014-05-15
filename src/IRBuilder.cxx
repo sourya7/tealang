@@ -4,6 +4,7 @@
 #include "OPCode.h"
 #include "CodeObject.h"
 #include "FunctionObj.h"
+#include "ClassObj.h"
 
 
 IRBuilder::IRBuilder() { co = MakeShared<CodeObject>(); }
@@ -96,19 +97,19 @@ void IRBuilder::CallFunc(string fn){
     co->PushOP(OP(OPC::CALL,id,l));
 }
 
-void IRBuilder::DeclClass(string n, SIRBuilder body){
+void IRBuilder::DeclClass(string n, SIRBuilder b){
+    b->GetCodeObject()->SetType(CT::CLASS);
+    auto cls_o = MakeShared<ClassObj>(n, b->GetCodeObject());
+    int id = co->GetID(n);
+    assert(id != -1);
+    co->StoreIDVal(cls_o,id);
 }
 
 void IRBuilder::CallMethod(string object, string method){
-    int objId = co->GetID(object);
-    assert(objId != -1); //The object exists
-    SObject obj = co->GetIDVal(objId);
-    //TODO make sure that this works. Do we check NIL or nullptr?
-    assert(obj != nullptr); //the object is implemented
-    //push the arguments
-    //push the method id
-    //call method with coid
-    //pop the co
-    //pop the method
-    //pop the arguments with the method
+    int cl = 0;
+    int cid = co->GetID(object, cl);
+    auto obj = co->GetIDVal(cid, cl)->GetCodeObject();
+    int mid = obj->GetID(method);
+    co->PushOP(OP(OPC::LOAD_VALUE,cid,cl)); 
+    co->PushOP(OP(OPC::CALL_METHOD,mid)); 
 }

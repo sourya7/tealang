@@ -22,6 +22,7 @@ enum class Type {
     STRING,
     FUNCTION,
     OBJECT,
+    CLASS,
     NIL
 };
 

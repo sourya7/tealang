@@ -1,5 +1,5 @@
-#ifndef T_BOOLEANOBJ_H
-#define T_BOOLEANOBJ_H
+#ifndef T_FUNCTIONOBJ_H
+#define T_FUNCTIONOBJ_H
 #include "Object.h"
 #include "CodeObject.h"
 class FunctionObj : public Object {
@@ -17,5 +17,10 @@ public:
     bool IsCFunction() { return isC; }
     string GetName() { return funcName; }
     SCodeObj GetObjectCode() { return MakeShared<CodeObject>(*(value->co)); }
+    SCodeObj GetObjectCode(SCodeObj p) { 
+        auto instance = MakeShared<CodeObject>(*(value->co)); 
+        instance->SetParent(p);
+        return instance;
+    }
 };
 #endif

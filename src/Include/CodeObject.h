@@ -10,7 +10,7 @@
 using std::string;
 class CodeObject;
 
-enum class CT { FUNCTION, METHOD, NORM };
+enum class CT { FUNCTION, METHOD, NORM, CLASS };
 class CodeObject : public TGC {
 private:
     //variables in the codeobject scope

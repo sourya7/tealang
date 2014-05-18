@@ -28,6 +28,7 @@ void FuncStmtAST::GenerateIR(SIRBuilder b){
         child->DeclVar(GUARD_CAST<WordTok*>(POINTER_VAL(p))->value);
         child->StoreValue(GUARD_CAST<WordTok*>(POINTER_VAL(p))->value);
     }
+    right->GenerateIR(child);
     b->DeclFunc(isInit,paramAST->GetName(),paramAST->GetCount(),child);
 }
 

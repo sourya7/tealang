@@ -5,11 +5,11 @@
 class ClassObj : public Object {
 private:
     string clsName;
+    SCodeObj co;
 public:  
-    ClassObj(string cn, SCodeObj co) : 
-                clsName(cn),
-                Object(Type::CLASS, MakeShared<Value>(POINTER_VAL(co))){}
+    ClassObj(string cn, SCodeObj o) : 
+                clsName(cn), co(o),
+                Object(Type::CLASS, MakeShared<Value>(POINTER_VAL(o))){}
     string GetName() { return clsName; }
-    SCodeObj GetObjectCode() { return MakeShared<CodeObject>(*(value->co)); }
 };
 #endif

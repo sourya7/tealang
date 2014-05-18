@@ -22,7 +22,7 @@ private:
     //opcodes for this codeobject
     SVecOP opcode;
     SVecSCodeObj children;
-    SCodeObj parent;
+    SCodeObj parent = nullptr;
     CT type = CT::NORM;
 public:
     CodeObject(SCodeObj p) : CodeObject(){

@@ -35,7 +35,7 @@ public:
     void LoadConst(SObject o);
     void DeclVar(string v);
     void DeclVar(string v, SObject o);
-    void CallMethod(string object, string method);
+    void CallMethod(string method);
     void DeclFunc(string n, int ac, SIRBuilder f); 
     void DeclClass(string n, SIRBuilder b);
     void DeclCFunc(string n, int ac); 

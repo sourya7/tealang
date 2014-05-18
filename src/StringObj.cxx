@@ -8,7 +8,7 @@ SObject StringObj::operator+(SObject rhs){
 }
 
 string StringObj::ToString() { 
-    const char* s = value->s;
+    const char* s = GetString();
     return s;
 }
 

@@ -115,25 +115,24 @@ typedef GV<pair<OP,SInt>>::Vector VecPairOPSInt;
 // {{{ GC/SharedPtr convinience functions/constants
 #ifdef ALLOW_GC
 #define POINTER_VAL(x) x
-
 template <typename T, typename...Args>
-T* MakeShared(Args &&...args) { return new T(std::forward<Args>(args)...); }
+inline T* MakeShared(Args &&...args) { return new T(std::forward<Args>(args)...); }
 
 template <typename T, typename V>
-T* DYN_GC_CAST(V val){
-    return dynamic_cast<T*>(val);
-}
+inline T* DYN_GC_CAST(V val){ return dynamic_cast<T*>(val); }
+
+template <typename T, typename V>
+inline T* WRAP_PTR(V* v){ return v; }
 #else
 #define POINTER_VAL(x) x.get()
+template <typename T, typename V>
+inline shared_ptr<T> WrapPtr(V* v){ return shared_ptr<T>(v); }
 
 template <typename T, typename... Args>
-std::shared_ptr<T> MakeShared(Args&&... args) { return std::make_shared<T>(std::forward<Args>(args)...); }
+inline std::shared_ptr<T> MakeShared(Args&&... args) { return std::make_shared<T>(std::forward<Args>(args)...); }
 
 template <typename T, typename V>
-std::shared_ptr<T> DYN_GC_CAST(V val){
-    return dynamic_pointer_cast<T>(val);
-}
-
+inline std::shared_ptr<T> DYN_GC_CAST(V val){ return dynamic_pointer_cast<T>(val); }
 #endif
 // }}}
 #endif

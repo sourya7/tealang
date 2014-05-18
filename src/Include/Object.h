@@ -15,6 +15,7 @@ class Token;
 class CodeObject;
 class FunctionObj;
 
+
 enum class Type {
     INTEGER = 1,
     DOUBLE,
@@ -45,9 +46,9 @@ union Value {
 class Object : public TGC {
 private:
     Type type;
+    SValue value;
     Object() : Object(Type::NIL, nullptr) {}; 
 protected:
-    SValue value;
     Object(Type t, SValue v) : type(t) { 
         value = v;
     }
@@ -63,12 +64,12 @@ public:
     virtual bool IsNumeral() const { return IsInteger() || IsDouble(); }
     virtual bool IsDouble() const { return  type == Type::DOUBLE; } 
     virtual bool IsNil() const { return  type == Type::NIL; }
-    int GetInt() { return value->l; }
-    int GetDouble() { return value->d; }
-    bool GetBool() { return value->b; }
-    const char* GetString() { return value->s; }
-    CodeObject* GetCodeObject() { return value->co; }
-    Object* GetObject() { return value->o; }
+    int GetInt() const { return value->l; }
+    int GetDouble() const { return value->d; }
+    bool GetBool() const { return value->b; }
+    const char* GetString() const;
+    SCodeObj GetCodeObject() const;
+    SObject GetObject() const;
 
     virtual SObject operator+(SObject rhs) {assert(false); return nullptr; }
     virtual SObject operator*(SObject rhs) {assert(false); return nullptr;}
@@ -76,7 +77,6 @@ public:
     virtual SObject operator==(SObject rhs) {assert(false); return nullptr;}
     virtual SObject operator!=(SObject rhs) {assert(false); return nullptr; }
     virtual string ToString() { return "<OBJECT>"; }
-    SValue GetValue() const { return value; } 
 };
 
 

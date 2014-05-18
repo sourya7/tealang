@@ -4,7 +4,7 @@
 class BooleanObj : public Object {
 public:  
     BooleanObj(bool b) : Object(Type::BOOLEAN,MakeShared<Value>(b)) {}
-    bool IsTrue() const { return GetValue()->b; }  
+    bool IsTrue() const { return GetBool(); }  
     bool IsBoolean() { return true; }
     string ToString();
     SObject operator==(SObject rhs);

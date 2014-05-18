@@ -5,7 +5,7 @@ class IntegerObj : public Object {
 public:  
     IntegerObj(long l) : Object(Type::INTEGER, MakeShared<Value>(l)) {}
     bool IsInteger() { return true; }
-    bool IsTrue() { return GetValue()->l != 0; }
+    bool IsTrue() { return GetInt() != 0; }
     SObject operator+(SObject rhs);
     SObject operator*(SObject rhs);
     SObject operator-(SObject rhs);

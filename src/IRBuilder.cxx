@@ -1,5 +1,7 @@
+#include <cstring>
 #include "Debug.h"
 #include "IRBuilder.h"
+#include "StringObj.h"
 #include "Object.h"
 #include "OPCode.h"
 #include "CodeObject.h"
@@ -98,18 +100,20 @@ void IRBuilder::CallFunc(string fn){
 }
 
 void IRBuilder::DeclClass(string n, SIRBuilder b){
-    b->GetCodeObject()->SetType(CT::CLASS);
-    auto cls_o = MakeShared<ClassObj>(n, b->GetCodeObject());
+    auto b_co = b->GetCodeObject();
+    b_co->SetType(CT::CLASS);
+    auto cls_o = MakeShared<ClassObj>(n, b_co);
     int id = co->GetID(n);
     assert(id != -1);
     co->StoreIDVal(cls_o,id);
 }
 
-void IRBuilder::CallMethod(string object, string method){
-    int cl = 0;
-    int cid = co->GetID(object, cl);
-    auto obj = co->GetIDVal(cid, cl)->GetCodeObject();
-    int mid = obj->GetID(method);
-    co->PushOP(OP(OPC::LOAD_VALUE,cid,cl)); 
-    co->PushOP(OP(OPC::CALL_METHOD,mid)); 
+void IRBuilder::CallMethod(string method){
+    //StringObj takes ownership of this 
+    //TODO turn this into unique_ptr
+    char* c = new char[method.length()];
+    std::strncpy(c,method.c_str(),method.length()); 
+    SObject strObj = MakeShared<StringObj>(c);
+    LoadConst(strObj);
+    co->PushOP(OP(OPC::CALL_METHOD));
 }

@@ -48,6 +48,8 @@ void VM::PushCO(SCodeObj c) {
 void VM::ExecCode(SCodeObj c){
     VM::PushCO(c);
     int count = 30;
+    //TODO, if coStack is empty, push a NIL object
+    //This is in case the user tries to assign a value to a void function call
     while(!coStack.empty()) {
     if(*opid >= ops->size()) { 
         PopCO(); continue; 
@@ -156,11 +158,14 @@ void VM::ExecCode(SCodeObj c){
         case OPC::CALL_METHOD:
         {
             DEBUG("OP::CALL");
-            assert(op.HasArgA());
+            auto method = VM::Pop();
             auto instance = VM::Pop();
-            auto i_co = instance->GetValue()->co;
-            auto fn = DYN_GC_CAST<FunctionObj>(i_co->GetIDVal(op.GetArgA()));
-            auto fn_co = fn->GetObjectCode(MakeShared<CodeObject>(*i_co));
+            auto i_co = instance->GetCodeObject();
+            auto fn_id = i_co->GetID(method->ToString());
+            assert(fn_id != -1);
+            auto fn = DYN_GC_CAST<FunctionObj>(i_co->GetIDVal(fn_id));
+            //Todo, make a wrapper that works with gc
+            auto fn_co = fn->GetCodeObject(i_co);
             INCR_OP();
             PushCO(fn_co);
             continue;
@@ -171,7 +176,7 @@ void VM::ExecCode(SCodeObj c){
             assert(op.HasArgB());
             auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             if(!fn->IsCFunction()){
-                SCodeObj c = fn->GetObjectCode(); 
+                SCodeObj c = fn->GetCodeObject(); 
                 INCR_OP();
                 PushCO(c);
                 continue;

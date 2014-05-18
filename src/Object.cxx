@@ -7,8 +7,15 @@
 #include "RealTok.h"
 #include "NumberTok.h"
 #include "WordTok.h"
+#include "CodeObject.h"
 
 using std::string;
+
+const char* Object::GetString() const { return value->s; }
+
+SCodeObj Object::GetCodeObject() const { return MakeShared<CodeObject>(*value->co); }
+
+SObject Object::GetObject() const { return MakeShared<Object>(*value->o); }
 
 SObject Object::NIL;
 SObject Object::FromToken(Token* t){

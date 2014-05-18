@@ -32,7 +32,7 @@ SObject IntegerObj::operator!=(SObject rhs){
 }
 
 string IntegerObj::ToString() {
-    long val = value->l;
+    long val = GetInt();
     string str = COM::toStr(val);
     return str;
 }

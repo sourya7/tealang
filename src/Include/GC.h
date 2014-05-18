@@ -20,7 +20,7 @@ class FunctionObj;
 class IRBuilder;
 class SeqAST;
 class Parser;
-union Value;
+class Value;
 class Lexer;
 
 // }}}
@@ -126,7 +126,7 @@ inline T* WRAP_PTR(V* v){ return v; }
 #else
 #define POINTER_VAL(x) x.get()
 template <typename T, typename V>
-inline shared_ptr<T> WrapPtr(V* v){ return shared_ptr<T>(v); }
+inline shared_ptr<T> WRAP_PTR(V* v){ return shared_ptr<T>(v); }
 
 template <typename T, typename... Args>
 inline std::shared_ptr<T> MakeShared(Args&&... args) { return std::make_shared<T>(std::forward<Args>(args)...); }

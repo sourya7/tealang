@@ -119,9 +119,7 @@ void IRBuilder::DeclClass(string n, SIRBuilder b){
 void IRBuilder::CallMethod(string method){
     //StringObj takes ownership of this 
     //TODO turn this into unique_ptr
-    char* c = new char[method.length()];
-    std::strncpy(c,method.c_str(),method.length()); 
-    SObject strObj = MakeShared<StringObj>(c);
+    SObject strObj = MakeShared<StringObj>(method);
     LoadConst(strObj);
     co->PushOP(OP(OPC::CALL_METHOD));
 }

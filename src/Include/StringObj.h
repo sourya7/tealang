@@ -2,9 +2,8 @@
 #define T_STRINGOBJ_H
 #include "Object.h"
 class StringObj : public Object {
-    const char* c;
 public:  
-    StringObj(const char* v) : Object(Type::STRING, MakeShared<Value>(v)) { c = v; }
+    StringObj(string s) : Object(MakeShared<Value>(s)) {}
     bool IsString() { return true; }
     SObject operator+(SObject rhs);
     SObject operator==(SObject rhs);

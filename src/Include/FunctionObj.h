@@ -15,15 +15,15 @@ private:
 public:  
     FunctionObj(string fn, int ac, SCodeObj o) : 
                 argc(ac), funcName(fn), co(o),
-                Object(Type::FUNCTION, MakeShared<Value>(POINTER_VAL(o))){}
+                Object(MakeShared<Value>(POINTER_VAL(o))){}
     FunctionObj(string fn, int ac) : 
                 argc(ac), funcName(fn), isC(true),
-                Object(Type::FUNCTION){}
+                Object(MakeShared<Value>((CodeObject*)nullptr)) {} 
     bool IsCFunction() { return isC; }
     int GetArgc() { return argc; }
     string GetName() { return funcName; }
-    SCodeObj GetCodeObject() { return Object::GetCodeObject(); }
-    SCodeObj GetCodeObject(SCodeObj o) { 
+    SCodeObj GetCodeObject() const { return MakeShared<CodeObject>(*Object::GetCodeObject()); }
+    SCodeObj GetCodeObject(SCodeObj o) const { 
         auto instance = GetCodeObject();
         instance->SetParent(o);
         return instance;

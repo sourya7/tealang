@@ -158,10 +158,8 @@ void VM::ExecCode(SCodeObj c){
             continue;
         case OPC::INIT_INSTANCE:
         {
-            auto instance = DYN_GC_CAST<ClassObj>(VM::Pop());
-            assert(instance != 0);
             auto class_co = co->GetParent();
-            auto class_o = MakeShared<ClassObj>(instance->GetName(),class_co,true);
+            auto class_o = MakeShared<ClassObj>(class_co);
             VM::Push(class_o);
             break;
         }
@@ -169,28 +167,26 @@ void VM::ExecCode(SCodeObj c){
         {
             DEBUG("OP::CALL_METHOD");
             auto method = VM::Pop();
-            auto instance = DYN_GC_CAST<ClassObj>(VM::Pop());
-            //instance->IsClassDef();
-            auto i_co = instance->GetCodeObject();
-            auto fn_id = i_co->GetID(method->ToString());
-            assert(fn_id != -1);
-            auto fn = DYN_GC_CAST<FunctionObj>(i_co->GetIDVal(fn_id));
-            auto fn_co = fn->GetCodeObject(i_co);
+            auto clsObj = DYN_GC_CAST<ClassObj>(VM::Pop());
+            auto clsCo = clsObj->GetCodeObject();
+            auto fnId = clsCo->GetID(method->ToString());
+
+            assert(fnId != -1);
+
+            auto fn = DYN_GC_CAST<FunctionObj>(clsCo->GetIDVal(fnId));
+            auto fnCo = fn->GetCodeObject(clsCo);
+
             //Todo, handle static
-            if(fn_co->IsInit()) { 
-                assert(!instance->IsInstance());
-                i_co = MakeShared<CodeObject>(*i_co);
-                fn_co = fn->GetCodeObject(i_co);
+            if(fnCo->IsInit()) { 
+                assert(!clsObj->IsInstance());
+                auto initCo = MakeShared<CodeObject>(*clsCo);
+                fnCo->SetParent(initCo);
             }
             else{ 
-                assert(instance->IsInstance());
+                assert(clsObj->IsInstance());
             }
-            //fn->IsMethod(), fn->IsInit()
-            //if isMethod and IsClass -> assert(false)
-            //if not IsClassDef and not IsInit() -> assert(false)
-            //otherwise If IsInit() 
             INCR_OP();
-            PushCO(fn_co);
+            PushCO(fnCo);
             continue;
         }
         case OPC::CALL:{
@@ -208,6 +204,7 @@ void VM::ExecCode(SCodeObj c){
         }
         case OPC::C_CALL:
         {
+            DEBUG("OP::C_CALL");
             auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             CFunction::Call(fn);
             break;

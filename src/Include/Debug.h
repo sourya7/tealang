@@ -1,6 +1,7 @@
 #ifndef T_DEBUG_H
 #define T_DEBUG_H
 
+#include <csignal>
 #include <iostream>
 using std::cerr;
 

@@ -4,12 +4,11 @@
 SObject StringObj::operator+(SObject rhs){
     string x = ToString();
     string y = rhs->ToString();
-    return MakeShared<StringObj>((x+y).c_str());
+    return MakeShared<StringObj>(x+y);
 }
 
 string StringObj::ToString() { 
-    const char* s = GetString();
-    return s;
+    return GetString();
 }
 
 SObject StringObj::operator==(SObject rhs){

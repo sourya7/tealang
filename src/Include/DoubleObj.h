@@ -3,7 +3,7 @@
 #include "Object.h"
 class DoubleObj : public Object {
 public:  
-    DoubleObj(double d) : Object(Type::DOUBLE, MakeShared<Value>(d)) {}
+    DoubleObj(double d) : Object(MakeShared<Value>(d)) {}
     bool IsDouble() { return true; }
     bool IsTrue() { return GetDouble() != 0; }
     SObject operator+(const Object* rhs);

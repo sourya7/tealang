@@ -4,8 +4,9 @@ defclass Animal
         sound = s
     endcon
     defun makeSound
-        [printf: "Hello world"]
+        [printf: sound]
     endfun
 endclass
 
 var test = [Animal initWithSound:"abcd"]
+[test makeSound]

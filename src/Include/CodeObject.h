@@ -23,8 +23,8 @@ private:
     SVecOP opcode;
     SVecSCodeObj children;
     SCodeObj parent = nullptr;
-    SClassObj parento = nullptr;
     CT type = CT::NORM;
+    SObject instanceOf = nullptr;
 public:
     CodeObject(SCodeObj p) : CodeObject(){
         parent = p;
@@ -39,7 +39,7 @@ public:
         //vals = p.vals;
         ids = p.ids;
         type = p.type;
-        parento = p.parento;
+        instanceOf = p.instanceOf;
     }
 
     CodeObject() {
@@ -50,13 +50,14 @@ public:
         children = MakeShared<VecSCodeObj>();
     }
 
+    void SetInstanceOf(SObject ins) { instanceOf = ins; }
+    SObject GetInstanceOf() { return instanceOf; }
+
     void SetType(CT t) { type = t; }
     bool IsFunction() { return type == CT::FUNCTION; }
     bool IsInit() { return type == CT::INIT; }
     bool IsNorm() { return type == CT::NORM; }
 
-    void SetParentCls(SObject o) { parentO = o; }
-    //TODO, get rid of CO parent. Make everything an object.
     void SetParent(SCodeObj p) { parent = p; }
     SCodeObj GetParent() const { return parent; }
 

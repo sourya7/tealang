@@ -11,12 +11,6 @@
 
 using std::string;
 
-const char* Object::GetString() const { return value->s; }
-
-SCodeObj Object::GetCodeObject() const { return MakeShared<CodeObject>(*value->co); }
-
-SObject Object::GetObject() const { return MakeShared<Object>(*value->o); }
-
 SObject Object::NIL;
 SObject Object::FromToken(Token* t){
     SObject o;
@@ -28,7 +22,7 @@ SObject Object::FromToken(Token* t){
             o = MakeShared<DoubleObj>(GUARD_CAST<RealTok*>(t)->value);
             break;
         case Tags::STR:
-            o = MakeShared<StringObj>(GUARD_CAST<WordTok*>(t)->value.c_str());
+            o = MakeShared<StringObj>(GUARD_CAST<WordTok*>(t)->value);
             break;
         default:
             assert(t->tag != Tags::BCIO);

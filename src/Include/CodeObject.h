@@ -23,6 +23,7 @@ private:
     SVecOP opcode;
     SVecSCodeObj children;
     SCodeObj parent = nullptr;
+    SClassObj parento = nullptr;
     CT type = CT::NORM;
 public:
     CodeObject(SCodeObj p) : CodeObject(){
@@ -38,6 +39,7 @@ public:
         //vals = p.vals;
         ids = p.ids;
         type = p.type;
+        parento = p.parento;
     }
 
     CodeObject() {
@@ -53,6 +55,8 @@ public:
     bool IsInit() { return type == CT::INIT; }
     bool IsNorm() { return type == CT::NORM; }
 
+    void SetParentCls(SObject o) { parentO = o; }
+    //TODO, get rid of CO parent. Make everything an object.
     void SetParent(SCodeObj p) { parent = p; }
     SCodeObj GetParent() const { return parent; }
 

@@ -20,6 +20,7 @@ public:
                 argc(ac), funcName(fn), isC(true),
                 Object(Type::FUNCTION){}
     bool IsCFunction() { return isC; }
+    int GetArgc() { return argc; }
     string GetName() { return funcName; }
     SCodeObj GetCodeObject() { return Object::GetCodeObject(); }
     SCodeObj GetCodeObject(SCodeObj o) { 

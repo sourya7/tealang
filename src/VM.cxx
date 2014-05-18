@@ -159,6 +159,7 @@ void VM::ExecCode(SCodeObj c){
         case OPC::INIT_INSTANCE:
         {
             auto instance = DYN_GC_CAST<ClassObj>(VM::Pop());
+            assert(instance != 0);
             auto class_co = co->GetParent();
             auto class_o = MakeShared<ClassObj>(instance->GetName(),class_co,true);
             VM::Push(class_o);
@@ -166,7 +167,7 @@ void VM::ExecCode(SCodeObj c){
         }
         case OPC::CALL_METHOD:
         {
-            DEBUG("OP::CALL");
+            DEBUG("OP::CALL_METHOD");
             auto method = VM::Pop();
             auto instance = DYN_GC_CAST<ClassObj>(VM::Pop());
             //instance->IsClassDef();
@@ -174,17 +175,16 @@ void VM::ExecCode(SCodeObj c){
             auto fn_id = i_co->GetID(method->ToString());
             assert(fn_id != -1);
             auto fn = DYN_GC_CAST<FunctionObj>(i_co->GetIDVal(fn_id));
-            SCodeObj fn_co;
+            auto fn_co = fn->GetCodeObject(i_co);
             //Todo, handle static
             if(fn_co->IsInit()) { 
                 assert(!instance->IsInstance());
-                VM::Push(instance);
-                auto i_cod = MakeShared<CodeObject>(*i_co);
+                i_co = MakeShared<CodeObject>(*i_co);
+                fn_co = fn->GetCodeObject(i_co);
             }
             else{ 
                 assert(instance->IsInstance());
             }
-            fn_co = fn->GetCodeObject(i_co);
             //fn->IsMethod(), fn->IsInit()
             //if isMethod and IsClass -> assert(false)
             //if not IsClassDef and not IsInit() -> assert(false)
@@ -215,6 +215,7 @@ void VM::ExecCode(SCodeObj c){
         case OPC::RETURN:
         {
             //TODO, clean the stack
+            assert(op.HasArgA());
             DEBUG("OP::RETURN");
             while(!co->IsFunction()){
                 PopCO();

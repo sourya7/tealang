@@ -9,9 +9,9 @@
 class FunctionObj : public Object {
 private:
     int argc;
-    bool isC = false;
     string funcName;
     SCodeObj co = nullptr;
+    bool isC = false;
 public:  
     FunctionObj(string fn, int ac, SCodeObj o) : 
                 argc(ac), funcName(fn), co(o),
@@ -21,8 +21,8 @@ public:
                 Object(Type::FUNCTION){}
     bool IsCFunction() { return isC; }
     string GetName() { return funcName; }
-    SCodeObj GetCodeObject() const { return Object::GetCodeObject(); }
-    SCodeObj GetCodeObject(SCodeObj o) const { 
+    SCodeObj GetCodeObject() { return Object::GetCodeObject(); }
+    SCodeObj GetCodeObject(SCodeObj o) { 
         auto instance = GetCodeObject();
         instance->SetParent(o);
         return instance;

@@ -10,7 +10,7 @@
 using std::string;
 class CodeObject;
 
-enum class CT { FUNCTION, METHOD, NORM, CLASS };
+enum class CT { FUNCTION, NORM, CLASS, INIT };
 class CodeObject : public TGC {
 private:
     //variables in the codeobject scope
@@ -50,9 +50,11 @@ public:
 
     void SetType(CT t) { type = t; }
     bool IsFunction() { return type == CT::FUNCTION; }
-    bool IsMethod() { return type == CT::METHOD; }
+    bool IsInit() { return type == CT::INIT; }
     bool IsNorm() { return type == CT::NORM; }
+
     void SetParent(SCodeObj p) { parent = p; }
+    SCodeObj GetParent() const { return parent; }
 
     int PushID(string var); 
     int PushConst(SObject o);

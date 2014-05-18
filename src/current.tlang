@@ -1,5 +1,5 @@
 defclass Animal
-    var sound = "Generic"
+    var sound
     defcon initWithSound:s
         sound = s
     endcon

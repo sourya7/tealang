@@ -63,12 +63,19 @@ void IRBuilder::DeclVar(string v, SObject o){
     co->StoreIDVal(o,id);
 }
 
-void IRBuilder::DeclFunc(string n, int ac, SIRBuilder b){
-    b->GetCodeObject()->SetType(CT::FUNCTION);
-    auto fo = MakeShared<FunctionObj>(n, ac, b->GetCodeObject());
+void IRBuilder::DeclFunc(bool i, string n, int ac, SIRBuilder b){
+    CT type = i ? CT::INIT : CT::FUNCTION;
+
+    auto fun_co = b->GetCodeObject();
+    fun_co->SetType(type);
+    //TODO: Is this a hack? A better way to initialize?
+    if(i) fun_co->PushOP(OP(OPC::INIT_INSTANCE));
+
+    auto fo = MakeShared<FunctionObj>(n, ac, fun_co);
     int id = co->GetID(n);
     assert(id != -1);
-    co->StoreIDVal(fo,id);
+    co->StoreIDVal(fo, id);
+        //load the into the stack
 }
 
 void IRBuilder::DeclCFunc(string n, int ac){
@@ -100,6 +107,7 @@ void IRBuilder::CallFunc(string fn){
 }
 
 void IRBuilder::DeclClass(string n, SIRBuilder b){
+    //Todo, add a default init if there is none
     auto b_co = b->GetCodeObject();
     b_co->SetType(CT::CLASS);
     auto cls_o = MakeShared<ClassObj>(n, b_co);

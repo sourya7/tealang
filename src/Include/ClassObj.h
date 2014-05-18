@@ -6,10 +6,12 @@ class ClassObj : public Object {
 private:
     string clsName;
     SCodeObj co;
+    bool isInstance = false;
 public:  
-    ClassObj(string cn, SCodeObj o) : 
-                clsName(cn), co(o),
+    ClassObj(string cn, SCodeObj o, bool i = false) : 
+                clsName(cn), co(o), isInstance(i),
                 Object(Type::CLASS, MakeShared<Value>(POINTER_VAL(o))){}
-    string GetName() { return clsName; }
+    string GetName() const { return clsName; }
+    bool IsInstance() const { return isInstance; }
 };
 #endif

@@ -3,6 +3,7 @@
 #include "ObjOP.h"
 #include "Frame.h"
 #include "OPCode.h"
+#include "ClassObj.h"
 #include "CFunction.h"
 #include "CodeObject.h"
 #include "FunctionObj.h"
@@ -155,17 +156,39 @@ void VM::ExecCode(SCodeObj c){
                 PushCO(c); 
             }
             continue;
+        case OPC::INIT_INSTANCE:
+        {
+            auto instance = DYN_GC_CAST<ClassObj>(VM::Pop());
+            auto class_co = co->GetParent();
+            auto class_o = MakeShared<ClassObj>(instance->GetName(),class_co,true);
+            VM::Push(class_o);
+            break;
+        }
         case OPC::CALL_METHOD:
         {
             DEBUG("OP::CALL");
             auto method = VM::Pop();
-            auto instance = VM::Pop();
+            auto instance = DYN_GC_CAST<ClassObj>(VM::Pop());
+            //instance->IsClassDef();
             auto i_co = instance->GetCodeObject();
             auto fn_id = i_co->GetID(method->ToString());
             assert(fn_id != -1);
             auto fn = DYN_GC_CAST<FunctionObj>(i_co->GetIDVal(fn_id));
-            //Todo, make a wrapper that works with gc
-            auto fn_co = fn->GetCodeObject(i_co);
+            SCodeObj fn_co;
+            //Todo, handle static
+            if(fn_co->IsInit()) { 
+                assert(!instance->IsInstance());
+                VM::Push(instance);
+                auto i_cod = MakeShared<CodeObject>(*i_co);
+            }
+            else{ 
+                assert(instance->IsInstance());
+            }
+            fn_co = fn->GetCodeObject(i_co);
+            //fn->IsMethod(), fn->IsInit()
+            //if isMethod and IsClass -> assert(false)
+            //if not IsClassDef and not IsInit() -> assert(false)
+            //otherwise If IsInit() 
             INCR_OP();
             PushCO(fn_co);
             continue;

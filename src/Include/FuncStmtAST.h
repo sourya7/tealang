@@ -5,8 +5,9 @@
 class IRBuilder;
 class FuncStmtAST : public NodeAST{ 
     SNodeAST obj;
+    bool isInit;
 public:
-    FuncStmtAST(SNodeAST p,SNodeAST b) : NodeAST(NodeType::FSTMT,p,b){}
+    FuncStmtAST(bool i,SNodeAST p,SNodeAST b) : NodeAST(NodeType::FSTMT,p,b), isInit(i) {}
     void GenerateIR(SIRBuilder b);
 };
 

@@ -167,13 +167,13 @@ SNodeAST Parser::ParseFunctionStmt(){
      * defun funWith:(funWithA:B:) andB:b
      * endfun
      */
-    //consume defun
-    bool isDefcon = look->tag == Tags::DEFCON;
+    //consume defun or defcon
+    bool isinit = look->tag == Tags::DEFCON;
     move(); 
 
     auto param = ParseFunctionParam();
     auto block = ParseBlock();
-    auto funcDef = MakeShared<FuncStmtAST>(param,block);
+    auto funcDef = MakeShared<FuncStmtAST>(isinit,param,block);
 
     //consume the endfun 
     //TODO use matchAndMove instead to make sure that the syntax is valid

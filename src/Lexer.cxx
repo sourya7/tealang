@@ -44,16 +44,19 @@ map<string, Tags> TokenMap {
 * TODO
 */
 int decFromHex(string hexStr){
+    cerr << hexStr;
     return 0;
 }
 
 //TODO
 int decFromOct(string octStr){
+    cerr << octStr;
     return 0;
 }
 
 //TODO
 int decFromBin(string binStr){
+    cerr << binStr;
     return 0;
 }
 
@@ -63,6 +66,7 @@ int decFromDec(string decStr){
 
 //TODO
 double floatFromFloat(string floatStr){
+    cerr << floatStr;
     return 0;
 }
 
@@ -224,6 +228,8 @@ SToken Lexer::ParseStringLiteral(){
                 case 'r': tmp += 13; break;
                 case 't': tmp += 9; break;
                 case 'v': tmp += 11; break;
+                case '\\': tmp += '\\'; break;
+                default: break;
             }
         }
         else tmp += peek;

@@ -19,14 +19,13 @@ IRBuilder::IRBuilder(SIRBuilder b) {
 void IRBuilder::CondJump(SIRBuilder ifBlk){
     int childId = co->GetChildID(ifBlk->GetCodeObject());
     assert(childId != -1);
-    co->PushOP(OP(OPC::JMP_IF, childId));
+    co->PushOP(OP(OPC::JMP_IF_ELSE, childId));
 }
 
 void IRBuilder::CondJump(SIRBuilder ifBlk, SIRBuilder elBlk){
     int ifId = co->GetChildID(ifBlk->GetCodeObject());
     int elId = co->GetChildID(elBlk->GetCodeObject());
-    co->PushOP(OP(OPC::JMP_IF_ELSE, ifId));
-    co->PushOP(OP(OPC::JMP_IF_ELSE, elId));
+    co->PushOP(OP(OPC::JMP_IF_ELSE, ifId, elId));
 }
 
 void IRBuilder::PerformOP(OPC op){

@@ -7,8 +7,8 @@ private:
     SCodeObj co;
     bool isInstance = false;
 public:  
-    ClassObj(string cn, SCodeObj o) : co(o),
-                Object(MakeShared<Value>(POINTER_VAL(o))) {
+    ClassObj(string cn, SCodeObj o) : 
+        Object(MakeShared<Value>(POINTER_VAL(o))), co(o) {
         SetName(cn);
         co->SetInstanceOf(WRAP_PTR<ClassObj>(this));
     }

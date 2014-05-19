@@ -1,6 +1,9 @@
-defun bla:a
-    [printf: "The value is " + a]
+defun abc:a
+    if a < 6
+        [println: "Val less than six"]
+    else 
+        [println: "Val six or greater"]
+    endif
 endfun
 
-[bla: 2]
-
+[abc:6]

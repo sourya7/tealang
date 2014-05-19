@@ -97,15 +97,18 @@ public:
     int GetDouble() const { return value->GetDouble(); }
     bool GetBool() const { return value->GetBool(); }
     string GetString() const { return value->GetString(); } 
-
     SCodeObj GetCodeObject() const { return value->GetCodeObject(); }
     SObject GetObject() const { return value->GetObject(); }
-
-    virtual SObject operator+(SObject rhs) {assert(false); return nullptr; }
-    virtual SObject operator*(SObject rhs) {assert(false); return nullptr;}
-    virtual SObject operator-(SObject rhs) {assert(false); return nullptr;}
-    virtual SObject operator==(SObject rhs) {assert(false); return nullptr;}
-    virtual SObject operator!=(SObject rhs) {assert(false); return nullptr; }
+    virtual SObject operator+(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator<(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator<=(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator>(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator>=(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator*(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator-(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator||(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator==(SObject rhs){assert(false);return rhs;}
+    virtual SObject operator!=(SObject rhs){assert(false);return rhs;}
     virtual string ToString() { return "<OBJECT>"; }
 };
 

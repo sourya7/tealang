@@ -19,10 +19,6 @@ private:
 
     static void Push(SObject a);
     static SObject Pop();
-    static bool RetFlag;
-    static void ResetFlags() {
-        RetFlag = false;
-    }
     static void PopCO();
     static void PushCO(SCodeObj c);
 public:

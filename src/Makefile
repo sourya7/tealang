@@ -1,10 +1,16 @@
 CC = ccache g++
-CC_FLAGS = -I./Include --std=c++11 -ggdb
+CC_FLAGS = -I./Include --std=c++11 -ggdb -Wall
+WARN_FLAGS = -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Werror
 
 ifeq ($(EGC), 1)
 GC_FLAGS = -DALLOW_GC
 GC_LIB= -lgc
 endif
+
+ifeq ($(EWARN), 1)
+WARN = $(WARN_FLAGS)
+endif
+
 
 # File names
 EXEC = tlang
@@ -17,7 +23,7 @@ $(EXEC): $(OBJECTS)
 
 # To obtain object files
 %.o: %.cxx
-	$(CC) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o $@
+	$(CC) $(WARN) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o $@
 
 # To remove generated files
 clean:

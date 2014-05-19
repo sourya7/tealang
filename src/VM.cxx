@@ -8,16 +8,20 @@
 #include "CodeObject.h"
 #include "FunctionObj.h"
 
+#define INCR_OP() (*opid)++;
+#define BIN_OP(op)\
+    j = VM::Pop();\
+    i = VM::Pop();\
+    VM::Push(*i op j);\
+
+
 VecSObj VM::vmStack;
 VecSCodeObj VM::coStack;
 VecPairVecOPInt VM::opsStack;
-#define INCR_OP() (*opid)++;
-SVecOP VM::ops;
+
 SInt VM::opid;
+SVecOP VM::ops;
 SCodeObj VM::co;
-
-bool VM::RetFlag = false;
-
 
 void VM::PopCO() {
     coStack.pop_back();
@@ -62,24 +66,16 @@ void VM::ExecCode(SCodeObj c){
     OP op = (*ops)[*opid];
     OPC opc = op.opc;
     switch(opc){
-        case OPC::ADD:
-            DEBUG("OP::ADD");
-            j = VM::Pop();
-            i = VM::Pop();
-            VM::Push(ObjOP::Add(i, j));
-            break;
-        case OPC::SUB:
-            DEBUG("OP::SUB");
-            j = VM::Pop();
-            i = VM::Pop();
-            VM::Push(*i - j);
-            break;
-        case OPC::EQ:
-            DEBUG("OP::EQ");
-            j = VM::Pop();
-            i = VM::Pop();
-            VM::Push(*i == j);
-            break;
+        case OPC::ADD: DEBUG("OP::ADD"); BIN_OP(+); break;
+        case OPC::SUB: DEBUG("OP::SUB"); BIN_OP(-); break;
+        case OPC::LT: DEBUG("OP::LT"); BIN_OP(<); break;
+        case OPC::GT: DEBUG("OP::GT"); BIN_OP(>); break;
+        case OPC::LEQ: DEBUG("OP::LEQ"); BIN_OP(<=); break;
+        case OPC::GEQ: DEBUG("OP::GEQ"); BIN_OP(>=); break;
+        case OPC::EQ: DEBUG("OP::EQ"); BIN_OP(==); break;
+        case OPC::NEQ: DEBUG("OP::NEQ"); BIN_OP(!=); break;
+        case OPC::MULT: DEBUG("OP::MULT"); BIN_OP(*); break;
+        //case OPC::POWER: DEBUG("OP::POWER"); BIN_OP(**); break;
             /*
         case OPC::WHILE:
             DEBUG("OP::WHILE");
@@ -93,18 +89,6 @@ void VM::ExecCode(SCodeObj c){
             }
             break;
             */
-        case OPC::NEQ:
-            DEBUG("OP::NEQ");
-            j = VM::Pop();
-            i = VM::Pop();
-            VM::Push(*i != j);
-            break;
-        case OPC::MULT:
-            DEBUG("OP::MULT");
-            j = VM::Pop();
-            i = VM::Pop();
-            VM::Push(*i * j);
-            break;
         case OPC::LOAD_CONSTANT:
             DEBUG("OP::PUSH_CONSTANT");
             assert(op.HasArgA());
@@ -126,34 +110,21 @@ void VM::ExecCode(SCodeObj c){
             assert(i->GetInt() >= 0);
             co->StoreIDVal(i, op.GetArgA(), op.GetArgB());
             break;
-        case OPC::JMP_IF:
-            DEBUG("OP::JMP_IF");
-            assert(op.HasArgA());
-            if(VM::Pop()->IsTrue()) {
-                SCodeObj c = co->GetChild(op.GetArgA());
-                c->SetParent(co);
-                INCR_OP();
-                PushCO(c); 
-            } else { INCR_OP(); }
-            continue;
         case OPC::JMP_IF_ELSE:
             DEBUG("OP::JMP_IF_ELSE");
+            INCR_OP(); 
             assert(op.HasArgA());
-            //For if, we skip the else statment
-            //For else, we skip the if statment
             if(VM::Pop()->IsTrue()) { 
                 SCodeObj c = co->GetChild(op.GetArgA());
                 c->SetParent(co);
-                INCR_OP(); //move to the next which is else
-                INCR_OP(); //eat up the else statement
                 PushCO(c);
             }
             else { 
-                INCR_OP(); // consume the previous if
-                SCodeObj c = co->GetChild(op.GetArgA());
-                c->SetParent(co);
-                INCR_OP(); //consume the else stmt
-                PushCO(c); 
+                if(op.HasArgB()){
+                    SCodeObj c = co->GetChild(op.GetArgB());
+                    c->SetParent(co);
+                    PushCO(c); 
+                }
             }
             continue;
         case OPC::INIT_INSTANCE:

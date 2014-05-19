@@ -4,7 +4,7 @@ defclass Animal
         sound = s
     endcon
     defun makeSound
-        [printf: sound]
+        [println: sound]
     endfun
 endclass
 

@@ -4,7 +4,8 @@
 #include "VM.h"
 
 MapStrFunc funcMap = {
-    {"printf:", {printWrapper, 1}},
+    {"print:", {printWrapper, 1}},
+    {"println:", {printlnWrapper, 1}},
     {"printf:withF:", {printfWrapper, 2}},
 };
 
@@ -25,9 +26,16 @@ void CFunction::Call(SFunctionObj obj){
     SObject ret = fsp.first(p);
 }
 
+
+SObject printlnWrapper(const VecSObj& v){
+    string s = v.back()->ToString();
+    cout << s << "\n";
+    return nullptr;
+}
+
 SObject printWrapper(const VecSObj& v){
     string s = v.back()->ToString();
-    cerr << s;
+    cout << s;
     return nullptr;
 }
 

@@ -75,7 +75,6 @@ SNodeAST Parser::ParseFunctionParam(bool isCall = false){
     //   defun funcWithCb:(cb:a andB:b) andB:b
     //      //do something
     //   endfun
-    uint currentLine = look->line;
     SNodeAST param;
     auto p = MakeShared<ParamAST>();
     auto lw = GUARD_CAST<WordTok*>(POINTER_VAL(look));
@@ -228,9 +227,10 @@ SNodeAST Parser::ParseSingleStmt(){
             move();
             return MakeShared<NodeAST>(NodeType::RETURN,ParseExpr(),nullptr);
             break;
+        default:
+            assert(false);
     }
     
-    assert(false);
     return node;
 }
 

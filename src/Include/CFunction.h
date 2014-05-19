@@ -9,6 +9,7 @@ using namespace std;
 class FunctionObj;
 
 SObject printWrapper(const VecSObj& s);
+SObject printlnWrapper(const VecSObj& s);
 SObject printfWrapper(const VecSObj& s);
 
 class IRBuilder;

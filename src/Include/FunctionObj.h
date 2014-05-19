@@ -10,15 +10,17 @@ class FunctionObj : public Object {
 private:
     int argc;
     string funcName;
-    SCodeObj co = nullptr;
-    bool isC = false;
+    SCodeObj co;
+    bool isC;
 public:  
-    FunctionObj(string fn, int ac, SCodeObj o) : 
-                argc(ac), funcName(fn), co(o),
-                Object(MakeShared<Value>(POINTER_VAL(o))){}
+    FunctionObj(string fn, int ac, SCodeObj o) :
+                Object(MakeShared<Value>(POINTER_VAL(o))),
+                argc(ac),funcName(fn),co(o),isC(false)
+                {}
     FunctionObj(string fn, int ac) : 
-                argc(ac), funcName(fn), isC(true),
-                Object(MakeShared<Value>((CodeObject*)nullptr)) {} 
+                Object(MakeShared<Value>((CodeObject*)nullptr)),
+                argc(ac),funcName(fn),co(nullptr),isC(true)
+                {}
     bool IsCFunction() { return isC; }
     int GetArgc() { return argc; }
     string GetName() { return funcName; }

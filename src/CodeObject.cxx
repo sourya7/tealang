@@ -18,7 +18,6 @@ int CodeObject::PushID(string var) {
 
 //level returns if we can find it in a parent
 int CodeObject::GetID(string var, int &level){
-    bool found = false;
     level = 0;
     CodeObject* root = this;
     while(root != nullptr){
@@ -40,7 +39,7 @@ void CodeObject::StoreIDVal(SObject val, int id, int level) {
         assert(root != nullptr);
         root = POINTER_VAL(root->parent);
     }
-    assert(root->ids->size() > id); 
+    assert((int)root->ids->size() > id); 
     root->vals->at(id) = val; 
 }
 

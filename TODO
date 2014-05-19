@@ -1,2 +1,7 @@
 * Add measures to make sure that the functions clean the stack after they are done
 * Need to make sure that if a return statement is used, and if there is no assignment, we discard the value rather than leaving it at the stack
+* Hexadecimal/octal/binary/boolean literals
+* List and Dictionary data type
+* While Statement
+* For Statement
+* Class inheritance

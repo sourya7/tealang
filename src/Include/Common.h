@@ -24,6 +24,6 @@ namespace COM{
         in >> output;
         return output;
     }
-};
+}
 
 #endif

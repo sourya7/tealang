@@ -10,9 +10,9 @@ class IRBuilder;
 enum class NodeType {NODE, SEQ, CALL, PARAM, IFSTMT, FSTMT,WSTMT, ASSIGN, EXPR, TOKEN, VAR, RETURN, CLASS};
 class NodeAST : public TGC {
 protected:
+    NodeType type = NodeType::NODE;
     SNodeAST left;
     SNodeAST right;
-    NodeType type = NodeType::NODE;
 public:
     NodeAST() {} 
     NodeAST(NodeType t) : type(t) {} 

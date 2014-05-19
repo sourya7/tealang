@@ -3,33 +3,26 @@
 #include "DoubleObj.h"
 #include "Common.h"
 
-#define PERFORM_OP(op)\
+#define PERFORM_BIN_OP(op)\
     if(rhs->IsDouble())\
         return MakeShared<DoubleObj>(GetInt() op rhs->GetDouble());\
     else\
         return MakeShared<IntegerObj>(GetInt() op rhs->GetInt());\
 
+#define PERFORM_BOOL_OP(op)\
+    return (GetInt() op rhs->GetInt()) ? BooleanObj::TRUE : BooleanObj::FALSE;\
+
+
         
-SObject IntegerObj::operator+(SObject rhs){
-    PERFORM_OP(+)
-}
-
-SObject IntegerObj::operator*(SObject rhs){
-    PERFORM_OP(*)
-}
-
-SObject IntegerObj::operator-(SObject rhs){
-    PERFORM_OP(-)
-}
-
-SObject IntegerObj::operator==(SObject rhs){
-    return GetInt() == rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
-}
-
-SObject IntegerObj::operator!=(SObject rhs){
-    auto ret = GetInt() != rhs->GetInt() ? BooleanObj::TRUE : BooleanObj::FALSE;
-    return ret;
-}
+SObject IntegerObj::operator+(SObject rhs){ PERFORM_BIN_OP(+) }
+SObject IntegerObj::operator*(SObject rhs){ PERFORM_BIN_OP(*) }
+SObject IntegerObj::operator-(SObject rhs){ PERFORM_BIN_OP(-) }
+SObject IntegerObj::operator<(SObject rhs){ PERFORM_BOOL_OP(<) }
+SObject IntegerObj::operator<=(SObject rhs){ PERFORM_BOOL_OP(<=) }
+SObject IntegerObj::operator>(SObject rhs){ PERFORM_BOOL_OP(>) }
+SObject IntegerObj::operator>=(SObject rhs){ PERFORM_BOOL_OP(>=) }
+SObject IntegerObj::operator==(SObject rhs){ PERFORM_BOOL_OP(==) }
+SObject IntegerObj::operator!=(SObject rhs){ PERFORM_BOOL_OP(!=) }
 
 string IntegerObj::ToString() {
     long val = GetInt();

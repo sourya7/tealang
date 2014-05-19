@@ -17,11 +17,10 @@ private:
     bool hasArgA = false;
     bool hasArgB = false;
 public:
-    OP(OPC o) : opc(o) {}
-
-    OP(OPC o, int a) : opc(o),hasArgA(true),argA(a) {} 
-    OP(OPC o, int a, int b) : opc(o),hasArgA(true),hasArgB(true),argA(a),argB(b) {} 
     const OPC  opc;
+    OP(OPC o) : hasArgA(false),hasArgB(false),opc(o) {}
+    OP(OPC o, int a) : argA(a),hasArgA(true),opc(o){} 
+    OP(OPC o, int a, int b) : argA(a),argB(b),hasArgA(true),hasArgB(true),opc(o){} 
     bool HasArgA() { return hasArgA; }
     int GetArgA() { return hasArgA ? argA : -1; }
 

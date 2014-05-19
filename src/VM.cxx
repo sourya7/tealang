@@ -52,17 +52,15 @@ void VM::PushCO(SCodeObj c) {
 
 void VM::ExecCode(SCodeObj c){
     VM::PushCO(c);
-    int count = 30;
     //TODO, if coStack is empty, push a NIL object
     //This is in case the user tries to assign a value to a void function call
     while(!coStack.empty()) {
-    if(*opid >= ops->size()) { 
+    if(*opid >= static_cast<int>(ops->size())) { 
         PopCO(); continue; 
     }
 
     SObject i;
     SObject j;
-    SFunctionObj fn;
     OP op = (*ops)[*opid];
     OPC opc = op.opc;
     switch(opc){
@@ -115,15 +113,15 @@ void VM::ExecCode(SCodeObj c){
             INCR_OP(); 
             assert(op.HasArgA());
             if(VM::Pop()->IsTrue()) { 
-                SCodeObj c = co->GetChild(op.GetArgA());
-                c->SetParent(co);
-                PushCO(c);
+                SCodeObj ic = co->GetChild(op.GetArgA());
+                ic->SetParent(co);
+                PushCO(ic);
             }
             else { 
                 if(op.HasArgB()){
-                    SCodeObj c = co->GetChild(op.GetArgB());
-                    c->SetParent(co);
-                    PushCO(c); 
+                    SCodeObj ec = co->GetChild(op.GetArgB());
+                    ec->SetParent(co);
+                    PushCO(ec); 
                 }
             }
             continue;
@@ -166,9 +164,9 @@ void VM::ExecCode(SCodeObj c){
             assert(op.HasArgB());
             auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
             if(!fn->IsCFunction()){
-                SCodeObj c = fn->GetCodeObject(); 
+                SCodeObj cc = fn->GetCodeObject(); 
                 INCR_OP();
-                PushCO(c);
+                PushCO(cc);
                 continue;
             }
             //Letting it pass through intended

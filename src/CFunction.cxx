@@ -39,6 +39,9 @@ SObject printWrapper(const VecSObj& v){
     return nullptr;
 }
 
-SObject printfWrapper(const VecSObj& s){
+SObject printfWrapper(const VecSObj& v){
+    string f = v[0]->ToString();
+    string s = v[1]->ToString();
+    cout << f << " " << s;
     return nullptr;
 }

@@ -6,9 +6,9 @@ public:
     DoubleObj(double d) : Object(MakeShared<Value>(d)) {}
     bool IsDouble() { return true; }
     bool IsTrue() { return GetDouble() != 0; }
-    SObject operator+(const Object* rhs);
-    SObject operator*(const Object* rhs);
-    SObject operator-(const Object* rhs);
+    SObject operator+(SObject rhs);
+    SObject operator*(SObject rhs);
+    SObject operator-(SObject rhs);
     static double ValFromObj(SObject val){ return val->GetDouble(); }
 };
 #endif

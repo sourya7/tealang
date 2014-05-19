@@ -18,7 +18,7 @@ public:
                 argc(ac),funcName(fn),co(o),isC(false)
                 {}
     FunctionObj(string fn, int ac) : 
-                Object(MakeShared<Value>((CodeObject*)nullptr)),
+                Object(MakeShared<Value>(static_cast<CodeObject*>(nullptr))),
                 argc(ac),funcName(fn),co(nullptr),isC(true)
                 {}
     bool IsCFunction() { return isC; }

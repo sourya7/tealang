@@ -39,7 +39,7 @@ void CodeObject::StoreIDVal(SObject val, int id, int level) {
         assert(root != nullptr);
         root = POINTER_VAL(root->parent);
     }
-    assert((int)root->ids->size() > id); 
+    assert(static_cast<int>(root->ids->size()) > id); 
     root->vals->at(id) = val; 
 }
 

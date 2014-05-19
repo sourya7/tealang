@@ -25,9 +25,6 @@ SObject Object::FromToken(Token* t){
             o = MakeShared<StringObj>(GUARD_CAST<WordTok*>(t)->value);
             break;
         default:
-            assert(t->tag != Tags::BCIO);
-            assert(t->tag != Tags::BSQO);
-            cerr << (int)t->tag << "\n";
             assert(false && "This should not happen");
             break;
     }

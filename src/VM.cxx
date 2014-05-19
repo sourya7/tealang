@@ -58,7 +58,6 @@ void VM::ExecCode(SCodeObj c){
     if(*opid >= static_cast<int>(ops->size())) { 
         PopCO(); continue; 
     }
-
     SObject i;
     SObject j;
     OP op = (*ops)[*opid];
@@ -127,25 +126,22 @@ void VM::ExecCode(SCodeObj c){
             continue;
         case OPC::INIT_INSTANCE:
         {
-            auto class_co = co->GetParent();
-            auto class_o = MakeShared<ClassObj>(class_co);
-            VM::Push(class_o);
+            auto classCo = co->GetParent();
+            auto classO = MakeShared<ClassObj>(classCo);
+            VM::Push(classO);
             break;
         }
         case OPC::CALL_METHOD:
         {
             DEBUG("OP::CALL_METHOD");
+            INCR_OP();
             auto method = VM::Pop();
             auto clsObj = DYN_GC_CAST<ClassObj>(VM::Pop());
             auto clsCo = clsObj->GetCodeObject();
             auto fnId = clsCo->GetID(method->ToString());
-
             assert(fnId != -1);
-
             auto fn = DYN_GC_CAST<FunctionObj>(clsCo->GetIDVal(fnId));
             auto fnCo = fn->GetCodeObject(clsCo);
-
-            //Todo, handle static
             if(fnCo->IsInit()) { 
                 assert(!clsObj->IsInstance());
                 auto initCo = MakeShared<CodeObject>(*clsCo);
@@ -154,11 +150,11 @@ void VM::ExecCode(SCodeObj c){
             else{ 
                 assert(clsObj->IsInstance());
             }
-            INCR_OP();
             PushCO(fnCo);
             continue;
         }
-        case OPC::CALL:{
+        case OPC::CALL:
+        {
             DEBUG("OP::CALL");
             assert(op.HasArgA());
             assert(op.HasArgB());
@@ -169,13 +165,11 @@ void VM::ExecCode(SCodeObj c){
                 PushCO(cc);
                 continue;
             }
-            //Letting it pass through intended
-        }
-        case OPC::C_CALL:
-        {
-            DEBUG("OP::C_CALL");
-            auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
-            CFunction::Call(fn);
+            else {
+                DEBUG("OP::C_CALL");
+                auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
+                CFunction::Call(fn);
+            }
             break;
         }
         case OPC::RETURN:

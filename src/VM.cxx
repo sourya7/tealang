@@ -167,7 +167,7 @@ void VM::ExecCode(SCodeObj c){
             }
             else {
                 DEBUG("OP::C_CALL");
-                auto fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
+                fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
                 CFunction::Call(fn);
             }
             break;

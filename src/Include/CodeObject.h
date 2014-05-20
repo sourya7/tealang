@@ -36,7 +36,6 @@ public:
         opcode = p.opcode;
         consts = p.consts;
         vals = MakeShared<VecSObj>(*p.vals);
-        //vals = p.vals;
         ids = p.ids;
         type = p.type;
         instanceOf = p.instanceOf;

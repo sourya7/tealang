@@ -20,24 +20,25 @@ using namespace std;
 
 class Parser : public TGC {
 private:
-    SToken look;
-    SLexer lexer;
-public:
-    Parser(istream* i);
-    void move();
+  SToken look;
+  SLexer lexer;
 
-    SNodeAST Parse();
-    SNodeAST ParseBlock();
-    SNodeAST ParseIfStmt();
-    SNodeAST ParseForStmt();
-    SNodeAST ParseTryStmt();
-    SNodeAST ParseClassStmt();
-    SNodeAST ParseWhileStmt();
-    SNodeAST ParseSingleStmt();
-    SNodeAST ParseFunctionStmt();
-    SNodeAST ParseFunctionParam(bool isCall);
-    SNodeAST ParseFunctionCall();
-    SNodeAST ParseExpr();
+public:
+  Parser(istream *i);
+  void move();
+
+  SNodeAST Parse();
+  SNodeAST ParseBlock();
+  SNodeAST ParseIfStmt();
+  SNodeAST ParseForStmt();
+  SNodeAST ParseTryStmt();
+  SNodeAST ParseClassStmt();
+  SNodeAST ParseWhileStmt();
+  SNodeAST ParseSingleStmt();
+  SNodeAST ParseFunctionStmt();
+  SNodeAST ParseFunctionParam(bool isCall);
+  SNodeAST ParseFunctionCall();
+  SNodeAST ParseExpr();
 };
 
 #endif

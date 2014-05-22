@@ -12,21 +12,21 @@ using std::istream;
 
 class Lexer : public TGC {
 private:
-    char peek;
-    unsigned long line;
-    istream* inputStream;
+  char peek;
+  unsigned long line;
+  istream *inputStream;
 
-    void Reserve(WordTok w);
-    SToken ParseNumericToken();
-    SToken ParseIdentifierToken();
-    SToken ParseSpecialNumber();
-    void ReadChar();
-    bool ReadAndMatch(char ch);
-    SToken ParseStringLiteral();
-public: 
-    SToken Scan();
-    Lexer(istream* pistream);
+  void Reserve(WordTok w);
+  SToken ParseNumericToken();
+  SToken ParseIdentifierToken();
+  SToken ParseSpecialNumber();
+  void ReadChar();
+  bool ReadAndMatch(char ch);
+  SToken ParseStringLiteral();
+
+public:
+  SToken Scan();
+  Lexer(istream *pistream);
 };
-
 
 #endif

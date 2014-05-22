@@ -5,8 +5,8 @@
 
 class ClassStmtAST : public NodeAST {
 public:
-    ClassStmtAST(SNodeAST n, SNodeAST b) : NodeAST(NodeType::CLASS,n,b) {};
-    void GenerateIR(SIRBuilder builder);
+  ClassStmtAST(SNodeAST n, SNodeAST b) : NodeAST(NodeType::CLASS, n, b) {};
+  void GenerateIR(SIRBuilder builder);
 };
 
 #endif

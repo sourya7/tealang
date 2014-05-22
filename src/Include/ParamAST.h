@@ -3,17 +3,18 @@
 #include "NodeAST.h"
 class ParamAST : public NodeAST {
 private:
-    VecSNodeAST params;
-    string name;
+  VecSNodeAST params;
+  string name;
+
 public:
-    ParamAST() : NodeAST(NodeType::PARAM) {}
-    void AddParam(string s, SNodeAST n) { 
-        name += s;
-        if(n != nullptr) params.push_back(n);
-    }
-    string GetName(){ return name; }
-    int GetCount(){ return params.size(); }
-    VecSNodeAST GetParams() { return params; }
+  ParamAST() : NodeAST(NodeType::PARAM) {}
+  void AddParam(string s, SNodeAST n) {
+    name += s;
+    if (n != nullptr)
+      params.push_back(n);
+  }
+  string GetName() { return name; }
+  int GetCount() { return params.size(); }
+  VecSNodeAST GetParams() { return params; }
 };
 #endif
-

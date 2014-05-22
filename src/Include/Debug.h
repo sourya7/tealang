@@ -9,16 +9,18 @@ using std::cerr;
 //#define assert(exp) ((void) 0)
 
 #ifdef PRINTDEBUG
-#define DEBUG(x) do { std::cerr << __FILE__ << ":" << __LINE__ << " " << x << std::endl; } while (0)
+#define DEBUG(x)                                                               \
+  do {                                                                         \
+    std::cerr << __FILE__ << ":" << __LINE__ << " " << x << std::endl;         \
+  } while (0)
 #else
-#define DEBUG(x) 
+#define DEBUG(x)
 #endif
 
-template <typename T, typename V>
-T GUARD_CAST(V val) {
-    T tmp = dynamic_cast<T>(val);
-    assert(tmp != 0);
-    return tmp;
+template <typename T, typename V> T GUARD_CAST(V val) {
+  T tmp = dynamic_cast<T>(val);
+  assert(tmp != 0);
+  return tmp;
 }
 
 #endif

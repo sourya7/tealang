@@ -3,7 +3,7 @@
 #include "Token.h"
 class NumberTok : public Token {
 public:
-    long value;
-    NumberTok(int n, ulong l) : Token(Tags::NUM,l), value(n) {}
+  long value;
+  NumberTok(int n, ulong l) : Token(Tags::NUM, l), value(n) {}
 };
 #endif

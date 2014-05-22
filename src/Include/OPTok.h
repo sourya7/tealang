@@ -5,7 +5,7 @@
 
 class OPTok : public Token {
 public:
-    OPC value;
-    OPTok(OPC op, ulong l) : Token(Tags::OP,l), value(op) {}
+  OPC value;
+  OPTok(OPC op, ulong l) : Token(Tags::OP, l), value(op) {}
 };
 #endif

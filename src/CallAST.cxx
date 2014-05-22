@@ -27,30 +27,27 @@
  *     c. Call "callA:andB:"
  *
  */
-void CallAST::GenerateIR(SIRBuilder builder){
-    auto paramAST = GUARD_CAST<ParamAST*>(POINTER_VAL(right));
-    VecSNodeAST params = paramAST->GetParams();
-    for(auto it=params.rbegin(), end=params.rend(); it != end; ++it){
-        (*it)->GenerateIR(builder);
-    }
+void CallAST::GenerateIR(SIRBuilder builder) {
+  auto paramAST = GUARD_CAST<ParamAST *>(POINTER_VAL(right));
+  VecSNodeAST params = paramAST->GetParams();
+  for (auto it = params.rbegin(), end = params.rend(); it != end; ++it) {
+    (*it)->GenerateIR(builder);
+  }
 
-    if(POINTER_VAL(left) != nullptr){
-        //there is an object. 
-        if(left->GetType() == NodeType::PARAM){
-            //there is a function to generate an object
-            assert(false);
-            left->GenerateIR(builder);
-        }
-        else {
-            //its simply an id to an object
-            string val = GUARD_CAST<WordTok*>(POINTER_VAL(left))->value;
-            builder->LoadValue(val);
-        }
-        builder->CallMethod(paramAST->GetName());
+  if (POINTER_VAL(left) != nullptr) {
+    // there is an object.
+    if (left->GetType() == NodeType::PARAM) {
+      // there is a function to generate an object
+      assert(false);
+      left->GenerateIR(builder);
+    } else {
+      // its simply an id to an object
+      string val = GUARD_CAST<WordTok *>(POINTER_VAL(left))->value;
+      builder->LoadValue(val);
     }
-    else {
-        //its a simple function call
-        builder->CallFunc(paramAST->GetName());
-    }
-    
+    builder->CallMethod(paramAST->GetName());
+  } else {
+    // its a simple function call
+    builder->CallFunc(paramAST->GetName());
+  }
 }

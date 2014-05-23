@@ -8,12 +8,16 @@
 #include "CodeObject.h"
 #include "FunctionObj.h"
 
+#define VM_POP()                                                               \
+  vmStack.back();                                                              \
+  vmStack.pop_back();
+#define VM_PUSH(v) vmStack.push_back(v);
+
 #define INCR_OP() (*opid)++;
 #define BIN_OP(op)                                                             \
-  j = VM::Pop();                                                               \
-  i = VM::Pop();                                                               \
-  r = *i op j;                                                                 \
-  VM::Push(r);
+  j = VM_POP();                                                                \
+  i = VM_POP();                                                                \
+  VM_PUSH(*i op j);
 
 VecSObj VM::vmStack;
 VecSCodeObj VM::coStack;
@@ -29,8 +33,9 @@ void VM::PopCO() {
   if (coStack.empty())
     return;
   co = coStack.back();
-  ops = opsStack.back().first;
-  opid = opsStack.back().second;
+  auto opsBack = opsStack.back();
+  ops = opsBack.first;
+  opid = opsBack.second;
 }
 
 const SObject VM::Pop() {
@@ -60,7 +65,6 @@ void VM::ExecCode(const SCodeObj &c) {
     }
     SObject i;
     SObject j;
-    SObject r;
 
     OP op = (*ops)[*opid];
     OPC opc = op.opc;
@@ -118,28 +122,29 @@ void VM::ExecCode(const SCodeObj &c) {
       DEBUG("OP::PUSH_CONSTANT");
       assert(op.HasArgA());
       i = co->GetConst(op.GetArgA());
-      VM::Push(i);
+      VM_PUSH(i);
       break;
     case OPC::LOAD_VALUE:
       DEBUG("OP::LOAD_VALUE");
       assert(op.HasArgA());
       assert(op.HasArgB());
       i = co->GetIDVal(op.GetArgA(), op.GetArgB());
-      VM::Push(i);
+      VM_PUSH(i);
       break;
     case OPC::STORE_VALUE:
       DEBUG("OP::STORE_VALUE");
       assert(op.HasArgA());
       assert(op.HasArgB());
-      i = VM::Pop();
+      i = VM_POP();
       assert(i->GetInt() >= 0);
       co->StoreIDVal(i, op.GetArgA(), op.GetArgB());
       break;
-    case OPC::JMP_IF_ELSE:
+    case OPC::JMP_IF_ELSE: {
       DEBUG("OP::JMP_IF_ELSE");
       INCR_OP();
       assert(op.HasArgA());
-      if (VM::Pop()->IsTrue()) {
+      auto v = VM_POP();
+      if (v->IsTrue()) {
         SCodeObj ic = co->GetChild(op.GetArgA());
         ic->SetParent(co);
         PushCO(ic);
@@ -151,17 +156,19 @@ void VM::ExecCode(const SCodeObj &c) {
         }
       }
       continue;
+    }
     case OPC::INIT_INSTANCE: {
       auto classCo = co->GetParent();
       auto classO = MakeShared<ClassObj>(classCo);
-      VM::Push(classO);
+      VM_PUSH(classO);
       break;
     }
     case OPC::CALL_METHOD: {
       DEBUG("OP::CALL_METHOD");
       INCR_OP();
-      auto method = VM::Pop();
-      auto clsObj = DYN_GC_CAST<ClassObj>(VM::Pop());
+      auto method = VM_POP();
+      auto v = VM_POP();
+      auto clsObj = DYN_GC_CAST<ClassObj>(v);
       auto clsCo = clsObj->GetCodeObject();
       auto fnId = clsCo->GetID(method->ToString());
       assert(fnId != -1);

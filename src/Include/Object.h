@@ -101,43 +101,43 @@ public:
   string GetString() const { return value->GetString(); }
   SCodeObj GetCodeObject() const { return value->GetCodeObject(); }
   SObject GetObject() const { return value->GetObject(); }
-  virtual SObject operator+(const SObject& rhs) {
+  virtual SObject operator+(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator<(const SObject& rhs) {
+  virtual SObject operator<(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator<=(const SObject& rhs) {
+  virtual SObject operator<=(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator>(const SObject& rhs) {
+  virtual SObject operator>(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator>=(const SObject& rhs) {
+  virtual SObject operator>=(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator*(const SObject& rhs) {
+  virtual SObject operator*(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator-(const SObject& rhs) {
+  virtual SObject operator-(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator||(const SObject& rhs) {
+  virtual SObject operator||(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator==(const SObject& rhs) {
+  virtual SObject operator==(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator!=(const SObject& rhs) {
+  virtual SObject operator!=(const SObject &rhs) {
     assert(false);
     return rhs;
   }

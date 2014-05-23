@@ -29,6 +29,6 @@ int main(int argc, char *argv[]) {
   VM::ExecCode(builder->GetCodeObject());
   execd_c = clock();
 
-  cout << "AST Generetion took: " << (parsed_c - start_c)/1000.0 << " ms\n";
-  cout << "Execution Took: " << (execd_c - parsed_c)/1000.0 << " ms\n";
+  cout << "AST Generetion took: " << (parsed_c - start_c) / 1000.0 << " ms\n";
+  cout << "Execution Took: " << (execd_c - parsed_c) / 1000.0 << " ms\n";
 }

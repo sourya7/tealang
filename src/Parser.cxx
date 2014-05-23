@@ -156,7 +156,7 @@ SNodeAST Parser::ParseFunctionCall() {
     break;
   case Tags::ID:
     call->SetLeft(look);
-    move(); // consume the object
+    move();                                   // consume the object
     call->SetRight(ParseFunctionParam(true)); //[obj some]
     break;
   default:

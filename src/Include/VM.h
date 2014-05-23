@@ -13,17 +13,17 @@ private:
   static VecSCodeObj coStack;
   static VecPairVecOPInt opsStack;
 
-  static SInt opid; // currentopid
-  static SVecOP ops; // currentOps
+  static SInt opid;   // currentopid
+  static SVecOP ops;  // currentOps
   static SCodeObj co; // currentCo
 
-  static void Push(const SObject& a);
+  static void Push(const SObject &a);
   static const SObject Pop();
   static void PopCO();
-  static void PushCO(SCodeObj c);
+  static void PushCO(const SCodeObj &c);
 
 public:
-  static void ExecCode(SCodeObj c);
+  static void ExecCode(const SCodeObj &c);
   friend class CFunction;
 };
 #endif

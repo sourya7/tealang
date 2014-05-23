@@ -39,9 +39,9 @@ const SObject VM::Pop() {
   return top;
 }
 
-void VM::Push(const SObject& a) { vmStack.push_back(a); }
+void VM::Push(const SObject &a) { vmStack.push_back(a); }
 
-void VM::PushCO(SCodeObj c) {
+void VM::PushCO(const SCodeObj &c) {
   opid = MakeShared<int>(0);
   co = c;
   ops = c->GetOPS();
@@ -49,7 +49,7 @@ void VM::PushCO(SCodeObj c) {
   opsStack.push_back(make_pair(ops, opid));
 }
 
-void VM::ExecCode(SCodeObj c) {
+void VM::ExecCode(const SCodeObj &c) {
   VM::PushCO(c);
   // TODO, if coStack is empty, push a NIL object
   // This is in case the user tries to assign a value to a void function call
@@ -61,7 +61,7 @@ void VM::ExecCode(SCodeObj c) {
     SObject i;
     SObject j;
     SObject r;
-    
+
     OP op = (*ops)[*opid];
     OPC opc = op.opc;
     switch (opc) {
@@ -106,14 +106,14 @@ void VM::ExecCode(SCodeObj c) {
       DEBUG("OP::WHILE");
       assert(op.HasArgA());
       assert(op.HasArgB());
-      //push truthyco to stack
-      //push whileBody to stack
-      //VM::ExecCode(co->GetChild(op.GetArgA()));
-      //while (VM::Pop()->IsTrue()) {
-      // VM::ExecCode(co->GetChild(op.GetArgB()));
-      //  VM::ExecCode(co->GetChild(op.GetArgA()));
-      //}
-      //break;
+    // push truthyco to stack
+    // push whileBody to stack
+    // VM::ExecCode(co->GetChild(op.GetArgA()));
+    // while (VM::Pop()->IsTrue()) {
+    // VM::ExecCode(co->GetChild(op.GetArgB()));
+    //  VM::ExecCode(co->GetChild(op.GetArgA()));
+    //}
+    // break;
     case OPC::LOAD_CONSTANT:
       DEBUG("OP::PUSH_CONSTANT");
       assert(op.HasArgA());

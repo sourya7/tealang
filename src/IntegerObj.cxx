@@ -12,15 +12,15 @@
 #define PERFORM_BOOL_OP(op)                                                    \
   return (GetInt() op rhs->GetInt()) ? BooleanObj::TRUE : BooleanObj::FALSE;
 
-SObject IntegerObj::operator+(const SObject& rhs) { PERFORM_BIN_OP(+) }
-SObject IntegerObj::operator*(const SObject& rhs) { PERFORM_BIN_OP(*) }
-SObject IntegerObj::operator-(const SObject& rhs) { PERFORM_BIN_OP(-) }
-SObject IntegerObj::operator<(const SObject& rhs) { PERFORM_BOOL_OP(< ) }
-SObject IntegerObj::operator<=(const SObject& rhs) { PERFORM_BOOL_OP(<= ) }
-SObject IntegerObj::operator>(const SObject& rhs) { PERFORM_BOOL_OP(> ) }
-SObject IntegerObj::operator>=(const SObject& rhs) { PERFORM_BOOL_OP(>= ) }
-SObject IntegerObj::operator==(const SObject& rhs) { PERFORM_BOOL_OP(== ) }
-SObject IntegerObj::operator!=(const SObject& rhs) { PERFORM_BOOL_OP(!= ) }
+SObject IntegerObj::operator+(const SObject &rhs) { PERFORM_BIN_OP(+) }
+SObject IntegerObj::operator*(const SObject &rhs) { PERFORM_BIN_OP(*) }
+SObject IntegerObj::operator-(const SObject &rhs) { PERFORM_BIN_OP(-) }
+SObject IntegerObj::operator<(const SObject &rhs) { PERFORM_BOOL_OP(< ) }
+SObject IntegerObj::operator<=(const SObject &rhs) { PERFORM_BOOL_OP(<= ) }
+SObject IntegerObj::operator>(const SObject &rhs) { PERFORM_BOOL_OP(> ) }
+SObject IntegerObj::operator>=(const SObject &rhs) { PERFORM_BOOL_OP(>= ) }
+SObject IntegerObj::operator==(const SObject &rhs) { PERFORM_BOOL_OP(== ) }
+SObject IntegerObj::operator!=(const SObject &rhs) { PERFORM_BOOL_OP(!= ) }
 
 string IntegerObj::ToString() {
   long val = GetInt();

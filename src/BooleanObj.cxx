@@ -2,7 +2,7 @@
 
 SObject BooleanObj::TRUE = MakeShared<BooleanObj>(true);
 SObject BooleanObj::FALSE = MakeShared<BooleanObj>(false);
-SObject BooleanObj::operator==(const SObject& rhs) {
+SObject BooleanObj::operator==(const SObject &rhs) {
   if (IsTrue() == rhs->IsTrue()) {
     return TRUE;
   }

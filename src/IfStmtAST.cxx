@@ -5,7 +5,7 @@
 void IfStmtAST::GenerateIR(SIRBuilder builder) {
   auto ifBlkBuild = MakeShared<IRBuilder>(builder);
 
-  left->GenerateIR(builder); // build the expression
+  left->GenerateIR(builder);     // build the expression
   right->GenerateIR(ifBlkBuild); // build the ifblock
 
   // If the last expressoin evals to true, jump to the child

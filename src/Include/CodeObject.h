@@ -53,7 +53,7 @@ public:
     children = MakeShared<VecSCodeObj>();
   }
 
-  void SetInstanceOf(SObject ins) { instanceOf = ins; }
+  void SetInstanceOf(const SObject &ins) { instanceOf = ins; }
   SObject GetInstanceOf() { return instanceOf; }
 
   void SetType(CT t) { type = t; }
@@ -61,25 +61,25 @@ public:
   bool IsInit() { return type == CT::INIT; }
   bool IsNorm() { return type == CT::NORM; }
 
-  void SetParent(SCodeObj& p) { parent = p; }
+  void SetParent(const SCodeObj &p) { parent = p; }
   SCodeObj GetParent() const { return parent; }
 
   int PushID(string var);
-  int PushConst(const SObject& o);
+  int PushConst(const SObject &o);
 
   int GetID(string var, int &l);
   int GetID(string var) {
     int l;
     return GetID(var, l);
   }
-  void StoreIDVal(const SObject& val, int id, int level = 0);
+  void StoreIDVal(const SObject &val, int id, int level = 0);
   SObject GetIDVal(int id, int level = 0);
 
   SObject GetConst(int id) { return consts->at(id); }
   SVecOP GetOPS() { return opcode; }
   void PushOP(OP op) { opcode->push_back(op); }
-  void AddChild(SCodeObj& c);
-  int GetChildID(const SCodeObj& c);
+  void AddChild(const SCodeObj &c);
+  int GetChildID(const SCodeObj &c);
   SCodeObj GetChild(int id) { return children->at(id); }
 };
 

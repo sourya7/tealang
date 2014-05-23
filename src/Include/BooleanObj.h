@@ -7,7 +7,7 @@ public:
   bool IsTrue() const { return GetBool(); }
   bool IsBoolean() { return true; }
   string ToString();
-  SObject operator==(SObject rhs);
+  SObject operator==(const SObject& rhs);
   static SObject TRUE;
   static SObject FALSE;
 };

@@ -1,7 +1,8 @@
 #include "DoubleObj.h"
 
-SObject DoubleObj::operator+(SObject rhs) { return rhs; }
+#define RET_MS_D return MakeShared<DoubleObj>(rhs->GetDouble()); 
+SObject DoubleObj::operator+(const SObject& rhs) { RET_MS_D; }
 
-SObject DoubleObj::operator*(SObject rhs) { return rhs; }
+SObject DoubleObj::operator*(const SObject& rhs) { RET_MS_D; }
 
-SObject DoubleObj::operator-(SObject rhs) { return rhs; }
+SObject DoubleObj::operator-(const SObject& rhs) { RET_MS_D; }

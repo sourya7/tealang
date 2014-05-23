@@ -5,8 +5,8 @@ class StringObj : public Object {
 public:
   StringObj(string s) : Object(MakeShared<Value>(s)) {}
   bool IsString() { return true; }
-  SObject operator+(SObject rhs);
-  SObject operator==(SObject rhs);
+  SObject operator+(const SObject& rhs);
+  SObject operator==(const SObject& rhs);
   string ToString();
 };
 #endif

@@ -12,7 +12,8 @@
 #define BIN_OP(op)                                                             \
   j = VM::Pop();                                                               \
   i = VM::Pop();                                                               \
-  VM::Push(*i op j);
+  r = *i op j;                                                                 \
+  VM::Push(r);
 
 VecSObj VM::vmStack;
 VecSCodeObj VM::coStack;
@@ -32,13 +33,13 @@ void VM::PopCO() {
   opid = opsStack.back().second;
 }
 
-SObject VM::Pop() {
-  SObject top = vmStack.back();
+const SObject VM::Pop() {
+  const SObject top = vmStack.back();
   vmStack.pop_back();
   return top;
 }
 
-void VM::Push(SObject a) { vmStack.push_back(a); }
+void VM::Push(const SObject& a) { vmStack.push_back(a); }
 
 void VM::PushCO(SCodeObj c) {
   opid = MakeShared<int>(0);
@@ -59,6 +60,8 @@ void VM::ExecCode(SCodeObj c) {
     }
     SObject i;
     SObject j;
+    SObject r;
+    
     OP op = (*ops)[*opid];
     OPC opc = op.opc;
     switch (opc) {

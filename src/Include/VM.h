@@ -17,8 +17,8 @@ private:
   static SVecOP ops; // currentOps
   static SCodeObj co; // currentCo
 
-  static void Push(SObject a);
-  static SObject Pop();
+  static void Push(const SObject& a);
+  static const SObject Pop();
   static void PopCO();
   static void PushCO(SCodeObj c);
 

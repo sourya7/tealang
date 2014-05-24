@@ -30,6 +30,7 @@ class Value {
   double d;
   long l;
   Type type;
+
 public:
   Value() : type(Type::NIL) {};
   Value(long v) : l(v), type(Type::INTEGER) {}
@@ -52,10 +53,12 @@ class Object : public TGC {
 private:
   SValue value;
   Object() { value = MakeShared<Value>(); }
+
 protected:
   string name = "OBJECT";
   Object(SValue v) { value = v; }
   void SetName(string n) { name = n; }
+
 public:
   static SObject NIL;
   static SObject FromToken(Token *);

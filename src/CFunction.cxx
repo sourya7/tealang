@@ -7,7 +7,7 @@ MapStrFunc funcMap = { { "print:", { printWrapper, 1 } },
                        { "println:", { printlnWrapper, 1 } },
                        { "printf:withF:", { printfWrapper, 2 } }, };
 
-void CFunction::Init(SIRBuilder b) {
+void CFunction::Init(const SIRBuilder &b) {
   for (auto f : funcMap) {
     int argc = f.second.second;
     string funcName = f.first;
@@ -15,13 +15,10 @@ void CFunction::Init(SIRBuilder b) {
   }
 }
 
-void CFunction::Call(SFunctionObj obj) {
+void CFunction::Call(const SFunctionObj &obj, const VecSObj &p) {
   VecSObj p;
   string funcName = obj->GetName();
   FuncSizePair fsp = funcMap[funcName];
-  int size = fsp.second;
-  while (size--)
-    p.push_back(VM::Pop());
   SObject ret = fsp.first(p);
 }
 

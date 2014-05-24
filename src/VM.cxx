@@ -38,14 +38,6 @@ void VM::PopCO() {
   opid = opsBack.second;
 }
 
-const SObject VM::Pop() {
-  const SObject top = vmStack.back();
-  vmStack.pop_back();
-  return top;
-}
-
-void VM::Push(const SObject &a) { vmStack.push_back(a); }
-
 void VM::PushCO(const SCodeObj &c) {
   opid = MakeShared<int>(0);
   co = c;
@@ -197,8 +189,13 @@ void VM::ExecCode(const SCodeObj &c) {
         continue;
       } else {
         DEBUG("OP::C_CALL");
-        fn = DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
-        CFunction::Call(fn);
+        auto size = fn->GetArgc();
+        VecSObj p;
+        while (size--) {
+          auto v = VM_POP();
+          p.push_back(v);
+        }
+        CFunction::Call(fn, p);
       }
       break;
     }

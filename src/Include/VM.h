@@ -17,13 +17,10 @@ private:
   static SVecOP ops;  // currentOps
   static SCodeObj co; // currentCo
 
-  static void Push(const SObject &a);
-  static const SObject Pop();
   static void PopCO();
   static void PushCO(const SCodeObj &c);
 
 public:
   static void ExecCode(const SCodeObj &c);
-  friend class CFunction;
 };
 #endif

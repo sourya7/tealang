@@ -15,8 +15,8 @@ SObject printfWrapper(const VecSObj &s);
 class IRBuilder;
 class CFunction {
 public:
-  static void Init(SIRBuilder b);
-  static void Call(SFunctionObj obj);
+  static void Init(const SIRBuilder &b);
+  static void Call(const SFunctionObj &obj, const VecSObj &p);
 };
 
 #endif

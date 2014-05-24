@@ -1,7 +1,7 @@
-@sym "@[#{Object}#{...}]" "[append:%1]" "[List init]"
-@sym "#{List}[#{Integer}] = #{Object}" "[insert:%3 at:%2]" "%1"
-@sym "#{List}[#{Integer}]" "[getValAt:%2]" "%1"
-@sym "#{List} + #{List}" "[combineWith:%2]" "%1"
+%sym "@[#{Object}#{...}]" "[append:%1]" "[List init]"
+%sym "#{List}[#{Integer}] = #{Object}" "[insert:%3 at:%2]" "%1"
+%sym "#{List}[#{Integer}]" "[getValAt:%2]" "%1"
+%sym "#{List} + #{List}" "[combineWith:%2]" "%1"
 class List
     var container
     @init

@@ -16,24 +16,46 @@ CModule::Init(SIRBuilder& builder){
 var t = [Table init]
 [t append:2]
 
+class Module {
+    Module(Module* m){
+    }
+    virtual void InitModule() = 0;
+}
+
 class Table : public Module {
   Map<SObject, SObject> container;
-  Call(string methodName){
-    if(methodName == "init"){
-      
-    }
-  }
-  Table(){
-  }
   void Init(){
     auto table = MakeShared<Table>();
   }
-  void Append(const SObject& ob){
+  Table() : Module(this) { }
+  static void InitModule(){
+      auto funcMap = 
+      {{"append:", Append},
+       {"append:WithKey", Append},
+       {"count", Count},
+       {"getValAt:", GetValAt},
+       {"reverse", Reverse},
+       {"insertVal:At:", InsertValAt}};
+      //"append:", std::bind(&Table::Append, _1, _2)
+      SetInit("init", Init);
+      SetMethodMap(funcMap);
+  }
+  SObject Append(const VecSObj& ob){
     //if countType is not Integer, assert(false)
     container[count++] = ob;
+    return nullptr;
   }
-  void Append(const SObject& key, const SObject& val){
-    //assert that countType and key-type is the same
-    container[key] = val;
+  SObject Count(){
+      //pack container.size() into count
+      return nullptr;
+  }
+  SObject GetValAt(const SObject& key){
+      return nullptr;
+  }
+  SObject Reverse(){
+      return nullptr;
+  }
+  SObject InsertValAt(const SObject& val, const SObject& at){
+      return nullptr;
   }
 }

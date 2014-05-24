@@ -16,7 +16,6 @@ void CFunction::Init(const SIRBuilder &b) {
 }
 
 void CFunction::Call(const SFunctionObj &obj, const VecSObj &p) {
-  VecSObj p;
   string funcName = obj->GetName();
   FuncSizePair fsp = funcMap[funcName];
   SObject ret = fsp.first(p);

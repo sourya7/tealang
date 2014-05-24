@@ -17,17 +17,23 @@ var t = [Table init]
 [t append:2]
 
 class Module {
-    Module(Module* m){
-    }
-    virtual void InitModule() = 0;
+  static vector<Module*> modules;
+  Module(Module* m){ modules.push_back(m); }
+  virtual void InitModule() = 0;
+  void Import();
 }
 
-class Table : public Module {
+var t = [List init]
+[t count]
+
+DeclCModule(List);
+
+class List : public Module {
   Map<SObject, SObject> container;
-  void Init(){
-    auto table = MakeShared<Table>();
+  SObject Init(){
+    auto list = MakeShared<List>();
   }
-  Table() : Module(this) { }
+  List() : Module(this) { }
   static void InitModule(){
       auto funcMap = 
       {{"append:", Append},
@@ -40,22 +46,21 @@ class Table : public Module {
       SetInit("init", Init);
       SetMethodMap(funcMap);
   }
-  SObject Append(const VecSObj& ob){
-    //if countType is not Integer, assert(false)
+  SObject Append(const VecSObj& obj){
     container[count++] = ob;
     return nullptr;
   }
-  SObject Count(){
+  SObject Count(const VecSObj& obj){
       //pack container.size() into count
       return nullptr;
   }
-  SObject GetValAt(const SObject& key){
+  SObject GetValAt(const VecSObj& obj){
       return nullptr;
   }
-  SObject Reverse(){
+  SObject Reverse(const VecSObj& obj){
       return nullptr;
   }
-  SObject InsertValAt(const SObject& val, const SObject& at){
+  SObject InsertValAt(const VecSObj& obj){
       return nullptr;
   }
 }

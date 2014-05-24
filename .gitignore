@@ -1,6 +1,7 @@
 wiki/
 tmp/
 docs/
+benchmark/
 tags
 current.test
 *.[oa]

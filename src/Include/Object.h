@@ -6,11 +6,6 @@
 #include "Debug.h"
 #include "CodeObject.h"
 using std::string;
-
-/*
- *
- */
-
 class Object;
 class Token;
 class CodeObject;
@@ -27,24 +22,6 @@ enum class Type {
   NIL
 };
 
-/*
-union Value {
-    long l;
-    double d;
-    bool b;
-    const char* s;
-    Object* o;
-    CodeObject* co;
-
-    Value(long v) : l(v) {}
-    Value(double v) : d(v) {}
-    Value(bool v) : b(v) {}
-    Value(const char* v) : s(v) {}
-    Value(Object* v) : o(v) {}
-    Value(CodeObject* v) : co(v) {}
-};
-*/
-
 class Value {
   SCodeObj co;
   SObject o;
@@ -53,7 +30,6 @@ class Value {
   double d;
   long l;
   Type type;
-
 public:
   Value() : type(Type::NIL) {};
   Value(long v) : l(v), type(Type::INTEGER) {}
@@ -69,7 +45,6 @@ public:
   string GetString() const { return s; }
   SCodeObj GetCodeObject() const { return co; }
   SObject GetObject() const { return o; }
-
   Type GetType() { return type; }
 };
 
@@ -77,12 +52,10 @@ class Object : public TGC {
 private:
   SValue value;
   Object() { value = MakeShared<Value>(); }
-
 protected:
   string name = "OBJECT";
   Object(SValue v) { value = v; }
   void SetName(string n) { name = n; }
-
 public:
   static SObject NIL;
   static SObject FromToken(Token *);

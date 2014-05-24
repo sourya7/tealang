@@ -102,14 +102,7 @@ void VM::ExecCode(const SCodeObj &c) {
       DEBUG("OP::WHILE");
       assert(op.HasArgA());
       assert(op.HasArgB());
-    // push truthyco to stack
-    // push whileBody to stack
-    // VM::ExecCode(co->GetChild(op.GetArgA()));
-    // while (VM::Pop()->IsTrue()) {
-    // VM::ExecCode(co->GetChild(op.GetArgB()));
-    //  VM::ExecCode(co->GetChild(op.GetArgA()));
-    //}
-    // break;
+      break;
     case OPC::LOAD_CONSTANT:
       DEBUG("OP::PUSH_CONSTANT");
       assert(op.HasArgA());

@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class Parser : public TGC {
+class Parser {
 private:
   SToken look;
   SLexer lexer;

@@ -22,7 +22,7 @@ enum class NodeType {
   RETURN,
   CLASS
 };
-class NodeAST : public TGC {
+class NodeAST {
 protected:
   NodeType type = NodeType::NODE;
   SNodeAST left;

@@ -2,12 +2,11 @@
 #define T_VM_H
 #include "GC.h"
 class CFunction;
-
 class CodeObject;
 class Frame;
 class Object;
 
-class VM : public TGC {
+class VM {
 private:
   static VecSObj vmStack;
   static VecSCodeObj coStack;
@@ -19,6 +18,8 @@ private:
 
   static void PopCO();
   static void PushCO(const SCodeObj &c);
+  static void CallFunc(const SObject &fnob);
+  static void CallMethod(const SObject &instance, const SObject &funcName);
 
 public:
   static void ExecCode(const SCodeObj &c);

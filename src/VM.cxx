@@ -27,6 +27,40 @@ SInt VM::opid;
 SVecOP VM::ops;
 SCodeObj VM::co;
 
+void VM::CallMethod(const SObject &instance, const SObject &funcName) {
+  auto clsObj = DYN_GC_CAST<ClassObj>(instance);
+  auto clsCo = clsObj->GetCodeObject();
+  auto fnId = clsCo->GetID(funcName->ToString());
+  assert(fnId != -1);
+  auto fn = DYN_GC_CAST<FunctionObj>(clsCo->GetIDVal(fnId));
+  auto fnCo = fn->GetCodeObject(clsCo);
+  if (fnCo->IsInit()) {
+    assert(!clsObj->IsInstance());
+    auto initCo = MakeShared<CodeObject>(*clsCo);
+    fnCo->SetParent(initCo);
+  } else {
+    assert(clsObj->IsInstance());
+  }
+  PushCO(fnCo);
+}
+
+void VM::CallFunc(const SObject &fnob) {
+  auto fn = DYN_GC_CAST<FunctionObj>(fnob);
+  if (!fn->IsCFunction()) {
+    SCodeObj cc = fn->GetCodeObject();
+    PushCO(cc);
+  } else {
+    DEBUG("OP::C_CALL");
+    auto size = fn->GetArgc();
+    VecSObj p;
+    while (size--) {
+      auto v = VM_POP();
+      p.push_back(v);
+    }
+    CFunction::Call(fn, p);
+  }
+}
+
 void VM::PopCO() {
   coStack.pop_back();
   opsStack.pop_back();
@@ -146,51 +180,25 @@ void VM::ExecCode(const SCodeObj &c) {
       auto classCo = co->GetParent();
       auto classO = MakeShared<ClassObj>(classCo);
       VM_PUSH(classO);
-      break;
+      INCR_OP();
+      continue;
     }
     case OPC::CALL_METHOD: {
       DEBUG("OP::CALL_METHOD");
       INCR_OP();
       auto method = VM_POP();
-      auto v = VM_POP();
-      auto clsObj = DYN_GC_CAST<ClassObj>(v);
-      auto clsCo = clsObj->GetCodeObject();
-      auto fnId = clsCo->GetID(method->ToString());
-      assert(fnId != -1);
-      auto fn = DYN_GC_CAST<FunctionObj>(clsCo->GetIDVal(fnId));
-      auto fnCo = fn->GetCodeObject(clsCo);
-      if (fnCo->IsInit()) {
-        assert(!clsObj->IsInstance());
-        auto initCo = MakeShared<CodeObject>(*clsCo);
-        fnCo->SetParent(initCo);
-      } else {
-        assert(clsObj->IsInstance());
-      }
-      PushCO(fnCo);
+      auto instance = VM_POP();
+      VM::CallMethod(instance, method);
       continue;
     }
     case OPC::CALL: {
       DEBUG("OP::CALL");
       assert(op.HasArgA());
       assert(op.HasArgB());
-      auto fn =
-          DYN_GC_CAST<FunctionObj>(co->GetIDVal(op.GetArgA(), op.GetArgB()));
-      if (!fn->IsCFunction()) {
-        SCodeObj cc = fn->GetCodeObject();
-        INCR_OP();
-        PushCO(cc);
-        continue;
-      } else {
-        DEBUG("OP::C_CALL");
-        auto size = fn->GetArgc();
-        VecSObj p;
-        while (size--) {
-          auto v = VM_POP();
-          p.push_back(v);
-        }
-        CFunction::Call(fn, p);
-      }
-      break;
+      auto fnob = co->GetIDVal(op.GetArgA(), op.GetArgB());
+      INCR_OP();
+      VM::CallFunc(fnob);
+      continue;
     }
     case OPC::RETURN: {
       // TODO, clean the stack

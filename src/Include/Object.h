@@ -4,11 +4,9 @@
 #include <string>
 #include "GC.h"
 #include "Debug.h"
-#include "CodeObject.h"
 using std::string;
 class Object;
 class Token;
-class CodeObject;
 class FunctionObj;
 
 enum class Type {
@@ -23,7 +21,6 @@ enum class Type {
 };
 
 class Value {
-  SCodeObj co;
   SObject o;
   string s;
   bool b;
@@ -38,18 +35,16 @@ public:
   Value(bool v) : b(v), type(Type::BOOLEAN) {}
   Value(string v) : s(v), type(Type::STRING) {}
   Value(Object *v) : type(Type::OBJECT) { o = WRAP_PTR<Object>(v); }
-  Value(CodeObject *v) : type(Type::CODE) { co = WRAP_PTR<CodeObject>(v); }
 
   int GetInt() const { return l; }
   int GetDouble() const { return d; }
   bool GetBool() const { return b; }
   string GetString() const { return s; }
-  SCodeObj GetCodeObject() const { return co; }
   SObject GetObject() const { return o; }
   Type GetType() { return type; }
 };
 
-class Object : public TGC {
+class Object {
 private:
   SValue value;
   Object() { value = MakeShared<Value>(); }
@@ -75,7 +70,6 @@ public:
   int GetDouble() const { return value->GetDouble(); }
   bool GetBool() const { return value->GetBool(); }
   string GetString() const { return value->GetString(); }
-  SCodeObj GetCodeObject() const { return value->GetCodeObject(); }
   SObject GetObject() const { return value->GetObject(); }
   virtual SObject operator+(const SObject &rhs) {
     assert(false);

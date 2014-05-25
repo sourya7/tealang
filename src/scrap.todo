@@ -43,7 +43,9 @@ class List : public Module {
        {"reverse", Reverse},
        {"insertVal:At:", InsertValAt}};
       //"append:", std::bind(&Table::Append, _1, _2)
-      SetInit("init", Init);
+      auto initMap = 
+      {{"init", Init}};
+      SetInitMap(InitMap);
       SetMethodMap(funcMap);
   }
   SObject Append(const VecSObj& obj){

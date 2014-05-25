@@ -23,7 +23,7 @@ using std::string;
  *      Each frame has a parent frame that it has access to view
  *
  */
-class IRBuilder : public TGC {
+class IRBuilder {
 private:
   SCodeObj co;
 

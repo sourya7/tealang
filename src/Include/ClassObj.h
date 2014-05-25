@@ -4,20 +4,20 @@
 #include "CodeObject.h"
 class ClassObj : public Object {
 private:
-  SCodeObj co;
-  bool isInstance = false;
+  SCodeObj _codeObj;
+  bool _isInstance;
 
 public:
-  ClassObj(string cn, SCodeObj o)
-      : Object(MakeShared<Value>(POINTER_VAL(o))), co(o) {
+  ClassObj(string cn, SCodeObj codeObj)
+      : Object(MakeShared<Value>(this)), _codeObj(codeObj), _isInstance(false) {
     SetName(cn);
-    co->SetInstanceOf(WRAP_PTR<ClassObj>(this));
+    _codeObj->SetInstanceOf(WRAP_PTR<ClassObj>(this));
   }
-  ClassObj(SCodeObj o) : Object(MakeShared<Value>(POINTER_VAL(o))) {
-    isInstance = true;
-    co = o;
-    assert(co->GetInstanceOf() != nullptr);
+  ClassObj(SCodeObj codeObj)
+      : Object(MakeShared<Value>(this)), _codeObj(codeObj), _isInstance(true) {
+    assert(_codeObj->GetInstanceOf() != nullptr);
   }
-  bool IsInstance() const { return isInstance; }
+  bool IsInstance() const { return _isInstance; }
+  SCodeObj GetCodeObject() const { return MakeShared<CodeObject>(*_codeObj); }
 };
 #endif

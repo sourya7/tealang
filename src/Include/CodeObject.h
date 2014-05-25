@@ -16,7 +16,7 @@ enum class CT {
   CLASS,
   INIT
 };
-class CodeObject : public TGC {
+class CodeObject {
 private:
   // variables in the codeobject scope
   SVecStr ids;

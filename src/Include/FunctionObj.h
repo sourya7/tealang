@@ -2,33 +2,29 @@
 #define T_FUNCTIONOBJ_H
 #include "Object.h"
 #include "CodeObject.h"
-/*
- * TODO: I believe the object class should not have a "CodeObject" value
- * We should only have specific deriving classes like this implement them
- */
 class FunctionObj : public Object {
 private:
-  int argc;
-  string funcName;
-  SCodeObj co;
-  bool isC;
+  int _argc;
+  string _funcName;
+  SCodeObj _codeObj;
+  bool _isC;
 
 public:
-  FunctionObj(string fn, int ac, SCodeObj o)
-      : Object(MakeShared<Value>(POINTER_VAL(o))), argc(ac), funcName(fn),
-        co(o), isC(false) {}
-  FunctionObj(string fn, int ac)
-      : Object(MakeShared<Value>(static_cast<CodeObject *>(nullptr))), argc(ac),
-        funcName(fn), co(nullptr), isC(true) {}
-  bool IsCFunction() { return isC; }
-  int GetArgc() { return argc; }
-  string GetName() { return funcName; }
-  SCodeObj GetCodeObject() const {
-    return MakeShared<CodeObject>(*Object::GetCodeObject());
-  }
-  SCodeObj GetCodeObject(SCodeObj o) const {
+  FunctionObj(string funcName, int argc, SCodeObj codeObj)
+      : Object(MakeShared<Value>(this)), _argc(argc), _funcName(funcName),
+        _codeObj(codeObj), _isC(false) {}
+  FunctionObj(string funcName, int argc)
+      : Object(MakeShared<Value>(this)), _argc(argc), _funcName(funcName),
+        _codeObj(nullptr), _isC(true) {}
+
+  int GetArgc() const { return _argc; }
+  bool IsCFunction() const { return _isC; }
+  string GetName() const { return _funcName; }
+
+  SCodeObj GetCodeObject() const { return MakeShared<CodeObject>(*_codeObj); }
+  SCodeObj GetCodeObject(const SCodeObj &codeObj) const {
     auto instance = GetCodeObject();
-    instance->SetParent(o);
+    instance->SetParent(codeObj);
     return instance;
   }
 };

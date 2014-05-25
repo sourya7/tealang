@@ -10,7 +10,7 @@
 using std::string;
 using std::istream;
 
-class Lexer : public TGC {
+class Lexer {
 private:
   char peek;
   unsigned long line;

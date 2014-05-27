@@ -7,7 +7,7 @@ MapStrFunc funcMap = { { "print:", { printWrapper, 1 } },
                        { "println:", { printlnWrapper, 1 } },
                        { "printf:withF:", { printfWrapper, 2 } }, };
 
-void CFunction::Init(const SIRBuilder &b) {
+void CFunction::LoadDefault(const SIRBuilder &b) {
   for (auto f : funcMap) {
     int argc = f.second.second;
     string funcName = f.first;

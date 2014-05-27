@@ -56,6 +56,12 @@ typedef vector<pair<SVecOP, SInt> > VecPairVecOPInt;
 typedef vector<pair<OP, SInt> > VecPairOPSInt;
 typedef vector<SModule> VecMod;
 
+typedef function<SObject(const VecSObj&)> ModuleFunc;
+typedef function<SObject(const VecSObj&)> ModuleInit;
+
+typedef map<string, ModuleInit> ModuleInitMap;
+typedef map<string, ModuleFunc> ModuleFuncMap;
+
 #define POINTER_VAL(x) x.get()
 template <typename T, typename V> inline shared_ptr<T> WRAP_PTR(V *v) {
   return shared_ptr<T>(v);

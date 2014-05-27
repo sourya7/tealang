@@ -26,11 +26,12 @@ using std::string;
 class IRBuilder {
 private:
   SCodeObj co;
-
+  static SIRBuilder _global;
 public:
   IRBuilder();
   IRBuilder(SIRBuilder parent);
 
+  SIRBuilder GetGlobal();
   void PerformOP(OPC v);
   void StoreValue(string v);
   void LoadValue(string v);

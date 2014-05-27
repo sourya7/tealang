@@ -1,7 +1,7 @@
 #include "Debug.h"
 #include "VM.h"
 #include "ObjOP.h"
-#include "Frame.h"
+#include "Module.h"
 #include "OPCode.h"
 #include "ClassObj.h"
 #include "CFunction.h"
@@ -27,11 +27,25 @@ SInt VM::opid;
 SVecOP VM::ops;
 SCodeObj VM::co;
 
+void VM::CallModule(const SObject &instance, const SObject &funcName) {
+  auto module = DYN_GC_CAST<Module>(instance);
+  auto size = module->GetArgc(funcName);
+  VecSObj p;
+  while (size--) {
+    auto v = VM_POP();
+    p.push_back(v);
+  }
+  Module::Call(instance, funcName, p);
+}
+
 void VM::CallMethod(const SObject &instance, const SObject &funcName) {
+  if(instance->GetType() == Type::MODULE){
+    VM::CallModule(instance, funcName);
+    return;
+  }
   auto clsObj = DYN_GC_CAST<ClassObj>(instance);
   auto clsCo = clsObj->GetCodeObject();
   auto fnId = clsCo->GetID(funcName->ToString());
-  assert(fnId != -1);
   auto fn = DYN_GC_CAST<FunctionObj>(clsCo->GetIDVal(fnId));
   auto fnCo = fn->GetCodeObject(clsCo);
   if (fnCo->IsInit()) {
@@ -50,7 +64,6 @@ void VM::CallFunc(const SObject &fnob) {
     SCodeObj cc = fn->GetCodeObject();
     PushCO(cc);
   } else {
-    DEBUG("OP::C_CALL");
     auto size = fn->GetArgc();
     VecSObj p;
     while (size--) {

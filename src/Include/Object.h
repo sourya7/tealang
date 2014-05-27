@@ -9,14 +9,29 @@ class Object;
 class Token;
 class FunctionObj;
 
+/*
+typedef unsigned int T_TYPE;
+T_TYPE T_CTR = 1
+#define NEW_TYPE(type) T_TYPE type =  T_CTR++;
+
+NEW_TYPE(T_INTEGER)
+NEW_TYPE(T_DOUBLE)
+NEW_TYPE(T_BOOL)
+NEW_TYPE(T_STRING)
+NEW_TYPE(T_FUNCTION)
+NEW_TYPE(T_OBJECT)
+NEW_TYPE(T_NIL)
+*/
+
 enum class Type {
   INTEGER = 1,
   DOUBLE,
   BOOLEAN,
   STRING,
   FUNCTION,
+  CLASS,
+  MODULE,
   OBJECT,
-  CODE,
   NIL
 };
 
@@ -35,6 +50,7 @@ public:
   Value(bool v) : b(v), type(Type::BOOLEAN) {}
   Value(string v) : s(v), type(Type::STRING) {}
   Value(Object *v) : type(Type::OBJECT) { o = WRAP_PTR<Object>(v); }
+  Value(Object *v, Type t) : type(t) { o = WRAP_PTR<Object>(v); }
 
   int GetInt() const { return l; }
   int GetDouble() const { return d; }
@@ -66,6 +82,7 @@ public:
   virtual bool IsNumeral() const { return IsInteger() || IsDouble(); }
   virtual bool IsDouble() const { return value->GetType() == Type::DOUBLE; }
   virtual bool IsNil() const { return value->GetType() == Type::NIL; }
+  Type GetType() { return value->GetType(); }
   int GetInt() const { return value->GetInt(); }
   int GetDouble() const { return value->GetDouble(); }
   bool GetBool() const { return value->GetBool(); }

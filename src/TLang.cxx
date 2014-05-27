@@ -5,6 +5,7 @@
 #include "Parser.h"
 #include "IRBuilder.h"
 #include "CFunction.h"
+#include "Module.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -18,15 +19,17 @@ int main(int argc, char *argv[]) {
     cerr << "Error: Need a file name\n";
   src.open(argv[1], std::ifstream::in);
 
-  auto builder = MakeShared<IRBuilder>();
-  CFunction::Init(builder);
+  SIRBuilder globalScope = MakeShared<IRBuilder>();
+  CFunction::LoadDefault(globalScope);
+  Module::LoadDefault(globalScope);
+
 
   parser = MakeShared<Parser>(&src);
   SNodeAST root = parser->Parse();
-  root->GenerateIR(builder);
+  root->GenerateIR(globalScope);
   parsed_c = clock();
 
-  VM::ExecCode(builder->GetCodeObject());
+  VM::ExecCode(globalScope->GetCodeObject());
   execd_c = clock();
 
   cout << "AST Generetion took: " << (parsed_c - start_c) / 1000.0 << " ms\n";

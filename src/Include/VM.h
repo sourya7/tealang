@@ -20,6 +20,7 @@ private:
   static void PushCO(const SCodeObj &c);
   static void CallFunc(const SObject &fnob);
   static void CallMethod(const SObject &instance, const SObject &funcName);
+  static void CallModule(const SObject &instance, const SObject &funcName);
 
 public:
   static void ExecCode(const SCodeObj &c);

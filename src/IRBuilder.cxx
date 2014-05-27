@@ -8,11 +8,16 @@
 #include "FunctionObj.h"
 #include "ClassObj.h"
 
+SIRBuilder IRBuilder::_global = MakeShared<IRBuilder>();
 IRBuilder::IRBuilder() { co = MakeShared<CodeObject>(); }
 IRBuilder::IRBuilder(SIRBuilder b) {
   auto parent = b->GetCodeObject();
   co = MakeShared<CodeObject>(parent);
   parent->AddChild(co);
+}
+
+SIRBuilder IRBuilder::GetGlobal(){
+  return _global;
 }
 
 void IRBuilder::CondJump(SIRBuilder ifBlk) {

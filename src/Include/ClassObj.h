@@ -9,7 +9,8 @@ private:
 
 public:
   ClassObj(string cn, SCodeObj codeObj)
-      : Object(MakeShared<Value>(this)), _codeObj(codeObj), _isInstance(false) {
+      : Object(MakeShared<Value>(this, Type::CLASS)), _codeObj(codeObj),
+        _isInstance(false) {
     SetName(cn);
     _codeObj->SetInstanceOf(WRAP_PTR<ClassObj>(this));
   }

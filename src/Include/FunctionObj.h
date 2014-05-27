@@ -11,11 +11,11 @@ private:
 
 public:
   FunctionObj(string funcName, int argc, SCodeObj codeObj)
-      : Object(MakeShared<Value>(this)), _argc(argc), _funcName(funcName),
-        _codeObj(codeObj), _isC(false) {}
+      : Object(MakeShared<Value>(this, Type::FUNCTION)), _argc(argc),
+        _funcName(funcName), _codeObj(codeObj), _isC(false) {}
   FunctionObj(string funcName, int argc)
-      : Object(MakeShared<Value>(this)), _argc(argc), _funcName(funcName),
-        _codeObj(nullptr), _isC(true) {}
+      : Object(MakeShared<Value>(this, Type::FUNCTION)), _argc(argc),
+        _funcName(funcName), _codeObj(nullptr), _isC(true) {}
 
   int GetArgc() const { return _argc; }
   bool IsCFunction() const { return _isC; }

@@ -1,7 +1,6 @@
 #include "ListModule.h"
 
 //register the module.. TODO: A better way? 
-typedef shared_ptr<ListModule> SListModule;
 SListModule ListModule::List = WRAP_PTR<ListModule>(new ListModule(true));
 
 SObject ListModule::Init(const VecSObj &obj) {

@@ -5,7 +5,6 @@
 #include "Parser.h"
 #include "IRBuilder.h"
 #include "CFunction.h"
-#include "Module.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -21,7 +20,7 @@ int main(int argc, char *argv[]) {
 
   SIRBuilder globalScope = MakeShared<IRBuilder>();
   CFunction::LoadDefault(globalScope);
-  Module::LoadDefault(globalScope);
+  //Module::LoadDefault(globalScope);
 
 
   parser = MakeShared<Parser>(&src);

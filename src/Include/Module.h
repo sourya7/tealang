@@ -17,7 +17,8 @@ protected:
   static SModule GetModuleFromObj(const SObject &obj) {
     return DYN_GC_CAST<Module>(obj);
   }
-  void RegisterModule(const SModule& module, bool loadDefault) {
+  void RegisterModule(SModule module, bool loadDefault) {
+    assert(module.get() != nullptr);
     _loadDefault = loadDefault;
     _modules[_moduleName] = module;
   }

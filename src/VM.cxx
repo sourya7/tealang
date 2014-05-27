@@ -28,6 +28,7 @@ SVecOP VM::ops;
 SCodeObj VM::co;
 
 void VM::CallModule(const SObject &instance, const SObject &funcName) {
+  /*
   auto module = DYN_GC_CAST<Module>(instance);
   auto size = module->GetArgc(funcName);
   VecSObj p;
@@ -36,6 +37,7 @@ void VM::CallModule(const SObject &instance, const SObject &funcName) {
     p.push_back(v);
   }
   Module::Call(instance, funcName, p);
+  */
 }
 
 void VM::CallMethod(const SObject &instance, const SObject &funcName) {

@@ -3,6 +3,7 @@ tmp/
 docs/
 benchmark/
 tags
+profiling/
 current.test
 *.[oa]
 *.exe

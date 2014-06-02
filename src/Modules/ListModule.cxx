@@ -1,8 +1,6 @@
 #include "ListModule.h"
 
 //register the module.. TODO: A better way? 
-SListModule ListModule::List = WRAP_PTR<ListModule>(new ListModule(true));
-
 SObject ListModule::Init(const VecSObj &obj) {
   auto instptr = new ListModule();
   auto inst = WRAP_PTR<ListModule>(instptr);

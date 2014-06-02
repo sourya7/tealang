@@ -18,15 +18,16 @@ endif
 EXEC = tlang
 SOURCES = $(wildcard *.cxx)
 OBJECTS = $(SOURCES:.cxx=.o)
+BUILTOBJ = $(wildcard build/*.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
-	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) $(OBJECTS) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
+	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) $(BUILTOBJ) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cxx
-	$(CC) $(WARN) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o $@
+	$(CC) $(WARN) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o build/$@
 
 # To remove generated files
 clean:
-	rm -f $(EXEC) $(OBJECTS)
+	rm -f $(EXEC) $(BUILTOBJ)

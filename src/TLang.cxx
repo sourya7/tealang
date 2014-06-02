@@ -4,7 +4,7 @@
 #include "VM.h"
 #include "Parser.h"
 #include "IRBuilder.h"
-#include "CFunction.h"
+#include "Module.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -19,15 +19,15 @@ int main(int argc, char *argv[]) {
   src.open(argv[1], std::ifstream::in);
 
   SIRBuilder globalScope = MakeShared<IRBuilder>();
-  CFunction::LoadDefault(globalScope);
-  //Module::LoadDefault(globalScope);
 
+  Module::Init();
+  Module::LoadDefaults(globalScope);
 
   parser = MakeShared<Parser>(&src);
   SNodeAST root = parser->Parse();
   root->GenerateIR(globalScope);
-  parsed_c = clock();
 
+  parsed_c = clock();
   VM::ExecCode(globalScope->GetCodeObject());
   execd_c = clock();
 

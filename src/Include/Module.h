@@ -27,13 +27,14 @@ protected:
   void SetInstance() { _isInstance = true; }
 
 public:
+  static void Init() {};
   int GetArgc(const SObject& method) const { return 0; }
   bool IsInstance() { return _isInstance; }
-  static void LoadDefault(const SIRBuilder &builder);
+  static void LoadDefaults(const SIRBuilder &builder);
     /*
    * LoadModule may load a module from the file or from the preloaded list of modules
    */
-  static void LoadModule(const SObject &modulename);
+  static void LoadModule(std::string name, const SIRBuilder &modulename);
   static SObject Call(const SObject &instance, const SObject &method,
                       const VecSObj &params);
 };

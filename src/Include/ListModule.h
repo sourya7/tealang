@@ -24,11 +24,7 @@ class ListModule : public Module {
 private:
   SModule instance;
   map<SObject, SObject> container;
-  static SListModule List;
-  ListModule(bool reg = false) : Module("List") {
-    if (reg){
-      RegisterModule(WRAP_PTR<ListModule>(new ListModule()), true);
-    }
+  ListModule() : Module("List") {
     ModuleInitMap initMap = { { "init", BIND_INIT(ListModule::Init) } };
     SetInitMap(initMap);
   }

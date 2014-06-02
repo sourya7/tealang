@@ -2,9 +2,6 @@
 #include "IRBuilder.h"
 
 map<string, SModule> Module::_modules;
-
-void LoadModule(const SObject &modulename) {}
-
 SObject Module::Call(const SObject &instance, const SObject &method,
                      const VecSObj &params) {
   SModule mod = GetModuleFromObj(instance);
@@ -16,13 +13,13 @@ SObject Module::Call(const SObject &instance, const SObject &method,
   }
 }
 
-void Module::LoadDefault(const SIRBuilder &builder) {
-  for (auto mpair : _modules) {
-    SModule m = mpair.second;
-    if (m->_loadDefault) {
-      // TODO ->  Make m a weak_ptr before passing it
-      builder->DeclVar(m->_moduleName, m);
-    }
-  }
+void Module::LoadModule(std::string name, const SIRBuilder &builder){
+  auto m = _modules[name];
+  builder->DeclVar(name, m);
+}
+
+void Module::LoadDefaults(const SIRBuilder &builder) {
+  LoadModule("List", builder);
+  LoadModule("IO", builder);
 }
 

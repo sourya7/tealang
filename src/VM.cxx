@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "OPCode.h"
 #include "ClassObj.h"
-#include "CFunction.h"
 #include "CodeObject.h"
 #include "FunctionObj.h"
 

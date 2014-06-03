@@ -36,7 +36,7 @@ int Module::GetArgc(const SObject &method) const {
 }
 
 void Module::LoadDefaults(const SIRBuilder &builder) {
-  //LoadModule("List", builder);
+  LoadModule("List", builder);
   LoadModule("IO", builder);
 }
 

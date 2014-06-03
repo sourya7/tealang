@@ -34,7 +34,8 @@ void VM::CallModule(const SObject &instance, const SObject &funcName) {
     auto v = VM_POP();
     p.push_back(v);
   }
-  Module::Call(instance, funcName, p);
+  auto ob = Module::Call(instance, funcName, p);
+  VM_PUSH(ob);
 }
 
 void VM::CallMethod(const SObject &instance, const SObject &funcName) {

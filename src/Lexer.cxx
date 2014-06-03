@@ -188,8 +188,6 @@ SToken Lexer::Scan() {
       break;
     }
   }
-  assert(peek != 10);
-
   switch (peek) {
   case '&': { IFMATCHELSE('&', OPC::AND, OPC::BAND); }
   case '|': { IFMATCHELSE('|', OPC::OR, OPC::BOR); }

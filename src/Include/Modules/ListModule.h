@@ -24,7 +24,7 @@ using namespace std::placeholders;
 class ListModule : public Module {
 private:
   SModule instance;
-  map<SObject, SObject> container;
+  vector<SObject> container;
 
 public:
   ListModule();

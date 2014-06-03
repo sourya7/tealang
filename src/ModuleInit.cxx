@@ -3,6 +3,6 @@
 #include "Modules/IOModule.h"
 
 void Module::Init(){
-  //AddModule("List", MakeShared<ListModule>());
+  AddModule("List", new ListModule());
   AddModule("IO", new IOModule());
 }

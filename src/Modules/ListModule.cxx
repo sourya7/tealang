@@ -1,4 +1,5 @@
 #include "Modules/ListModule.h"
+#include "IntegerObj.h"
 
 // register the module.. TODO: A better way?
 SObject ListModule::Init(const VecSObj &obj) {
@@ -13,19 +14,28 @@ SObject ListModule::Init(const VecSObj &obj) {
     { "insertVal:At:", BIND_METH_F(ListModule::Insert, inst.get(), 2) }
   };
   inst->SetFuncMap(funcMap);
+  inst->SetInstance();
   return inst;
 }
 
 ListModule::ListModule() : Module("List") {
-  MapStrFunc initMap = { { "init", BIND_INIT_F(ListModule::Init, 0)} };
+  MapStrFunc initMap = { { "init", BIND_INIT_F(ListModule::Init, 0) } };
   SetInitMap(initMap);
 }
 
-SObject ListModule::Append(const VecSObj &obj) { return nullptr; }
+SObject ListModule::Append(const VecSObj &obj) {
+  container.push_back(obj.back());
+  return nullptr;
+}
 
-SObject ListModule::Count(const VecSObj &obj) { return nullptr; }
+SObject ListModule::Count(const VecSObj &obj) {
+  auto size = static_cast<long>(container.size());
+  return MakeShared<IntegerObj>(size);
+}
 
-SObject ListModule::Get(const VecSObj &obj) { return nullptr; }
+SObject ListModule::Get(const VecSObj &obj) { 
+  return container[IntegerObj::ValFromObj(obj.back())];
+}
 
 SObject ListModule::Reverse(const VecSObj &obj) { return nullptr; }
 

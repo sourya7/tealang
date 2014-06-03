@@ -7,18 +7,15 @@ private:
   int _argc;
   string _funcName;
   SCodeObj _codeObj;
-  bool _isC;
+  bool _init;
 
 public:
-  FunctionObj(string funcName, int argc, SCodeObj codeObj)
-      : Object(MakeShared<Value>(this, Type::FUNCTION)), _argc(argc),
-        _funcName(funcName), _codeObj(codeObj), _isC(false) {}
-  FunctionObj(string funcName, int argc)
-      : Object(MakeShared<Value>(this, Type::FUNCTION)), _argc(argc),
-        _funcName(funcName), _codeObj(nullptr), _isC(true) {}
+  FunctionObj(string funcName, int argc, SCodeObj codeObj, bool init=false)
+      : Object(MakeShared<Value>(Type::FUNCTION)), _argc(argc),
+        _funcName(funcName), _codeObj(codeObj), _init(init) {}
 
   int GetArgc() const { return _argc; }
-  bool IsCFunction() const { return _isC; }
+  bool IsInit() const { return _init; }
   string GetName() const { return _funcName; }
 
   SCodeObj GetCodeObject() const { return MakeShared<CodeObject>(*_codeObj); }

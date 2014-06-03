@@ -13,16 +13,15 @@ ifeq ($(EWARN), 1)
 WARN = $(WARN_FLAGS)
 endif
 
-
 # File names
 EXEC = tlang
 SOURCES = $(wildcard *.cxx)
 OBJECTS = $(SOURCES:.cxx=.o)
-BUILTOBJ = $(wildcard build/*.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
-	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) $(BUILTOBJ) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
+	make -C Modules
+	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) build/* $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cxx

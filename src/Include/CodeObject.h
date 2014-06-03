@@ -10,12 +10,6 @@
 using std::string;
 class CodeObject;
 
-enum class CT {
-  FUNCTION,
-  NORM,
-  CLASS,
-  INIT
-};
 class CodeObject {
 private:
   // variables in the codeobject scope
@@ -28,8 +22,7 @@ private:
   SVecOP opcode;
   SVecSCodeObj children;
   SCodeObj parent = nullptr;
-  CT type = CT::NORM;
-  SObject instanceOf = nullptr;
+  SObject object = nullptr;
 
 public:
   CodeObject(SCodeObj p) : CodeObject() { parent = p; }
@@ -41,8 +34,7 @@ public:
     consts = p.consts;
     vals = MakeShared<VecSObj>(*p.vals);
     ids = p.ids;
-    type = p.type;
-    instanceOf = p.instanceOf;
+    object = p.object;
   }
 
   CodeObject() {
@@ -53,14 +45,8 @@ public:
     children = MakeShared<VecSCodeObj>();
   }
 
-  void SetInstanceOf(const SObject &ins) { instanceOf = ins; }
-  SObject GetInstanceOf() { return instanceOf; }
-
-  void SetType(CT t) { type = t; }
-  bool IsFunction() { return type == CT::FUNCTION; }
-  bool IsInit() { return type == CT::INIT; }
-  bool IsNorm() { return type == CT::NORM; }
-
+  void SetObject(const SObject &o) { object = o; }
+  SObject GetObject() { return object; }
   void SetParent(const SCodeObj &p) { parent = p; }
   SCodeObj GetParent() const { return parent; }
 
@@ -72,6 +58,7 @@ public:
     int l;
     return GetID(var, l);
   }
+
   void StoreIDVal(const SObject &val, int id, int level = 0);
   SObject GetIDVal(int id, int level = 0);
 

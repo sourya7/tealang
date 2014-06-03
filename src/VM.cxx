@@ -27,7 +27,6 @@ SVecOP VM::ops;
 SCodeObj VM::co;
 
 void VM::CallModule(const SObject &instance, const SObject &funcName) {
-  /*
   auto module = DYN_GC_CAST<Module>(instance);
   auto size = module->GetArgc(funcName);
   VecSObj p;
@@ -36,7 +35,6 @@ void VM::CallModule(const SObject &instance, const SObject &funcName) {
     p.push_back(v);
   }
   Module::Call(instance, funcName, p);
-  */
 }
 
 void VM::CallMethod(const SObject &instance, const SObject &funcName) {
@@ -49,7 +47,7 @@ void VM::CallMethod(const SObject &instance, const SObject &funcName) {
   auto fnId = clsCo->GetID(funcName->ToString());
   auto fn = DYN_GC_CAST<FunctionObj>(clsCo->GetIDVal(fnId));
   auto fnCo = fn->GetCodeObject(clsCo);
-  if (fnCo->IsInit()) {
+  if (fn->IsInit()) {
     assert(!clsObj->IsInstance());
     auto initCo = MakeShared<CodeObject>(*clsCo);
     fnCo->SetParent(initCo);
@@ -61,18 +59,8 @@ void VM::CallMethod(const SObject &instance, const SObject &funcName) {
 
 void VM::CallFunc(const SObject &fnob) {
   auto fn = DYN_GC_CAST<FunctionObj>(fnob);
-  if (!fn->IsCFunction()) {
-    SCodeObj cc = fn->GetCodeObject();
-    PushCO(cc);
-  } else {
-    auto size = fn->GetArgc();
-    VecSObj p;
-    while (size--) {
-      auto v = VM_POP();
-      p.push_back(v);
-    }
-    CFunction::Call(fn, p);
-  }
+  SCodeObj cc = fn->GetCodeObject();
+  PushCO(cc);
 }
 
 void VM::PopCO() {
@@ -218,7 +206,7 @@ void VM::ExecCode(const SCodeObj &c) {
       // TODO, clean the stack
       assert(op.HasArgA());
       DEBUG("OP::RETURN");
-      while (!co->IsFunction()) {
+      while (!co->GetObject()->IsFunction()) {
         PopCO();
       }
       PopCO();

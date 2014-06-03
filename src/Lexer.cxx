@@ -237,6 +237,10 @@ SToken Lexer::Scan() {
     ReadChar();
     return MakeShared<Token>(Tags::BCUC, line);
   }
+  case ',': {
+    ReadChar();
+    return MakeShared<Token>(Tags::CSEP, line);
+  }
   case '"':
   case '\'': { return ParseStringLiteral(); }
   case -1: { return MakeShared<Token>(Tags::SEOF, line); }

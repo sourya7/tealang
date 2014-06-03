@@ -28,6 +28,7 @@ public:
   void move();
 
   SNodeAST Parse();
+  SNodeAST ParseList();
   SNodeAST ParseBlock();
   SNodeAST ParseIfStmt();
   SNodeAST ParseForStmt();

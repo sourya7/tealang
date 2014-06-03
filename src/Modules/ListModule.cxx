@@ -2,6 +2,8 @@
 #include "IntegerObj.h"
 
 // register the module.. TODO: A better way?
+//
+
 SObject ListModule::Init(const VecSObj &obj) {
   auto instptr = new ListModule();
   auto inst = WRAP_PTR<ListModule>(instptr);
@@ -15,6 +17,9 @@ SObject ListModule::Init(const VecSObj &obj) {
   };
   inst->SetFuncMap(funcMap);
   inst->SetInstance();
+  if(obj.size() > 0){
+    inst->_container = obj;
+  }
   return inst;
 }
 
@@ -24,17 +29,17 @@ ListModule::ListModule() : Module("List") {
 }
 
 SObject ListModule::Append(const VecSObj &obj) {
-  container.push_back(obj.back());
+  _container.push_back(obj.back());
   return nullptr;
 }
 
 SObject ListModule::Count(const VecSObj &obj) {
-  auto size = static_cast<long>(container.size());
+  auto size = static_cast<long>(_container.size());
   return MakeShared<IntegerObj>(size);
 }
 
 SObject ListModule::Get(const VecSObj &obj) { 
-  return container[IntegerObj::ValFromObj(obj.back())];
+  return _container[IntegerObj::ValFromObj(obj.back())];
 }
 
 SObject ListModule::Reverse(const VecSObj &obj) { return nullptr; }

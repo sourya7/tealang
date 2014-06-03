@@ -20,6 +20,7 @@
 #include "WhileStmtAST.h"
 #include "ClassStmtAST.h"
 #include "IRBuilder.h"
+#include "ListAST.h"
 #include "OPTok.h"
 
 short GetPrecedence(SToken t) {
@@ -252,6 +253,27 @@ SNodeAST Parser::ParseSingleStmt() {
   return node;
 }
 
+SNodeAST Parser::ParseList(){
+  assert(look->tag == Tags::BCUO);
+  auto listast = MakeShared<ListAST>();
+  do{
+    //at the start we are consuming the '{', from then on
+    //we are consuming a ','
+    move();
+    SNodeAST key =  ParseExpr();
+    auto isDict = look->tag == Tags::DSEP ? true : false;
+    if (isDict) {
+      move();
+      listast->AddPair(key, ParseExpr());
+    } else {
+      listast->AddPair(nullptr, key);
+    }
+  } while(look->tag == Tags::CSEP);
+
+  move();
+  return listast;
+}
+
 /*
  * Using the Shunting yard algorithm to turn the infix expr
  * to RPN
@@ -291,6 +313,12 @@ SNodeAST Parser::ParseExpr() {
     case Tags::BSQO: {
       SToken tmp = look;
       tmp->SetLeft(ParseFunctionCall());
+      outstack.push_back(tmp);
+      break;
+    }
+    case Tags::BCUO: {
+      SToken tmp = look;
+      tmp->SetLeft(ParseList());
       outstack.push_back(tmp);
       break;
     }

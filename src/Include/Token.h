@@ -30,6 +30,8 @@ enum class Tags {
   BSQO,
   BSQC,
   SEOF,
+  CSEP,
+  DSEP,
   STR,
   BCIO,
   BCIC,

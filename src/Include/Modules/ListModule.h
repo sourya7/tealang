@@ -23,8 +23,7 @@ typedef shared_ptr<ListModule> SListModule;
 using namespace std::placeholders;
 class ListModule : public Module {
 private:
-  SModule instance;
-  vector<SObject> container;
+  vector<SObject> _container;
 
 public:
   ListModule();

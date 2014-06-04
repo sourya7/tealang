@@ -16,4 +16,5 @@ void ListAST::GenerateIR(SIRBuilder builder) {
     builder->LoadConst(list);
     builder->CallMethod("append:");
   }
+  builder->LoadConst(list);
 }

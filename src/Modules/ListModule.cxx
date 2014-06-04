@@ -11,7 +11,7 @@ SObject ListModule::Init(const VecSObj &obj) {
     { "append:", BIND_METH_F(ListModule::Append, inst.get(), 1) },
     { "append:WithKey:", BIND_METH_F(ListModule::Append, inst.get(), 2) },
     { "count", BIND_METH_F(ListModule::Count, inst.get(), 0) },
-    { "getValAt:", BIND_METH_F(ListModule::Get, inst.get(), 1) },
+    { "at:", BIND_METH_F(ListModule::Get, inst.get(), 1) },
     { "reverse", BIND_METH_F(ListModule::Reverse, inst.get(), 0) },
     { "insertVal:At:", BIND_METH_F(ListModule::Insert, inst.get(), 2) }
   };

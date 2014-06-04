@@ -1,32 +1,26 @@
 #ifndef T_LEXER_H
 #define T_LEXER_H
 
-#include "GC.h"
-#include <string>
 #include <istream>
 #include "Token.h"
-#include "WordTok.h"
-
-using std::string;
-using std::istream;
+#include "WordToken.h"
 
 class Lexer {
 private:
-  char peek;
-  unsigned long line;
-  istream *inputStream;
+  char peek_;
+  unsigned long line_;
+  std::istream *inputStream_;
 
-  void Reserve(WordTok w);
-  SToken ParseNumericToken();
-  SToken ParseIdentifierToken();
-  SToken ParseSpecialNumber();
-  void ReadChar();
-  bool ReadAndMatch(char ch);
-  SToken ParseStringLiteral();
+  SToken parseNumericToken();
+  SToken parseIdentifierToken();
+  SToken parseSpecialNumber();
+  void readChar();
+  bool readAndMatch(char ch);
+  SToken parseStringLiteral();
 
 public:
-  SToken Scan();
-  Lexer(istream *pistream);
+  SToken scan();
+  Lexer(std::istream *istream);
 };
 
 #endif

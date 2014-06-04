@@ -1,63 +1,62 @@
 #include <algorithm>
 #include "CodeObject.h"
 
-using std::string;
-using std::find;
-
-int CodeObject::PushConst(const SObject &o) {
-  consts->push_back(o);
-  return consts->size() - 1;
+int CodeObject::pushConst(const SObject &o) {
+  consts_->push_back(o);
+  return consts_->size() - 1;
 }
 
-int CodeObject::PushID(string var) {
-  ids->push_back(var);
-  vals->push_back(Object::NIL);
-  assert(ids->size() == vals->size());
-  return ids->size() - 1;
+int CodeObject::pushId(std::string var) {
+  ids_->push_back(var);
+  vals_->push_back(Object::NIL);
+  assert(ids_->size() == vals_->size());
+  return ids_->size() - 1;
 }
 
 // level returns if we can find it in a parent
-int CodeObject::GetID(string var, int &level) {
+int CodeObject::getId(std::string var, int &level) {
   level = 0;
   CodeObject *root = this;
   while (root != nullptr) {
-    auto it = find(root->ids->begin(), root->ids->end(), var);
-    if (it != root->ids->end()) {
-      return it - root->ids->begin();
+    auto it = std::find(root->ids_->begin(), root->ids_->end(), var);
+    if (it != root->ids_->end()) {
+      return it - root->ids_->begin();
     }
     level++;
-    root = POINTER_VAL(root->parent);
+    root = root->parent_.get();
   }
   // not found in any level
   level = -1;
   return -1;
 }
 
-void CodeObject::StoreIDVal(const SObject &val, int id, int level) {
+void CodeObject::storeIdValue(const SObject &val, int id, int level) {
   CodeObject *root = this;
   while (level--) {
     assert(root != nullptr);
-    root = POINTER_VAL(root->parent);
+    root = root->parent_.get();
   }
-  assert(static_cast<int>(root->ids->size()) > id);
-  root->vals->at(id) = val;
+  assert(static_cast<int>(root->ids_->size()) > id);
+  root->vals_->at(id) = val;
 }
 
-int CodeObject::GetChildID(const SCodeObj &c) {
-  auto it = find(children->begin(), children->end(), c);
-  if (it != children->end())
-    return it - children->begin();
+int CodeObject::getChildId(const SCodeObject &c) {
+  auto it = std::find(children_->begin(), children_->end(), c);
+  if (it != children_->end())
+    return it - children_->begin();
   else
     return -1;
 }
 
-SObject CodeObject::GetIDVal(int id, int level) {
+SObject CodeObject::getIdValue(int id, int level) {
   CodeObject *root = this;
   while (level--) {
     assert(root != nullptr);
-    root = POINTER_VAL(root->parent);
+    root = root->parent_.get();
   }
-  return root->vals->at(id);
+  return root->vals_->at(id);
 }
 
-void CodeObject::AddChild(const SCodeObj &child) { children->push_back(child); }
+void CodeObject::addChild(const SCodeObject &child) {
+  children_->push_back(child);
+}

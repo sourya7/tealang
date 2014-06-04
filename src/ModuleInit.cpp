@@ -1,8 +1,8 @@
 #include "Module.h"
 #include "Modules/ListModule.h"
-#include "Modules/IOModule.h"
+#include "Modules/IoModule.h"
 
-void Module::Init() {
-  AddModule("List", new ListModule());
-  AddModule("IO", new IOModule());
+void Module::init() {
+  addModule("List", std::make_shared<ListModule>());
+  addModule("IO", std::make_shared<IoModule>());
 }

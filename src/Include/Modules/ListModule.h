@@ -1,7 +1,6 @@
 #ifndef T_LISTMODULE_H
 #define T_LISTMODULE_H
 
-#include "GC.h"
 #include "Module.h"
 
 /*
@@ -18,22 +17,21 @@
 #define BIND_INIT_F(func, size) make_pair(std::bind(&func, _1), size)
 
 class ListModule;
-typedef shared_ptr<ListModule> SListModule;
+typedef std::shared_ptr<ListModule> SListModule;
 
 using namespace std::placeholders;
 class ListModule : public Module {
 private:
-  SModule instance;
-  map<SObject, SObject> container;
+  std::vector<SObject> container_;
 
 public:
   ListModule();
-  static SObject Init(const VecSObj &obj);
-  SObject Append(const VecSObj &obj);
-  SObject Count(const VecSObj &obj);
-  SObject Get(const VecSObj &obj);
-  SObject Reverse(const VecSObj &obj);
-  SObject Insert(const VecSObj &obj);
+  static SObject init(const VecSObject &obj);
+  SObject append(const VecSObject &obj);
+  SObject count(const VecSObject &obj);
+  SObject get(const VecSObject &obj);
+  SObject reverse(const VecSObject &obj);
+  SObject insert(const VecSObject &obj);
 };
 
 #endif

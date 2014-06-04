@@ -1,47 +1,47 @@
 #include "Modules/ListModule.h"
-#include "IntegerObj.h"
+#include "IntegerObject.h"
 
 // register the module.. TODO: A better way?
 //
 
-SObject ListModule::Init(const VecSObj &obj) {
+SObject ListModule::init(const VecSObject &obj) {
   auto instptr = new ListModule();
-  auto inst = WRAP_PTR<ListModule>(instptr);
+  auto inst = std::shared_ptr<ListModule>(instptr);
   MapStrFunc funcMap = {
-    { "append:", BIND_METH_F(ListModule::Append, inst.get(), 1) },
-    { "append:WithKey:", BIND_METH_F(ListModule::Append, inst.get(), 2) },
-    { "count", BIND_METH_F(ListModule::Count, inst.get(), 0) },
-    { "at:", BIND_METH_F(ListModule::Get, inst.get(), 1) },
-    { "reverse", BIND_METH_F(ListModule::Reverse, inst.get(), 0) },
-    { "insertVal:At:", BIND_METH_F(ListModule::Insert, inst.get(), 2) }
+    { "append:", BIND_METH_F(ListModule::append, inst.get(), 1) },
+    { "append:WithKey:", BIND_METH_F(ListModule::append, inst.get(), 2) },
+    { "count", BIND_METH_F(ListModule::count, inst.get(), 0) },
+    { "at:", BIND_METH_F(ListModule::get, inst.get(), 1) },
+    { "reverse", BIND_METH_F(ListModule::reverse, inst.get(), 0) },
+    { "insertVal:At:", BIND_METH_F(ListModule::insert, inst.get(), 2) }
   };
-  inst->SetFuncMap(funcMap);
-  inst->SetInstance();
+  inst->setFuncMap(funcMap);
+  inst->setInstance();
   if (obj.size() > 0) {
-    inst->_container = obj;
+    inst->container_ = obj;
   }
   return inst;
 }
 
 ListModule::ListModule() : Module("List") {
-  MapStrFunc initMap = { { "init", BIND_INIT_F(ListModule::Init, 0) } };
-  SetInitMap(initMap);
+  MapStrFunc initMap = { { "init", BIND_INIT_F(ListModule::init, 0) } };
+  setInitMap(initMap);
 }
 
-SObject ListModule::Append(const VecSObj &obj) {
-  _container.push_back(obj.back());
+SObject ListModule::append(const VecSObject &obj) {
+  container_.push_back(obj.back());
   return nullptr;
 }
 
-SObject ListModule::Count(const VecSObj &obj) {
-  auto size = static_cast<long>(_container.size());
-  return MakeShared<IntegerObj>(size);
+SObject ListModule::count(const VecSObject &obj) {
+  auto size = static_cast<long>(container_.size());
+  return std::make_shared<IntegerObject>(size);
 }
 
-SObject ListModule::Get(const VecSObj &obj) {
-  return _container[IntegerObj::ValFromObj(obj.back())];
+SObject ListModule::get(const VecSObject &obj) {
+  return container_[IntegerObject::getValue(obj.back())];
 }
 
-SObject ListModule::Reverse(const VecSObj &obj) { return nullptr; }
+SObject ListModule::reverse(const VecSObject &obj) { return nullptr; }
 
-SObject ListModule::Insert(const VecSObj &obj) { return nullptr; }
+SObject ListModule::insert(const VecSObject &obj) { return nullptr; }

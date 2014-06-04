@@ -2,72 +2,70 @@
 #define T_CODEOBJECT_H
 
 #include <string>
-#include "GC.h"
 #include "Debug.h"
 #include "Object.h"
-#include "OPCode.h"
+#include "OpCode.h"
 
-using std::string;
 class CodeObject;
 
 class CodeObject {
 private:
   // variables in the codeobject scope
-  SVecStr ids;
+  SVecString ids_;
   // value for those vars
-  SVecSObj vals;
+  SVecSObject vals_;
   // constants in the codeobject scope
-  SVecSObj consts;
+  SVecSObject consts_;
   // opcodes for this codeobject
-  SVecOP opcode;
-  SVecSCodeObj children;
-  SCodeObj parent = nullptr;
-  SObject object = nullptr;
+  SVecOp opcode_;
+  SVecSCodeObject children_;
+  SCodeObject parent_ = nullptr;
+  SObject object_ = nullptr;
 
 public:
-  CodeObject(SCodeObj p) : CodeObject() { parent = p; }
+  CodeObject(SCodeObject parent) : CodeObject() { parent_ = parent; }
 
-  CodeObject(const CodeObject &p) {
-    parent = p.parent;
-    children = p.children;
-    opcode = p.opcode;
-    consts = p.consts;
-    vals = MakeShared<VecSObj>(*p.vals);
-    ids = p.ids;
-    object = p.object;
+  CodeObject(const CodeObject &rhs) {
+    parent_ = rhs.parent_;
+    children_ = rhs.children_;
+    opcode_ = rhs.opcode_;
+    consts_ = rhs.consts_;
+    vals_ = std::make_shared<VecSObject>(*rhs.vals_);
+    ids_ = rhs.ids_;
+    object_ = rhs.object_;
   }
 
   CodeObject() {
-    ids = MakeShared<VecStr>();
-    vals = MakeShared<VecSObj>();
-    consts = MakeShared<VecSObj>();
-    opcode = MakeShared<VecOP>();
-    children = MakeShared<VecSCodeObj>();
+    ids_ = std::make_shared<VecString>();
+    vals_ = std::make_shared<VecSObject>();
+    consts_ = std::make_shared<VecSObject>();
+    opcode_ = std::make_shared<VecOp>();
+    children_ = std::make_shared<VecSCodeObject>();
   }
 
-  void SetObject(const SObject &o) { object = o; }
-  SObject GetObject() { return object; }
-  void SetParent(const SCodeObj &p) { parent = p; }
-  SCodeObj GetParent() const { return parent; }
+  void setObject(const SObject &object) { object_ = object; }
+  SObject getObject() { return object_; }
+  void setParent(const SCodeObject &parent) { parent_ = parent; }
+  SCodeObject getParent() const { return parent_; }
 
-  int PushID(string var);
-  int PushConst(const SObject &o);
+  int pushId(std::string var);
+  int pushConst(const SObject &o);
 
-  int GetID(string var, int &l);
-  int GetID(string var) {
+  int getId(std::string var, int &l);
+  int getId(std::string var) {
     int l;
-    return GetID(var, l);
+    return getId(var, l);
   }
 
-  void StoreIDVal(const SObject &val, int id, int level = 0);
-  SObject GetIDVal(int id, int level = 0);
+  void storeIdValue(const SObject &value, int id, int level = 0);
+  SObject getIdValue(int id, int level = 0);
 
-  SObject GetConst(int id) { return consts->at(id); }
-  SVecOP GetOPS() { return opcode; }
-  void PushOP(OP op) { opcode->push_back(op); }
-  void AddChild(const SCodeObj &c);
-  int GetChildID(const SCodeObj &c);
-  SCodeObj GetChild(int id) { return children->at(id); }
+  SObject getConst(int id) { return consts_->at(id); }
+  SVecOp getOpCode() { return opcode_; }
+  void pushOp(Op op) { opcode_->push_back(op); }
+  void addChild(const SCodeObject &c);
+  int getChildId(const SCodeObject &c);
+  SCodeObject getChild(int id) { return children_->at(id); }
 };
 
 #endif

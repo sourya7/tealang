@@ -1,28 +1,26 @@
 #include <string>
 #include "Object.h"
-#include "DoubleObj.h"
-#include "StringObj.h"
-#include "IntegerObj.h"
+#include "DoubleObject.h"
+#include "StringObject.h"
+#include "IntegerObject.h"
 #include "Token.h"
-#include "RealTok.h"
-#include "NumberTok.h"
-#include "WordTok.h"
+#include "RealToken.h"
+#include "NumberToken.h"
+#include "WordToken.h"
 #include "CodeObject.h"
 
-using std::string;
-
 SObject Object::NIL;
-SObject Object::FromToken(Token *t) {
+SObject Object::fromToken(Token *t) {
   SObject o;
-  switch (t->tag) {
+  switch (t->tag_) {
   case Tags::NUM:
-    o = MakeShared<IntegerObj>(GUARD_CAST<NumberTok *>(t)->value);
+    o = std::make_shared<IntegerObject>(GUARD_CAST<NumberToken *>(t)->value_);
     break;
   case Tags::REAL:
-    o = MakeShared<DoubleObj>(GUARD_CAST<RealTok *>(t)->value);
+    o = std::make_shared<DoubleObject>(GUARD_CAST<RealToken *>(t)->value_);
     break;
   case Tags::STR:
-    o = MakeShared<StringObj>(GUARD_CAST<WordTok *>(t)->value);
+    o = std::make_shared<StringObject>(GUARD_CAST<WordToken *>(t)->value_);
     break;
   default:
     assert(false && "This should not happen");

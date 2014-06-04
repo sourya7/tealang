@@ -15,8 +15,8 @@ endif
 
 # File names
 EXEC = tlang
-SOURCES = $(wildcard *.cxx)
-OBJECTS = $(SOURCES:.cxx=.o)
+SOURCES = $(wildcard *.cpp)
+OBJECTS = $(SOURCES:.cpp=.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
@@ -24,7 +24,7 @@ $(EXEC): $(OBJECTS)
 	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) build/* $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
 
 # To obtain object files
-%.o: %.cxx
+%.o: %.cpp
 	$(CC) $(WARN) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o build/$@
 
 # To remove generated files

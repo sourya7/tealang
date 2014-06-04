@@ -1,7 +1,7 @@
 #ifndef T_TOKEN_H
 #define T_TOKEN_H
 #include "Common.h"
-#include "NodeAST.h"
+#include "NodeAst.h"
 
 enum class Tags {
   OP = 256,
@@ -51,12 +51,13 @@ enum class Tags {
   ENDCON
 };
 
-class Token : public NodeAST {
+class Token : public NodeAst {
 private:
 public:
-  const Tags tag;
-  const ulong line;
-  Token(Tags t, ulong l) : NodeAST(NodeType::TOKEN), tag(t), line(l) {}
+  const Tags tag_;
+  const ulong line_;
+  Token(Tags tag, ulong line)
+      : NodeAst(NodeType::TOKEN), tag_(tag), line_(line) {}
   virtual ~Token() {}
 };
 

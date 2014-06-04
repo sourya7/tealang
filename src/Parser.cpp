@@ -11,70 +11,70 @@
 #include "Parser.h"
 #include "Lexer.h"
 #include "Token.h"
-#include "SeqAST.h"
-#include "IfStmtAST.h"
-#include "CallAST.h"
-#include "ExprAST.h"
-#include "ParamAST.h"
-#include "FuncStmtAST.h"
-#include "WhileStmtAST.h"
-#include "ClassStmtAST.h"
-#include "IRBuilder.h"
-#include "ListAST.h"
-#include "OPTok.h"
+#include "SeqAst.h"
+#include "IfStmtAst.h"
+#include "CallAst.h"
+#include "ExprAst.h"
+#include "ParamAst.h"
+#include "FunctionStmtAst.h"
+#include "WhileStmtAst.h"
+#include "ClassStmtAst.h"
+#include "IrBuilder.h"
+#include "ListAst.h"
+#include "OpToken.h"
 
-short GetPrecedence(SToken t) {
-  if (t->tag == Tags::BSQO)
+short getPrecedence(SToken t) {
+  if (t->tag_ == Tags::BSQO)
     return 100;
-  OPTok *opt = GUARD_CAST<OPTok *>(POINTER_VAL(t));
-  switch (opt->value) {
-  case OPC::LT:
-  case OPC::LEQ:
-  case OPC::GT:
-  case OPC::GEQ:
-  case OPC::NEQ:
-  case OPC::EQ:
+  OpToken *opt = GUARD_CAST<OpToken *>(t.get());
+  switch (opt->value_) {
+  case Opc::LT:
+  case Opc::LEQ:
+  case Opc::GT:
+  case Opc::GEQ:
+  case Opc::NEQ:
+  case Opc::EQ:
     return 10;
-  case OPC::BOR:
+  case Opc::BOR:
     return 20;
-  case OPC::XOR:
+  case Opc::XOR:
     return 30;
-  case OPC::BAND:
+  case Opc::BAND:
     return 40;
-  case OPC::LSHIFT:
-  case OPC::RSHIFT:
+  case Opc::LSHIFT:
+  case Opc::RSHIFT:
     return 50;
-  case OPC::ADD:
-  case OPC::SUB:
+  case Opc::ADD:
+  case Opc::SUB:
     return 60;
-  case OPC::MULT:
-  case OPC::DIV:
-  case OPC::MOD:
+  case Opc::MULT:
+  case Opc::DIV:
+  case Opc::MOD:
     return 70;
-  case OPC::POWER:
+  case Opc::POWER:
     return 80;
-  case OPC::INV:
+  case Opc::INV:
     return 90;
   default:
     return 100;
   }
 }
 
-Parser::Parser(istream *i) { lexer = MakeShared<Lexer>(i); }
+Parser::Parser(std::istream *i) { lexer_ = std::make_shared<Lexer>(i); }
 
-void Parser::move() { look = lexer->Scan(); }
+void Parser::move() { look_ = lexer_->scan(); }
 
-SNodeAST Parser::Parse() {
+SNodeAst Parser::parse() {
   /*
    * Block => [Stmt]*
    * Stmt => ifStmt, tryStmt, forStmt, whileStmt...
    * ifStmt =>
    */
   move();
-  return ParseBlock();
+  return parseBlock();
 }
 
-SNodeAST Parser::ParseFunctionParam(bool isCall = false) {
+SNodeAst Parser::parseFunctionParam(bool isCall = false) {
   // 1. Functions can have no parameter
   //   defun bla
   //      [print: Hello]
@@ -89,44 +89,44 @@ SNodeAST Parser::ParseFunctionParam(bool isCall = false) {
   //   defun funcWithCb:(cb:a andB:b) andB:b
   //      //do something
   //   endfun
-  SNodeAST param;
-  auto p = MakeShared<ParamAST>();
-  auto lw = GUARD_CAST<WordTok *>(POINTER_VAL(look));
-  switch (look->tag) {
+  SNodeAst param;
+  auto p = std::make_shared<ParamAst>();
+  auto lw = GUARD_CAST<WordToken *>(look_.get());
+  switch (look_->tag_) {
   case Tags::ID:
   case Tags::STR:
-    p->AddParam(lw->value, nullptr);
+    p->addParam(lw->value_, nullptr);
     move();
     break;
   case Tags::PARAM:
-    while (look->tag == Tags::PARAM) {
-      param = look;
-      lw = GUARD_CAST<WordTok *>(POINTER_VAL(look));
+    while (look_->tag_ == Tags::PARAM) {
+      param = look_;
+      lw = GUARD_CAST<WordToken *>(look_.get());
       move();
       // is it a [] grouping, only possible in a func call
-      if (isCall && look->tag == Tags::BSQO) {
-        p->AddParam(lw->value, ParseFunctionCall());
-      } else if (look->tag == Tags::BCIO) {
+      if (isCall && look_->tag_ == Tags::BSQO) {
+        p->addParam(lw->value_, parseFunctionCall());
+      } else if (look_->tag_ == Tags::BCIO) {
         // is it a () grouping
         if (!isCall)
           move(); // consume the (
         // Seems to be a function
-        if (look->tag == Tags::PARAM)
-          p->AddParam(lw->value, ParseFunctionParam());
+        if (look_->tag_ == Tags::PARAM)
+          p->addParam(lw->value_, parseFunctionParam());
         else {
-          p->AddParam(lw->value, ParseExpr());
+          p->addParam(lw->value_, parseExpr());
         }
         if (!isCall)
           move(); // consume the ))
-      } else if (look->tag == Tags::BCIC) {
+      } else if (look_->tag_ == Tags::BCIC) {
         move();
         break;
       } else {
         // its a simple id
         if (isCall) {
-          p->AddParam(lw->value, ParseExpr());
+          p->addParam(lw->value_, parseExpr());
         } else {
-          p->AddParam(lw->value, look);
+          p->addParam(lw->value_, look_);
           move();
         }
       }
@@ -144,21 +144,21 @@ SNodeAST Parser::ParseFunctionParam(bool isCall = false) {
  *       OBJ_N    PARAM_N
  *
  */
-SNodeAST Parser::ParseFunctionCall() {
+SNodeAst Parser::parseFunctionCall() {
   move(); // consume [
-  auto call = MakeShared<CallAST>();
-  switch (look->tag) {
+  auto call = std::make_shared<CallAst>();
+  switch (look_->tag_) {
   case Tags::PARAM: //[call:2 withb:]
-    call->SetRight(ParseFunctionParam(true));
+    call->setRight(parseFunctionParam(true));
     break;
   case Tags::BSQO: //[[obj init] doSmth:a]
-    call->SetLeft(ParseFunctionCall());
-    call->SetRight(ParseFunctionParam(true));
+    call->setLeft(parseFunctionCall());
+    call->setRight(parseFunctionParam(true));
     break;
   case Tags::ID:
-    call->SetLeft(look);
+    call->setLeft(look_);
     move();                                   // consume the object
-    call->SetRight(ParseFunctionParam(true)); //[obj some]
+    call->setRight(parseFunctionParam(true)); //[obj some]
     break;
   default:
     assert(false);
@@ -172,7 +172,7 @@ SNodeAST Parser::ParseFunctionCall() {
  *   FPAR_N  F_BLOCK
  *
  */
-SNodeAST Parser::ParseFunctionStmt() {
+SNodeAst Parser::parseFunctionStmt() {
   /*
    * defun bla
    *    [print: something]
@@ -183,12 +183,12 @@ SNodeAST Parser::ParseFunctionStmt() {
    * endfun
    */
   // consume defun or defcon
-  bool isinit = look->tag == Tags::DEFCON;
+  bool isinit = look_->tag_ == Tags::DEFCON;
   move();
 
-  auto param = ParseFunctionParam();
-  auto block = ParseBlock();
-  auto funcDef = MakeShared<FuncStmtAST>(isinit, param, block);
+  auto param = parseFunctionParam();
+  auto block = parseBlock();
+  auto funcDef = std::make_shared<FunctionStmtAst>(isinit, param, block);
 
   // consume the endfun
   // TODO use matchAndMove instead to make sure that the syntax is valid
@@ -196,7 +196,7 @@ SNodeAST Parser::ParseFunctionStmt() {
   return funcDef;
 }
 
-SNodeAST Parser::ParseSingleStmt() {
+SNodeAst Parser::parseSingleStmt() {
   /*
    * var a = 2
    * var b = (2 + 2)
@@ -205,31 +205,31 @@ SNodeAST Parser::ParseSingleStmt() {
    *
    */
   //[smth]
-  if (look->tag == Tags::BSQO) {
-    return ParseFunctionCall();
+  if (look_->tag_ == Tags::BSQO) {
+    return parseFunctionCall();
   }
-  SNodeAST node = nullptr;
+  SNodeAst node = nullptr;
 
-  if (look->tag == Tags::VAR) {
+  if (look_->tag_ == Tags::VAR) {
     move();
-    node = MakeShared<NodeAST>(NodeType::VAR, look, nullptr);
-    assert(look->tag == Tags::ID);
+    node = std::make_shared<NodeAst>(NodeType::VAR, look_, nullptr);
+    assert(look_->tag_ == Tags::ID);
   }
 
-  if (look->tag == Tags::ID) {
-    SToken tmp = look;
+  if (look_->tag_ == Tags::ID) {
+    SToken tmp = look_;
     move(); // move over the variable;
     // var a = smth
-    if (look->tag == Tags::ASSIGN) {
+    if (look_->tag_ == Tags::ASSIGN) {
       move();
-      auto n = MakeShared<NodeAST>(NodeType::ASSIGN, tmp, ParseExpr());
-      if (POINTER_VAL(node) != nullptr) {
-        node->SetRight(n);
+      auto n = std::make_shared<NodeAst>(NodeType::ASSIGN, tmp, parseExpr());
+      if (node.get() != nullptr) {
+        node->setRight(n);
         return node;
       } else {
         return n;
       } // a = smth;
-    } else if (POINTER_VAL(node) != nullptr) {
+    } else if (node.get() != nullptr) {
       return node;
     } // var a
 
@@ -238,13 +238,13 @@ SNodeAST Parser::ParseSingleStmt() {
   }
 
   // make sure that that the var keyword has not been found
-  assert(POINTER_VAL(node) == nullptr);
-  assert(look->tag != Tags::ASSIGN);
+  assert(node.get() == nullptr);
+  assert(look_->tag_ != Tags::ASSIGN);
 
-  switch (look->tag) {
+  switch (look_->tag_) {
   case Tags::RETURN:
     move();
-    return MakeShared<NodeAST>(NodeType::RETURN, ParseExpr(), nullptr);
+    return std::make_shared<NodeAst>(NodeType::RETURN, parseExpr(), nullptr);
     break;
   default:
     assert(false);
@@ -253,22 +253,22 @@ SNodeAST Parser::ParseSingleStmt() {
   return node;
 }
 
-SNodeAST Parser::ParseList() {
-  assert(look->tag == Tags::BCUO);
-  auto listast = MakeShared<ListAST>();
+SNodeAst Parser::parseList() {
+  assert(look_->tag_ == Tags::BCUO);
+  auto listast = std::make_shared<ListAst>();
   do {
     // at the start we are consuming the '{', from then on
     // we are consuming a ','
     move();
-    SNodeAST key = ParseExpr();
-    auto isDict = look->tag == Tags::DSEP ? true : false;
+    SNodeAst key = parseExpr();
+    auto isDict = look_->tag_ == Tags::DSEP ? true : false;
     if (isDict) {
       move();
-      listast->AddPair(key, ParseExpr());
+      listast->addPair(key, parseExpr());
     } else {
-      listast->AddPair(nullptr, key);
+      listast->addPair(nullptr, key);
     }
-  } while (look->tag == Tags::CSEP);
+  } while (look_->tag_ == Tags::CSEP);
 
   move();
   return listast;
@@ -281,27 +281,27 @@ SNodeAST Parser::ParseList() {
  * TODO: Optimization - We can perform open expressions ourselves rather than
  * having the vm do it
  */
-SNodeAST Parser::ParseExpr() {
+SNodeAst Parser::parseExpr() {
   // Expr -> id
   // Expr -> Val
   // Expr -> (Expr op epxr)
-  uint currentLine = look->line;
-  VecSTok opstack;
-  VecSTok outstack;
+  uint currentLine = look_->line_;
+  VecSToken opstack;
+  VecSToken outstack;
   bool stop = false;
   // Stop is needed for cases when the expression does not extend whole line
   // Eg. [someFunc: (a+b) ano:b]
   // Here we dont stop at the end of the line, but when we reach the
   // "ano:" PARAM
-  while (!stop && (currentLine == look->line)) {
-    switch (look->tag) {
+  while (!stop && (currentLine == look_->line_)) {
+    switch (look_->tag_) {
     case Tags::BCIO:
-      opstack.push_back(look);
+      opstack.push_back(look_);
       move(); // consume (
       break;
     case Tags::BCIC:
       while (!opstack.empty()) {
-        if (opstack.back()->tag == Tags::BCIO) {
+        if (opstack.back()->tag_ == Tags::BCIO) {
           opstack.pop_back();
           break;
         }
@@ -311,14 +311,14 @@ SNodeAST Parser::ParseExpr() {
       move();
       break;
     case Tags::BSQO: {
-      SToken tmp = look;
-      tmp->SetLeft(ParseFunctionCall());
+      SToken tmp = look_;
+      tmp->setLeft(parseFunctionCall());
       outstack.push_back(tmp);
       break;
     }
     case Tags::BCUO: {
-      SToken tmp = look;
-      tmp->SetLeft(ParseList());
+      SToken tmp = look_;
+      tmp->setLeft(parseList());
       outstack.push_back(tmp);
       break;
     }
@@ -326,18 +326,18 @@ SNodeAST Parser::ParseExpr() {
     case Tags::NUM:
     case Tags::REAL:
     case Tags::STR:
-      outstack.push_back(look);
+      outstack.push_back(look_);
       move();
       break;
     case Tags::OP:
-      while (!opstack.empty() && (opstack.back()->tag != Tags::BCIO)) {
-        if (GetPrecedence(look) <= GetPrecedence(opstack.back())) {
+      while (!opstack.empty() && (opstack.back()->tag_ != Tags::BCIO)) {
+        if (getPrecedence(look_) <= getPrecedence(opstack.back())) {
           outstack.push_back(opstack.back());
           opstack.pop_back();
         } else
           break;
       }
-      opstack.push_back(look);
+      opstack.push_back(look_);
       move();
       break;
     default:
@@ -349,8 +349,8 @@ SNodeAST Parser::ParseExpr() {
     outstack.push_back(v);
   int count = outstack.size();
   if (count == 0)
-    shared_ptr<NodeAST>(nullptr);
-  return MakeShared<ExprAST>(outstack);
+    std::shared_ptr<NodeAst>(nullptr);
+  return std::make_shared<ExprAst>(outstack);
 }
 
 /*
@@ -366,48 +366,48 @@ SNodeAST Parser::ParseExpr() {
  *
  *
  */
-SNodeAST Parser::ParseIfStmt() {
+SNodeAst Parser::parseIfStmt() {
   // ifStmt -> if (bool) block [elif block] [else block] endif
   // consume if
   move();
-  auto expr = ParseExpr();
-  auto block = ParseBlock();
-  auto stmt = MakeShared<IfStmtAST>(expr, block);
-  if (look->tag == Tags::ELIF) {
+  auto expr = parseExpr();
+  auto block = parseBlock();
+  auto stmt = std::make_shared<IfStmtAst>(expr, block);
+  if (look_->tag_ == Tags::ELIF) {
     assert(false && "Not supported");
   }
-  if (look->tag == Tags::ELSE) {
+  if (look_->tag_ == Tags::ELSE) {
     move();
-    stmt->SetElseBlk(ParseBlock());
+    stmt->setElseBlk(parseBlock());
   }
   // consume endif
   move();
   return stmt;
 }
 
-SNodeAST Parser::ParseForStmt() { return nullptr; }
+SNodeAst Parser::parseForStmt() { return nullptr; }
 
-SNodeAST Parser::ParseTryStmt() { return nullptr; }
+SNodeAst Parser::parseTryStmt() { return nullptr; }
 
-SNodeAST Parser::ParseClassStmt() {
+SNodeAst Parser::parseClassStmt() {
   // consume 'defclass'
   move();
   // TODO handle 'isa' for class inheritencec;
-  auto className = look;
+  auto className = look_;
   move();
-  auto classAST = MakeShared<ClassStmtAST>(className, ParseBlock());
+  auto classAst = std::make_shared<ClassStmtAst>(className, parseBlock());
 
   // consume the endclass
   move();
-  return classAST;
+  return classAst;
 }
 
-SNodeAST Parser::ParseWhileStmt() {
+SNodeAst Parser::parseWhileStmt() {
   // consume while
   move();
-  auto expr = ParseExpr();
-  auto block = ParseBlock();
-  auto stmt = MakeShared<WhileStmtAST>(expr, block);
+  auto expr = parseExpr();
+  auto block = parseBlock();
+  auto stmt = std::make_shared<WhileStmtAst>(expr, block);
   // consume endwhile
   move();
   return stmt;
@@ -419,32 +419,32 @@ SNodeAST Parser::ParseWhileStmt() {
  *                              STMT  SEQ
  *                                 ...
  */
-SNodeAST Parser::ParseBlock() {
+SNodeAst Parser::parseBlock() {
   // Block -> Stmts...
-  SSeqAST s = MakeShared<SeqAST>();
-  SSeqAST ts = s;
-  SNodeAST tmp;
+  SSeqAst s = std::make_shared<SeqAst>();
+  SSeqAst ts = s;
+  SNodeAst tmp;
   while (true) {
-    switch (look->tag) {
+    switch (look_->tag_) {
     // blocks
     case Tags::DEFCLASS:
-      tmp = ParseClassStmt();
+      tmp = parseClassStmt();
       break;
     case Tags::DEFCON:
     case Tags::DEFUN:
-      tmp = ParseFunctionStmt();
+      tmp = parseFunctionStmt();
       break;
     case Tags::IF:
-      tmp = ParseIfStmt();
+      tmp = parseIfStmt();
       break;
     case Tags::FOR:
-      tmp = ParseForStmt();
+      tmp = parseForStmt();
       break;
     case Tags::TRY:
-      tmp = ParseTryStmt();
+      tmp = parseTryStmt();
       break;
     case Tags::WHILE:
-      tmp = ParseWhileStmt();
+      tmp = parseWhileStmt();
       break;
     // block ends
     case Tags::SEOF:
@@ -458,9 +458,9 @@ SNodeAST Parser::ParseBlock() {
     case Tags::ELSE:
       return ts;
     default:
-      tmp = ParseSingleStmt();
+      tmp = parseSingleStmt();
     }
-    s = s->AddSeq(tmp);
+    s = s->addSeq(tmp);
   }
   return ts;
 }

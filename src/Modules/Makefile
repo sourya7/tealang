@@ -12,13 +12,13 @@ endif
 
 # File names
 EXEC = tlang
-SOURCES = $(wildcard *.cxx)
-OBJECTS = $(SOURCES:.cxx=.o)
+SOURCES = $(wildcard *.cpp)
+OBJECTS = $(SOURCES:.cpp=.o)
 BUILTOBJ = $(wildcard build/*.o)
 
 # Main target
 all: $(OBJECTS)
 
 # To obtain object files
-%.o: %.cxx
+%.o: %.cpp
 	$(CC) $(WARN) $(PFLAGS) $(GC_FLAGS) -c $(CC_FLAGS) $< -o ../build/$@

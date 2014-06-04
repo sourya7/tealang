@@ -1,31 +1,31 @@
 #include "Module.h"
-#include "IRBuilder.h"
+#include "IrBuilder.h"
 
-map<string, SModule> Module::_modules;
-SObject Module::Call(const SObject &instance, const SObject &method,
-                     const VecSObj &params) {
-  SModule mod = GetModuleFromObj(instance);
-  if (!mod->IsInstance()) {
+std::map<std::string, SModule> Module::modules_;
+SObject Module::call(const SObject &instance, const SObject &method,
+                     const VecSObject &params) {
+  SModule mod = std::dynamic_pointer_cast<Module>(instance);
+  if (!mod->isInstance()) {
     // TODO check if the methods exist
-    return mod->_initMap[method->ToString()].first(params);
+    return mod->initMap_[method->toString()].first(params);
   } else {
-    return mod->_funcMap[method->ToString()].first(params);
+    return mod->funcMap_[method->toString()].first(params);
   }
   return nullptr;
 }
 
-void Module::LoadModule(std::string name, const SIRBuilder &builder) {
-  auto m = _modules[name];
-  builder->DeclVar(name, m);
+void Module::loadModule(std::string name, const SIrBuilder &builder) {
+  auto m = modules_[name];
+  builder->declVar(name, m);
 }
 
-int Module::GetArgc(const SObject &method) const {
-  auto methodName = method->ToString();
-  auto it = _initMap.find(methodName);
-  if (it != _initMap.end()) {
+int Module::getArgc(const SObject &method) const {
+  auto methodName = method->toString();
+  auto it = initMap_.find(methodName);
+  if (it != initMap_.end()) {
   } else {
-    it = _funcMap.find(methodName);
-    if (it != _funcMap.end()) {
+    it = funcMap_.find(methodName);
+    if (it != funcMap_.end()) {
     } else {
       assert(false && "Calling a method that does not exist");
     }
@@ -33,7 +33,7 @@ int Module::GetArgc(const SObject &method) const {
   return (*it).second.second;
 }
 
-void Module::LoadDefaults(const SIRBuilder &builder) {
-  LoadModule("List", builder);
-  LoadModule("IO", builder);
+void Module::loadDefaults(const SIrBuilder &builder) {
+  loadModule("List", builder);
+  loadModule("IO", builder);
 }

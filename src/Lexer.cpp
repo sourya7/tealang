@@ -4,11 +4,11 @@
 #include <algorithm>
 #include <sstream>
 #include "Token.h"
-#include "WordTok.h"
-#include "NumberTok.h"
-#include "RealTok.h"
-#include "OPTok.h"
-#include "OPCode.h"
+#include "WordToken.h"
+#include "NumberToken.h"
+#include "RealToken.h"
+#include "OpToken.h"
+#include "OpCode.h"
 #include "Lexer.h"
 
 using namespace std;
@@ -66,109 +66,109 @@ double floatFromFloat(string floatStr) {
   return 0;
 }
 
-SToken Lexer::ParseSpecialNumber() {
-  bool isHex = peek == 'x';
-  bool isOctal = isdigit(peek);
-  bool isBinary = peek == 'b';
+SToken Lexer::parseSpecialNumber() {
+  bool isHex = peek_ == 'x';
+  bool isOctal = isdigit(peek_);
+  bool isBinary = peek_ == 'b';
   if (isHex || isBinary)
-    ReadChar();
+    readChar();
   if (isHex || isOctal || isBinary) {
     string tmp;
     do {
-      tmp += peek;
-      ReadChar();
-    } while ((isHex && isxdigit(peek)) || (isOctal && isdigit(peek)) ||
-             (isBinary && (peek == '0' || peek == '1')));
-    return MakeShared<WordTok>(tmp, Tags::ID, line);
+      tmp += peek_;
+      readChar();
+    } while ((isHex && isxdigit(peek_)) || (isOctal && isdigit(peek_)) ||
+             (isBinary && (peek_ == '0' || peek_ == '1')));
+    return std::make_shared<WordToken>(tmp, Tags::ID, line_);
 
     /* TODO use these instead
-    if(isHex) return new NumberTok(decFromHex(tmp), line);
-    else if(isHex) return new NumberTok(decFromOct(tmp), line);
-    else return new NumberTok(decFromBin(tmp), line);
+    if(isHex) return new NumberTok(decFromHex(tmp), line_);
+    else if(isHex) return new NumberTok(decFromOct(tmp), line_);
+    else return new NumberTok(decFromBin(tmp), line_);
     */
   }
-  return MakeShared<NumberTok>(0, line);
+  return std::make_shared<NumberToken>(0, line_);
 }
 
-SToken Lexer::ParseNumericToken() {
-  if (peek == '0') {
-    ReadChar();
-    return ParseSpecialNumber();
+SToken Lexer::parseNumericToken() {
+  if (peek_ == '0') {
+    readChar();
+    return parseSpecialNumber();
   }
 
   // handle decimal numbers
   string tmp;
   do {
-    tmp += peek;
-    ReadChar();
-  } while (isdigit(peek));
-  if (peek != '.')
-    return MakeShared<NumberTok>(decFromDec(tmp), line);
+    tmp += peek_;
+    readChar();
+  } while (isdigit(peek_));
+  if (peek_ != '.')
+    return std::make_shared<NumberToken>(decFromDec(tmp), line_);
 
   // handle real numbers
   do {
-    tmp += peek;
-    ReadChar();
-  } while (isdigit(peek));
-  return MakeShared<WordTok>(tmp, Tags::ID, line);
+    tmp += peek_;
+    readChar();
+  } while (isdigit(peek_));
+  return std::make_shared<WordToken>(tmp, Tags::ID, line_);
 }
 
-SToken Lexer::ParseIdentifierToken() {
+SToken Lexer::parseIdentifierToken() {
   string tmp;
-  while (isalpha(peek) || isdigit(peek)) {
-    tmp += peek;
-    ReadChar();
+  while (isalpha(peek_) || isdigit(peek_)) {
+    tmp += peek_;
+    readChar();
   }
   Tags tag;
   auto it = TokenMap.find(tmp);
-  if (peek == ':') {
-    ReadChar();
+  if (peek_ == ':') {
+    readChar();
     tmp += ':';
     tag = Tags::PARAM;
   } else if (it != TokenMap.end()) {
     tag = it->second;
-    return MakeShared<Token>(tag, line);
+    return std::make_shared<Token>(tag, line_);
   } else {
     tag = Tags::ID;
   }
 
-  return MakeShared<WordTok>(tmp, tag, line);
+  return std::make_shared<WordToken>(tmp, tag, line_);
 }
 
 Lexer::Lexer(istream *i) {
-  inputStream = i;
-  peek = ' ';
+  inputStream_ = i;
+  peek_ = ' ';
 }
 
-void Lexer::ReadChar() {
-  bool res = inputStream->get(peek);
-  if (!res || inputStream->eof())
-    peek = -1;
+void Lexer::readChar() {
+  bool res = inputStream_->get(peek_);
+  if (!res || inputStream_->eof())
+    peek_ = -1;
 }
 
-bool Lexer::ReadAndMatch(char ch) {
-  ReadChar();
-  if (peek != ch) {
+bool Lexer::readAndMatch(char ch) {
+  readChar();
+  if (peek_ != ch) {
     return false;
   }
-  peek = ' ';
+  peek_ = ' ';
   return true;
 }
 
 #define IFMATCHELSE(ifMatch, ifTok, elseTok)                                   \
-  if (ReadAndMatch(ifMatch)) {                                                 \
-    return MakeShared<OPTok>(ifTok, line);                                     \
+  if (readAndMatch(ifMatch)) {                                                 \
+    return std::make_shared<OpToken>(ifTok, line_);                            \
   } else {                                                                     \
-    return MakeShared<OPTok>(elseTok, line);                                   \
+    return std::make_shared<OpToken>(elseTok, line_);                          \
   }
 
 #define IFMATCH2ELSE(ifMatch, ifTok, elifMatch, elifTok, elseTok)              \
-  if (ReadAndMatch(ifMatch)) {                                                 \
-    return MakeShared<OPTok>(ifTok, line);                                     \
-  } else if (peek == elifMatch) {                                              \
-    return MakeShared<OPTok>(elifTok, line);                                   \
+  if (readAndMatch(ifMatch)) {                                                 \
+    return std::make_shared<OpToken>(ifTok, line_);                            \
+  } else if (peek_ == elifMatch) {                                             \
+    return std::make_shared<OpToken>(elifTok, line_);                          \
   } else {                                                                     \
-    return MakeShared<OPTok>(elseTok, line);                                   \
+    return std::make_shared<OpToken>(elseTok, line_);                          \
   }
 
 /*
@@ -176,102 +176,102 @@ bool Lexer::ReadAndMatch(char ch) {
  * TODO - Use a symbol table to store the identifiers, strings, and numbers
  *
  */
-SToken Lexer::Scan() {
+SToken Lexer::scan() {
   // Get rid of the white space
-  for (;; ReadChar()) {
-    if (peek == '\n') {
-      line += 1;
+  for (;; readChar()) {
+    if (peek_ == '\n') {
+      line_ += 1;
     } //
-    else if (isspace(peek)) {
+    else if (isspace(peek_)) {
       continue;
     } else {
       break;
     }
   }
-  switch (peek) {
-  case '&': { IFMATCHELSE('&', OPC::AND, OPC::BAND); }
-  case '|': { IFMATCHELSE('|', OPC::OR, OPC::BOR); }
-  case '-': { IFMATCHELSE('-', OPC::DECR, OPC::SUB); }
-  case '+': { IFMATCHELSE('+', OPC::INCR, OPC::ADD); }
-  case '*': { IFMATCHELSE('*', OPC::POWER, OPC::MULT); }
-  case '!': { IFMATCHELSE('=', OPC::NEQ, OPC::NOT); }
-  case '<': { IFMATCH2ELSE('=', OPC::LEQ, '<', OPC::LSHIFT, OPC::LT); }
-  case '>': { IFMATCH2ELSE('=', OPC::GEQ, '>', OPC::RSHIFT, OPC::GT); }
+  switch (peek_) {
+  case '&': { IFMATCHELSE('&', Opc::AND, Opc::BAND); }
+  case '|': { IFMATCHELSE('|', Opc::OR, Opc::BOR); }
+  case '-': { IFMATCHELSE('-', Opc::DECR, Opc::SUB); }
+  case '+': { IFMATCHELSE('+', Opc::INCR, Opc::ADD); }
+  case '*': { IFMATCHELSE('*', Opc::POWER, Opc::MULT); }
+  case '!': { IFMATCHELSE('=', Opc::NEQ, Opc::NOT); }
+  case '<': { IFMATCH2ELSE('=', Opc::LEQ, '<', Opc::LSHIFT, Opc::LT); }
+  case '>': { IFMATCH2ELSE('=', Opc::GEQ, '>', Opc::RSHIFT, Opc::GT); }
   case '/': {
-    ReadChar();
-    return MakeShared<OPTok>(OPC::DIV, line);
+    readChar();
+    return std::make_shared<OpToken>(Opc::DIV, line_);
   }
   case '%': {
-    ReadChar();
-    return MakeShared<OPTok>(OPC::MOD, line);
+    readChar();
+    return std::make_shared<OpToken>(Opc::MOD, line_);
   }
   case '~': {
-    ReadChar();
-    return MakeShared<OPTok>(OPC::INV, line);
+    readChar();
+    return std::make_shared<OpToken>(Opc::INV, line_);
   }
   case '^': {
-    ReadChar();
-    return MakeShared<OPTok>(OPC::XOR, line);
+    readChar();
+    return std::make_shared<OpToken>(Opc::XOR, line_);
   }
   case '[': {
-    ReadChar();
-    return MakeShared<Token>(Tags::BSQO, line);
+    readChar();
+    return std::make_shared<Token>(Tags::BSQO, line_);
   }
   case ']': {
-    ReadChar();
-    return MakeShared<Token>(Tags::BSQC, line);
+    readChar();
+    return std::make_shared<Token>(Tags::BSQC, line_);
   }
   case '(': {
-    ReadChar();
-    return MakeShared<Token>(Tags::BCIO, line);
+    readChar();
+    return std::make_shared<Token>(Tags::BCIO, line_);
   }
   case ')': {
-    ReadChar();
-    return MakeShared<Token>(Tags::BCIC, line);
+    readChar();
+    return std::make_shared<Token>(Tags::BCIC, line_);
   }
   case '{': {
-    ReadChar();
-    return MakeShared<Token>(Tags::BCUO, line);
+    readChar();
+    return std::make_shared<Token>(Tags::BCUO, line_);
   }
   case '}': {
-    ReadChar();
-    return MakeShared<Token>(Tags::BCUC, line);
+    readChar();
+    return std::make_shared<Token>(Tags::BCUC, line_);
   }
   case ',': {
-    ReadChar();
-    return MakeShared<Token>(Tags::CSEP, line);
+    readChar();
+    return std::make_shared<Token>(Tags::CSEP, line_);
   }
   case '"':
-  case '\'': { return ParseStringLiteral(); }
-  case -1: { return MakeShared<Token>(Tags::SEOF, line); }
+  case '\'': { return parseStringLiteral(); }
+  case -1: { return std::make_shared<Token>(Tags::SEOF, line_); }
   case '=': {
-    if (ReadAndMatch('='))
-      return MakeShared<OPTok>(OPC::EQ, line);
+    if (readAndMatch('='))
+      return std::make_shared<OpToken>(Opc::EQ, line_);
     else
-      return MakeShared<WordTok>('=', Tags::ASSIGN, line);
+      return std::make_shared<WordToken>('=', Tags::ASSIGN, line_);
   }
   default: {
-    return isdigit(peek) ? ParseNumericToken() : ParseIdentifierToken();
+    return isdigit(peek_) ? parseNumericToken() : parseIdentifierToken();
   }
   }
 }
 
 /*
- * TODO - Handle Multi line strings
+ * TODO - Handle Multi line_ strings
  * TODO - Handle Escape Characters
  *
- * As for the escape characters, only the double quote or the multi line quote
+ * As for the escape characters, only the double quote or the multi line_ quote
  * can represent them. Using the single quote, the escape characters are not
  * interpreted as special characters.
  */
-SToken Lexer::ParseStringLiteral() {
+SToken Lexer::parseStringLiteral() {
   string tmp;
-  char quote = peek;
-  ReadChar();
+  char quote = peek_;
+  readChar();
   do {
     if (quote == '"' && tmp.back() == '\\') {
       tmp.pop_back();
-      switch (peek) {
+      switch (peek_) {
       case 'a':
         tmp += 7;
         break;
@@ -303,7 +303,7 @@ SToken Lexer::ParseStringLiteral() {
         break;
       }
     } else
-      tmp += peek;
-  } while (!ReadAndMatch(quote));
-  return MakeShared<WordTok>(tmp, Tags::STR, line);
+      tmp += peek_;
+  } while (!readAndMatch(quote));
+  return std::make_shared<WordToken>(tmp, Tags::STR, line_);
 }

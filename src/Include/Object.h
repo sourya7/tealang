@@ -2,14 +2,8 @@
 #ifndef T_TYPE_H
 #define T_TYPE_H
 #include <string>
-#include "GC.h"
 #include "Debug.h"
-#include "CodeObject.h"
-using std::string;
-class Object;
-class Token;
-class CodeObject;
-class FunctionObj;
+#include "Common.h"
 
 enum class Type {
   INTEGER = 1,
@@ -17,66 +11,67 @@ enum class Type {
   BOOLEAN,
   STRING,
   FUNCTION,
+  CLASS,
+  MODULE,
   OBJECT,
-  CODE,
   NIL
 };
 
 class Value {
-  SCodeObj co;
-  SObject o;
-  string s;
-  bool b;
-  double d;
-  long l;
-  Type type;
+  SObject object_;
+  std::string string_;
+  bool bool_;
+  double double_;
+  long long_;
+  Type type_;
 
 public:
-  Value() : type(Type::NIL) {};
-  Value(long v) : l(v), type(Type::INTEGER) {}
-  Value(double v) : d(v), type(Type::DOUBLE) {}
-  Value(bool v) : b(v), type(Type::BOOLEAN) {}
-  Value(string v) : s(v), type(Type::STRING) {}
-  Value(Object *v) : type(Type::OBJECT) { o = WRAP_PTR<Object>(v); }
-  Value(CodeObject *v) : type(Type::CODE) { co = WRAP_PTR<CodeObject>(v); }
+  Value() : type_(Type::NIL) {};
+  Value(long value) : long_(value), type_(Type::INTEGER) {}
+  Value(double value) : double_(value), type_(Type::DOUBLE) {}
+  Value(bool value) : bool_(value), type_(Type::BOOLEAN) {}
+  Value(std::string value) : string_(value), type_(Type::STRING) {}
+  Value(Object *value) : type_(Type::OBJECT) {
+    object_ = std::shared_ptr<Object>(value);
+  }
+  Value(Type type) : type_(type) {}
 
-  int GetInt() const { return l; }
-  int GetDouble() const { return d; }
-  bool GetBool() const { return b; }
-  string GetString() const { return s; }
-  SCodeObj GetCodeObject() const { return co; }
-  SObject GetObject() const { return o; }
-  Type GetType() { return type; }
+  int getInt() const { return long_; }
+  int getDouble() const { return double_; }
+  bool getBool() const { return bool_; }
+  std::string getString() const { return string_; }
+  SObject getObject() const { return object_; }
+  Type getType() { return type_; }
 };
 
-class Object : public TGC {
+class Object {
 private:
-  SValue value;
-  Object() { value = MakeShared<Value>(); }
+  SValue value_;
+  Object() { value_ = std::make_shared<Value>(); }
 
 protected:
-  string name = "OBJECT";
-  Object(SValue v) { value = v; }
-  void SetName(string n) { name = n; }
+  std::string name_ = "OBJECT";
+  Object(SValue value) { value_ = value; }
+  void setName(std::string name) { name_ = name; }
 
 public:
   static SObject NIL;
-  static SObject FromToken(Token *);
-  string GetName() { return name; }
-  virtual bool IsTrue() const { return !IsNil(); }
-  virtual bool IsBool() const { return false; }
-  virtual bool IsInteger() const { return false; }
-  virtual bool IsString() const { return false; }
-  virtual bool IsFunction() const { return false; }
-  virtual bool IsNumeral() const { return IsInteger() || IsDouble(); }
-  virtual bool IsDouble() const { return value->GetType() == Type::DOUBLE; }
-  virtual bool IsNil() const { return value->GetType() == Type::NIL; }
-  int GetInt() const { return value->GetInt(); }
-  int GetDouble() const { return value->GetDouble(); }
-  bool GetBool() const { return value->GetBool(); }
-  string GetString() const { return value->GetString(); }
-  SCodeObj GetCodeObject() const { return value->GetCodeObject(); }
-  SObject GetObject() const { return value->GetObject(); }
+  static SObject fromToken(Token *);
+  std::string getName() { return name_; }
+  virtual bool isTrue() const { return !isNil(); }
+  virtual bool isBool() const { return false; }
+  virtual bool isInteger() const { return false; }
+  virtual bool isString() const { return false; }
+  virtual bool isFunction() const { return false; }
+  virtual bool isNumeral() const { return isInteger() || isDouble(); }
+  virtual bool isDouble() const { return value_->getType() == Type::DOUBLE; }
+  virtual bool isNil() const { return value_->getType() == Type::NIL; }
+  Type getType() { return value_->getType(); }
+  int getInt() const { return value_->getInt(); }
+  int getDouble() const { return value_->getDouble(); }
+  bool getBool() const { return value_->getBool(); }
+  std::string getString() const { return value_->getString(); }
+  SObject getObject() const { return value_->getObject(); }
   virtual SObject operator+(const SObject &rhs) {
     assert(false);
     return rhs;
@@ -117,7 +112,7 @@ public:
     assert(false);
     return rhs;
   }
-  virtual string ToString() { return "<OBJECT>"; }
+  virtual std::string toString() { return "<" + name_ + ">"; }
 };
 
 #endif

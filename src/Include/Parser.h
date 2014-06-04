@@ -8,37 +8,32 @@
  *
  */
 #include <istream>
-#include <iostream>
-#include <string>
-#include <map>
-#include "GC.h"
-#include "NodeAST.h"
+#include "NodeAst.h"
 #include "Lexer.h"
 #include "Token.h"
 
-using namespace std;
-
-class Parser : public TGC {
+class Parser {
 private:
-  SToken look;
-  SLexer lexer;
+  SToken look_;
+  SLexer lexer_;
 
 public:
-  Parser(istream *i);
+  Parser(std::istream *i);
   void move();
 
-  SNodeAST Parse();
-  SNodeAST ParseBlock();
-  SNodeAST ParseIfStmt();
-  SNodeAST ParseForStmt();
-  SNodeAST ParseTryStmt();
-  SNodeAST ParseClassStmt();
-  SNodeAST ParseWhileStmt();
-  SNodeAST ParseSingleStmt();
-  SNodeAST ParseFunctionStmt();
-  SNodeAST ParseFunctionParam(bool isCall);
-  SNodeAST ParseFunctionCall();
-  SNodeAST ParseExpr();
+  SNodeAst parse();
+  SNodeAst parseList();
+  SNodeAst parseBlock();
+  SNodeAst parseIfStmt();
+  SNodeAst parseForStmt();
+  SNodeAst parseTryStmt();
+  SNodeAst parseClassStmt();
+  SNodeAst parseWhileStmt();
+  SNodeAst parseSingleStmt();
+  SNodeAst parseFunctionStmt();
+  SNodeAst parseFunctionParam(bool isCall);
+  SNodeAst parseFunctionCall();
+  SNodeAst parseExpr();
 };
 
 #endif

@@ -15,13 +15,13 @@ endif
 
 # File names
 EXEC = tlang
-SOURCES = $(wildcard *.cpp)
+SOURCES = $(wildcard *.cpp) $(wildcard Modules/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
+BUILTOBJS = $(wildcard build/*.o) $(wildcard build/Modules/*.o)
 
 # Main target
 $(EXEC): $(OBJECTS)
-	make -C Modules
-	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) build/* $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
+	$(CC) $(WARN) $(PFLAGS) $(CC_FLAGS) $(BUILTOBJS) $(GC_FLAGS) $(GC_LIB) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cpp
@@ -29,4 +29,4 @@ $(EXEC): $(OBJECTS)
 
 # To remove generated files
 clean:
-	rm -f $(EXEC) $(BUILTOBJ)
+	rm -f $(EXEC) build/*.o build/Modules/*.o

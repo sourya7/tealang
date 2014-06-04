@@ -6,7 +6,8 @@
 class IRBuilder;
 class ListAST : public NodeAST {
 private:
-  vector<shared_ptr<NodeAST>>_container;
+  vector<shared_ptr<NodeAST> > _container;
+
 public:
   ListAST() : NodeAST(NodeType::SEQ) {}
   void AddPair(SNodeAST l, SNodeAST r);

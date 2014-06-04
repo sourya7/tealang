@@ -50,7 +50,7 @@ public:
   Value(bool v) : b(v), type(Type::BOOLEAN) {}
   Value(string v) : s(v), type(Type::STRING) {}
   Value(Object *v) : type(Type::OBJECT) { o = WRAP_PTR<Object>(v); }
-  Value(Type t) : type(t) { }
+  Value(Type t) : type(t) {}
 
   int GetInt() const { return l; }
   int GetDouble() const { return d; }

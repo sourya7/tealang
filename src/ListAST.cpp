@@ -10,8 +10,8 @@ void ListAST::AddPair(SNodeAST l, SNodeAST r) {
 void ListAST::GenerateIR(SIRBuilder builder) {
   VecSObj obj;
   auto list = ListModule::Init(obj);
-  for(auto v : _container){
-    //TODO make dict work
+  for (auto v : _container) {
+    // TODO make dict work
     v->GetRight()->GenerateIR(builder);
     builder->LoadConst(list);
     builder->CallMethod("append:");

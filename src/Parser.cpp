@@ -253,14 +253,14 @@ SNodeAST Parser::ParseSingleStmt() {
   return node;
 }
 
-SNodeAST Parser::ParseList(){
+SNodeAST Parser::ParseList() {
   assert(look->tag == Tags::BCUO);
   auto listast = MakeShared<ListAST>();
-  do{
-    //at the start we are consuming the '{', from then on
-    //we are consuming a ','
+  do {
+    // at the start we are consuming the '{', from then on
+    // we are consuming a ','
     move();
-    SNodeAST key =  ParseExpr();
+    SNodeAST key = ParseExpr();
     auto isDict = look->tag == Tags::DSEP ? true : false;
     if (isDict) {
       move();
@@ -268,7 +268,7 @@ SNodeAST Parser::ParseList(){
     } else {
       listast->AddPair(nullptr, key);
     }
-  } while(look->tag == Tags::CSEP);
+  } while (look->tag == Tags::CSEP);
 
   move();
   return listast;

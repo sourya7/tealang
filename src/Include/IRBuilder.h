@@ -27,6 +27,7 @@ class IRBuilder {
 private:
   SCodeObj co;
   static SIRBuilder _global;
+
 public:
   IRBuilder();
   IRBuilder(SIRBuilder parent);

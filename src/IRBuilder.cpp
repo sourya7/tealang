@@ -16,9 +16,7 @@ IRBuilder::IRBuilder(SIRBuilder b) {
   parent->AddChild(co);
 }
 
-SIRBuilder IRBuilder::GetGlobal(){
-  return _global;
-}
+SIRBuilder IRBuilder::GetGlobal() { return _global; }
 
 void IRBuilder::CondJump(SIRBuilder ifBlk) {
   int childId = co->GetChildID(ifBlk->GetCodeObject());
@@ -70,7 +68,7 @@ void IRBuilder::DeclFunc(bool i, string n, int ac, SIRBuilder b) {
   if (i)
     fun_co->PushOP(OP(OPC::INIT_INSTANCE));
 
-  auto fo = MakeShared<FunctionObj>(n, ac, fun_co,i);
+  auto fo = MakeShared<FunctionObj>(n, ac, fun_co, i);
   int id = co->GetID(n);
   assert(id != -1);
   co->StoreIDVal(fo, id);

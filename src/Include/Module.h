@@ -15,8 +15,7 @@ private:
 
 protected:
   Module(string moduleName)
-      : Object(MakeShared<Value>(Type::MODULE)), _moduleName(moduleName) {
-  }
+      : Object(MakeShared<Value>(Type::MODULE)), _moduleName(moduleName) {}
   static SModule GetModuleFromObj(const SObject &obj) {
     return DYN_GC_CAST<Module>(obj);
   }
@@ -29,7 +28,7 @@ public:
   int GetArgc(const SObject &method) const;
   bool IsInstance() { return _isInstance; }
   static void LoadDefaults(const SIRBuilder &builder);
-  static void AddModule(std::string name, Module* module){
+  static void AddModule(std::string name, Module *module) {
     _modules[name] = WRAP_PTR<Module>(module);
   }
   /*

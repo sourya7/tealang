@@ -10,7 +10,7 @@ private:
   bool _init;
 
 public:
-  FunctionObj(string funcName, int argc, SCodeObj codeObj, bool init=false)
+  FunctionObj(string funcName, int argc, SCodeObj codeObj, bool init = false)
       : Object(MakeShared<Value>(Type::FUNCTION)), _argc(argc),
         _funcName(funcName), _codeObj(codeObj), _init(init) {}
 

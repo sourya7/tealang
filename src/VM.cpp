@@ -35,12 +35,12 @@ void VM::CallModule(const SObject &instance, const SObject &funcName) {
     p.push_back(v);
   }
   auto ob = Module::Call(instance, funcName, p);
-  if(ob != nullptr)
+  if (ob != nullptr)
     VM_PUSH(ob);
 }
 
 void VM::CallMethod(const SObject &instance, const SObject &funcName) {
-  if(instance->GetType() == Type::MODULE){
+  if (instance->GetType() == Type::MODULE) {
     VM::CallModule(instance, funcName);
     return;
   }

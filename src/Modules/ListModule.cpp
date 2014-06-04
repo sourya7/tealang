@@ -17,7 +17,7 @@ SObject ListModule::Init(const VecSObj &obj) {
   };
   inst->SetFuncMap(funcMap);
   inst->SetInstance();
-  if(obj.size() > 0){
+  if (obj.size() > 0) {
     inst->_container = obj;
   }
   return inst;
@@ -38,11 +38,10 @@ SObject ListModule::Count(const VecSObj &obj) {
   return MakeShared<IntegerObj>(size);
 }
 
-SObject ListModule::Get(const VecSObj &obj) { 
+SObject ListModule::Get(const VecSObj &obj) {
   return _container[IntegerObj::ValFromObj(obj.back())];
 }
 
 SObject ListModule::Reverse(const VecSObj &obj) { return nullptr; }
 
 SObject ListModule::Insert(const VecSObj &obj) { return nullptr; }
-

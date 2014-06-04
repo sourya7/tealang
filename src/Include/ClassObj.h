@@ -16,7 +16,7 @@ public:
   }
   ClassObj(SCodeObj codeObj)
       : Object(MakeShared<Value>(this)), _codeObj(codeObj), _isInstance(true) {
-    //assert(_codeObj->GetInstanceOf() != nullptr);
+    // assert(_codeObj->GetInstanceOf() != nullptr);
   }
   bool IsInstance() const { return _isInstance; }
   SCodeObj GetCodeObject() const { return MakeShared<CodeObject>(*_codeObj); }

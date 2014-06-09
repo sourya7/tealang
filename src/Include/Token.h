@@ -53,9 +53,12 @@ enum class Tags {
 
 class Token : public NodeAst {
 private:
-public:
   const Tags tag_;
   const ulong line_;
+
+public:
+  Tags getTag() { return tag_; }
+  ulong getLineNo() { return line_; }
   Token(Tags tag, ulong line)
       : NodeAst(NodeType::TOKEN), tag_(tag), line_(line) {}
   virtual ~Token() {}

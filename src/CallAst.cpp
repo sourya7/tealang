@@ -42,7 +42,7 @@ void CallAst::generateIr(SIrBuilder builder) {
       left_->generateIr(builder);
     } else {
       // its simply an id to an object
-      std::string val = GUARD_CAST<WordToken *>(left_.get())->value_;
+      std::string val = GUARD_CAST<WordToken *>(left_.get())->getValue();
       builder->loadValue(val);
     }
     builder->callMethod(paramAst->getName());

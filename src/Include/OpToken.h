@@ -4,8 +4,10 @@
 #include "OpCode.h"
 
 class OpToken : public Token {
-public:
   Opc value_;
+
+public:
+  Opc getValue() const { return value_; }
   OpToken(Opc opc, ulong line) : Token(Tags::OP, line), value_(opc) {}
 };
 #endif

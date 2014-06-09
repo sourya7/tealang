@@ -5,8 +5,10 @@
 #include "Token.h"
 
 class WordToken : public Token {
-public:
   std::string value_;
+
+public:
+  std::string getValue() const { return value_; }
   WordToken(std::string str, Tags tag, ulong line)
       : Token(tag, line), value_(str) {}
   WordToken(char ch, Tags tag, ulong line) : Token(tag, line), value_(1, ch) {}

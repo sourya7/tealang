@@ -25,8 +25,8 @@ void FunctionStmtAst::generateIr(SIrBuilder b) {
   auto child = std::make_shared<IrBuilder>(b);
   VecSNodeAst params = paramAst->getParams();
   for (auto p : params) {
-    child->declVar(GUARD_CAST<WordToken *>(p.get())->value_);
-    child->storeValue(GUARD_CAST<WordToken *>(p.get())->value_);
+    child->declVar(GUARD_CAST<WordToken *>(p.get())->getValue());
+    child->storeValue(GUARD_CAST<WordToken *>(p.get())->getValue());
   }
   right_->generateIr(child);
   b->declFunc(isInit_, paramAst->getName(), paramAst->getCount(), child);

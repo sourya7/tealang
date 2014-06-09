@@ -10,7 +10,7 @@ void NodeAst::generateIr(SIrBuilder builder) {
   switch (type_) {
   case NodeType::VAR:
     // declare the variable;
-    builder->declVar(GUARD_CAST<WordToken *>(left_.get())->value_);
+    builder->declVar(GUARD_CAST<WordToken *>(left_.get())->getValue());
     // if the right exists, call it
     if (right_.get() != nullptr)
       right_->generateIr(builder);
@@ -19,14 +19,14 @@ void NodeAst::generateIr(SIrBuilder builder) {
     // eval the right node
     right_->generateIr(builder);
     // load the val into the var
-    builder->storeValue(GUARD_CAST<WordToken *>(left_.get())->value_);
+    builder->storeValue(GUARD_CAST<WordToken *>(left_.get())->getValue());
     break;
   case NodeType::TOKEN: {
     // TODO, this is a hack
     auto t = GUARD_CAST<Token *>(this);
-    if (t->tag_ == Tags::ID) {
+    if (t->getTag() == Tags::ID) {
       auto wt = GUARD_CAST<WordToken *>(t);
-      builder->loadValue(wt->value_);
+      builder->loadValue(wt->getValue());
     } else {
       builder->loadConst(Object::fromToken(t));
     }

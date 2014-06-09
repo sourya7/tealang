@@ -9,16 +9,16 @@
 
 void ExprAst::generateIr(SIrBuilder builder) {
   for (auto t : expr_) {
-    if (t->tag_ == Tags::OP) {
+    if (t->getTag() == Tags::OP) {
       auto op = GUARD_CAST<OpToken *>(t.get());
-      builder->performOp(op->value_);
-    } else if (t->tag_ == Tags::BSQO) {
+      builder->performOp(op->getValue());
+    } else if (t->getTag() == Tags::BSQO) {
       auto call = GUARD_CAST<CallAst *>(t->getLeft().get());
       call->generateIr(builder);
-    } else if (t->tag_ == Tags::ID) {
+    } else if (t->getTag() == Tags::ID) {
       auto wt = GUARD_CAST<WordToken *>(t.get());
-      builder->loadValue(wt->value_);
-    } else if (t->tag_ == Tags::BCUO) {
+      builder->loadValue(wt->getValue());
+    } else if (t->getTag() == Tags::BCUO) {
       auto list = GUARD_CAST<ListAst *>(t->getLeft().get());
       list->generateIr(builder);
     } else {

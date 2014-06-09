@@ -15,9 +15,9 @@ void ClassStmtAst::generateIr(SIrBuilder b) {
   auto wt = std::dynamic_pointer_cast<WordToken>(left_);
 
   // forward reference to the class
-  b->declVar(wt->value_);
+  b->declVar(wt->getValue());
 
   auto child = std::make_shared<IrBuilder>(b);
   right_->generateIr(child);
-  b->declClass(wt->value_, child);
+  b->declClass(wt->getValue(), child);
 }

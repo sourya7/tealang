@@ -3,8 +3,10 @@
 #include "Token.h"
 
 class RealToken : public Token {
-public:
   double value_;
+
+public:
+  double getValue() const { return value_; }
   RealToken(double value, uint line) : Token(Tags::REAL, line), value_(value) {}
 };
 

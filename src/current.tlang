@@ -1,12 +1,12 @@
-defclass Animal
-    var sound
-    defcon initWithSound:s
-        sound = s
-    endcon
-    defun makeSound
-        [IO println: sound]
-    endfun
-endclass
+var a = 0
+var l = {}
+while a != 10
+  [l append:a]
+  a = a + 1
+endwhile
 
-var test = [Animal initWithSound:"abcd"]
-[test makeSound]
+[IO println: "Im here"]
+while a > 0
+  [IO println: [l at:a-1]]
+  a = a - 1
+endwhile

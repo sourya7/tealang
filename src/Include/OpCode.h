@@ -36,6 +36,8 @@ enum class Opc {
   CALL,
   C_CALL,
   RETURN,
+  BREAK,
+  CONTINUE,
   WHILE,
   CALL_METHOD,
   INIT_INSTANCE

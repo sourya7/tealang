@@ -14,7 +14,9 @@ public:
   FunctionObject(std::string name, int argc, SCodeObject codeObject,
                  bool init = false)
       : Object(std::make_shared<Value>(Type::FUNCTION)), argc_(argc),
-        name_(name), codeObject_(codeObject), isInit_(init) {}
+        name_(name), codeObject_(codeObject), isInit_(init) {
+    codeObject_->setBlockType(BlockType::FUNCTION);     
+  }
 
   int getArgc() const { return argc_; }
   bool isInit() const { return isInit_; }

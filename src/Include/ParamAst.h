@@ -13,6 +13,9 @@ public:
     if (node != nullptr)
       params_.push_back(node);
   }
+  void addParam(std::string s){
+    name_ += s;
+  }
   std::string getName() { return name_; }
   int getCount() { return params_.size(); }
   VecSNodeAst getParams() { return params_; }

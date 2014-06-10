@@ -4,8 +4,6 @@
 
 class IrBuilder;
 class WhileStmtAst : public NodeAst {
-  SNodeAst object_;
-
 public:
   WhileStmtAst(SNodeAst predicate, SNodeAst block)
       : NodeAst(NodeType::WSTMT, predicate, block) {}

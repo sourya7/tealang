@@ -41,16 +41,6 @@ void NodeAst::generateIr(SIrBuilder builder) {
       break;
     }
   }
-  case NodeType::CALL:
-    assert(false && "CALL");
-  case NodeType::PARAM:
-    assert(false && "PARAM");
-  case NodeType::IFSTMT:
-    assert(false && "IFSTMT");
-  case NodeType::FSTMT:
-    assert(false && "FSTMT");
-  case NodeType::EXPR:
-    assert(false && "EXPR");
   default:
     assert(false && "This should not be called!");
   }

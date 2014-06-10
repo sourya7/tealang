@@ -19,6 +19,7 @@
 #include "FunctionStmtAst.h"
 #include "WhileStmtAst.h"
 #include "ClassStmtAst.h"
+#include "ForStmtAst.h"
 #include "IrBuilder.h"
 #include "ListAst.h"
 #include "OpToken.h"
@@ -156,10 +157,21 @@ SNodeAst Parser::parseFunctionCall() {
     call->setRight(parseFunctionParam(true));
     break;
   case Tags::ID:
-    call->setLeft(look_);
-    move();                                   // consume the object
-    call->setRight(parseFunctionParam(true)); //[obj some]
+  {
+    auto tmp = look_;
+    move();
+    if(look_->getTag() != Tags::BSQC){
+      call->setLeft(tmp);
+      call->setRight(parseFunctionParam(true)); //[obj some]
+    }
+    else{
+      auto param = std::make_shared<ParamAst>();
+      std::string fName = GUARD_CAST<WordToken*>(tmp.get())->getValue();
+      param->addParam(fName);
+      call->setRight(param);  // [func]
+    }
     break;
+  }
   default:
     assert(false);
   }
@@ -395,7 +407,28 @@ SNodeAst Parser::parseIfStmt() {
   return stmt;
 }
 
-SNodeAst Parser::parseForStmt() { return nullptr; }
+/*
+ * for x in y
+ * endfor
+ *
+ * x is a simple identifier. y is an expression/identifier that represents a 
+ * iterator
+ */
+SNodeAst Parser::parseForStmt() { 
+  //consume the for
+  move();
+  //consume the identifier
+  auto ident = look_;
+  //consume the in
+  move();
+  //consume the iterator or an expression that generates an iterator
+  auto iter = parseExpr();
+  //parse the body of the loop
+  auto body = parseBlock();
+  //consume endfor
+  move();
+  return std::make_shared<ForStmtAst>(ident, iter, body); 
+}
 
 SNodeAst Parser::parseTryStmt() { return nullptr; }
 

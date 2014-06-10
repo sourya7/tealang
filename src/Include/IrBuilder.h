@@ -38,10 +38,12 @@ public:
   void declFunc(bool i, std::string n, int ac, SIrBuilder f);
   void declClass(std::string n, SIrBuilder b);
   void declCFunc(std::string n, int ac);
-  void declWhile(SIrBuilder expr, SIrBuilder body);
+  void declWhile(SIrBuilder whileBlk);
   void condJump(SIrBuilder ifBlk);
   void condJump(SIrBuilder ifBlk, SIrBuilder elBlk);
   void callFunc(std::string fn);
+  void breakFlow();
+  void continueFlow();
   void returnValue(bool hasArg = true);
   void returnNoValue() { returnValue(false); }
   SCodeObject getCodeObject();

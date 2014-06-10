@@ -59,6 +59,7 @@ void Vm::callMethod(const SObject &instance, const SObject &funcName) {
 }
 
 void Vm::callFunc(const SObject &fnob) {
+  //TODO, verify if no need for the cast. Normal objects have getCodeObject
   auto fn = std::dynamic_pointer_cast<FunctionObject>(fnob);
   SCodeObject cc = fn->getCodeObject();
   pushCodeObject(cc);
@@ -136,10 +137,28 @@ void Vm::execCode(const SCodeObject &c) {
       break;
     // case Opc::POWER: DEBUG("OP::POWER"); BIN_OP(**); break;
     case Opc::WHILE:
+    {
       DEBUG("OP::WHILE");
       assert(op.hasArgA());
-      assert(op.hasArgB());
+      SCodeObject co = codeObject_->getChild(op.getArgA()); 
+      pushCodeObject(co);
+      continue;
+    }
+    /*TODO, Better to not have BREAK and CONTINUE in the vm. */
+    case Opc::BREAK:
+      DEBUG("OP::BREAK")
+      while (codeObject_->getBlockType() != BlockType::WHILE) {
+        popCodeObject();
+      }
+      popCodeObject();
       break;
+    case Opc::CONTINUE:
+      DEBUG("OP::CONTINUE")
+      while (codeObject_->getBlockType() != BlockType::WHILE) {
+        popCodeObject();
+      }
+      opId_ = 0;
+      continue;
     case Opc::LOAD_CONSTANT:
       DEBUG("OP::PUSH_CONSTANT");
       assert(op.hasArgA());
@@ -207,7 +226,7 @@ void Vm::execCode(const SCodeObject &c) {
       // TODO, clean the stack
       assert(op.hasArgA());
       DEBUG("OP::RETURN");
-      while (!codeObject_->getObject()->isFunction()) {
+      while (codeObject_->getBlockType() != BlockType::FUNCTION) {
         popCodeObject();
       }
       popCodeObject();

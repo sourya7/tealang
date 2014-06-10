@@ -59,7 +59,7 @@ void Vm::callMethod(const SObject &instance, const SObject &funcName) {
 }
 
 void Vm::callFunc(const SObject &fnob) {
-  //TODO, verify if no need for the cast. Normal objects have getCodeObject
+  // TODO, verify if no need for the cast. Normal objects have getCodeObject
   auto fn = std::dynamic_pointer_cast<FunctionObject>(fnob);
   SCodeObject cc = fn->getCodeObject();
   pushCodeObject(cc);
@@ -136,11 +136,10 @@ void Vm::execCode(const SCodeObject &c) {
       BIN_OP(*);
       break;
     // case Opc::POWER: DEBUG("OP::POWER"); BIN_OP(**); break;
-    case Opc::WHILE:
-    {
+    case Opc::WHILE: {
       DEBUG("OP::WHILE");
       assert(op.hasArgA());
-      SCodeObject co = codeObject_->getChild(op.getArgA()); 
+      SCodeObject co = codeObject_->getChild(op.getArgA());
       pushCodeObject(co);
       continue;
     }

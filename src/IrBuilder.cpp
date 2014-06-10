@@ -94,9 +94,7 @@ void IrBuilder::declWhile(SIrBuilder whileBlk) {
   codeObject_->pushOp(Op(Opc::WHILE, whileCid));
 }
 
-void IrBuilder::breakFlow() {
-  codeObject_->pushOp(Op(Opc::BREAK));
-}
+void IrBuilder::breakFlow() { codeObject_->pushOp(Op(Opc::BREAK)); }
 
 void IrBuilder::callFunc(std::string fn) {
   int l;

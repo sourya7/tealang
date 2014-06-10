@@ -5,7 +5,7 @@
 #include "ParamAst.h"
 
 /*
- * What would while do? 
+ * What would while do?
  * take the whileChild and pushco
  * whileChild
  *    expression
@@ -25,5 +25,3 @@ void WhileStmtAst::generateIr(SIrBuilder b) {
   whileChild->condJump(bodyChild, fakeChild);
   b->declWhile(whileChild);
 }
-
-

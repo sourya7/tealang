@@ -15,7 +15,7 @@ public:
                  bool init = false)
       : Object(std::make_shared<Value>(Type::FUNCTION)), argc_(argc),
         name_(name), codeObject_(codeObject), isInit_(init) {
-    codeObject_->setBlockType(BlockType::FUNCTION);     
+    codeObject_->setBlockType(BlockType::FUNCTION);
   }
 
   int getArgc() const { return argc_; }

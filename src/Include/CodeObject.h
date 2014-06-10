@@ -6,6 +6,14 @@
 #include "Object.h"
 #include "OpCode.h"
 
+enum class BlockType {
+  FUNCTION,
+  CLASS,
+  WHILE,
+  IF,
+  EXPR
+};
+
 class CodeObject;
 
 class CodeObject {
@@ -21,6 +29,7 @@ private:
   SVecSCodeObject children_;
   SCodeObject parent_ = nullptr;
   SObject object_ = nullptr;
+  BlockType type_ = BlockType::EXPR;
 
 public:
   CodeObject(SCodeObject parent) : CodeObject() { parent_ = parent; }
@@ -45,27 +54,33 @@ public:
 
   void setObject(const SObject &object) { object_ = object; }
   SObject getObject() { return object_; }
+
   void setParent(const SCodeObject &parent) { parent_ = parent; }
   SCodeObject getParent() const { return parent_; }
 
-  int pushId(std::string var);
   int pushConst(const SObject &o);
+  SObject getConst(int id) { return consts_->at(id); }
 
+  int pushId(std::string var);
   int getId(std::string var, int &l);
   int getId(std::string var) {
     int l;
     return getId(var, l);
   }
 
+  void setBlockType(BlockType type) { type_ = type; }
+  BlockType getBlockType() const { return type_; }
+
   void storeIdValue(const SObject &value, int id, int level = 0);
   SObject getIdValue(int id, int level = 0);
 
-  SObject getConst(int id) { return consts_->at(id); }
   SVecOp getOpCode() { return opcode_; }
   void pushOp(Op op) { opcode_->push_back(op); }
+
   void addChild(const SCodeObject &c);
-  int getChildId(const SCodeObject &c);
   SCodeObject getChild(int id) { return children_->at(id); }
+
+  int getChildId(const SCodeObject &c);
 };
 
 #endif

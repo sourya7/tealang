@@ -4,10 +4,26 @@
 #include "SeqAst.h"
 #include "ParamAst.h"
 
+/*
+ * What would while do? 
+ * take the whileChild and pushco
+ * whileChild
+ *    expression
+ *    jump to body if expression is true
+ *    otherwise break
+ */
 void WhileStmtAst::generateIr(SIrBuilder b) {
-  auto exprChild = std::make_shared<IrBuilder>(b);
-  left_->generateIr(exprChild);
-  auto bodyChild = std::make_shared<IrBuilder>(b);
+  auto whileChild = std::make_shared<IrBuilder>(b);
+
+  auto bodyChild = std::make_shared<IrBuilder>(whileChild);
   right_->generateIr(bodyChild);
-  b->declWhile(exprChild, bodyChild);
+  left_->generateIr(whileChild);
+
+  auto fakeChild = std::make_shared<IrBuilder>(whileChild);
+  fakeChild->breakFlow();
+
+  whileChild->condJump(bodyChild, fakeChild);
+  b->declWhile(whileChild);
 }
+
+

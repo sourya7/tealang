@@ -12,6 +12,7 @@ public:
       : Object(std::make_shared<Value>(Type::CLASS)), codeObject_(codeObject),
         isInstance_(false) {
     setName(className);
+    codeObject_->setBlockType(BlockType::CLASS);
   }
   ClassObject(SCodeObject codeObject)
       : Object(std::make_shared<Value>(this)), codeObject_(codeObject),

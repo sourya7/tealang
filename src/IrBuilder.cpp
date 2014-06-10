@@ -16,14 +16,21 @@ IrBuilder::IrBuilder(SIrBuilder b) {
 }
 
 void IrBuilder::condJump(SIrBuilder ifBlk) {
-  int childId = codeObject_->getChildId(ifBlk->getCodeObject());
+  auto ifCo = ifBlk->getCodeObject();
+  ifCo->setBlockType(BlockType::IF);
+  int childId = codeObject_->getChildId(ifCo);
   assert(childId != -1);
   codeObject_->pushOp(Op(Opc::JMP_IF_ELSE, childId));
 }
 
 void IrBuilder::condJump(SIrBuilder ifBlk, SIrBuilder elBlk) {
-  int ifId = codeObject_->getChildId(ifBlk->getCodeObject());
-  int elId = codeObject_->getChildId(elBlk->getCodeObject());
+  auto ifCo = ifBlk->getCodeObject();
+  ifCo->setBlockType(BlockType::IF);
+  auto elCo = elBlk->getCodeObject();
+  elCo->setBlockType(BlockType::IF);
+  int ifId = codeObject_->getChildId(ifCo);
+  int elId = codeObject_->getChildId(elCo);
+  assert(ifId != -1 && elId != -1);
   codeObject_->pushOp(Op(Opc::JMP_IF_ELSE, ifId, elId));
 }
 
@@ -78,12 +85,17 @@ void IrBuilder::returnValue(bool hasArg) {
   codeObject_->pushOp(Op(Opc::RETURN, hasArg));
 }
 
-void IrBuilder::declWhile(SIrBuilder expr, SIrBuilder body) {
-  int exprId = codeObject_->getChildId(expr->getCodeObject());
-  int bodyId = codeObject_->getChildId(body->getCodeObject());
-  assert(exprId != -1);
-  assert(bodyId != -1);
-  codeObject_->pushOp(Op(Opc::WHILE, exprId, bodyId));
+void IrBuilder::declWhile(SIrBuilder whileBlk) {
+  auto whileCo = whileBlk->getCodeObject();
+  whileCo->setBlockType(BlockType::WHILE);
+
+  int whileCid = codeObject_->getChildId(whileCo);
+  assert(whileCid != -1);
+  codeObject_->pushOp(Op(Opc::WHILE, whileCid));
+}
+
+void IrBuilder::breakFlow() {
+  codeObject_->pushOp(Op(Opc::BREAK));
 }
 
 void IrBuilder::callFunc(std::string fn) {

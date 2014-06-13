@@ -19,7 +19,7 @@ public:
         isInstance_(true) {}
   bool isInstance() const { return isInstance_; }
   SCodeObject getCodeObject() const {
-    return std::make_shared<CodeObject>(*codeObject_);
+    return codeObject_;
   }
 };
 #endif

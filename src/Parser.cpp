@@ -419,6 +419,7 @@ SNodeAst Parser::parseForStmt() {
   move();
   //consume the identifier
   auto ident = look_;
+  move();
   //consume the in
   move();
   //consume the iterator or an expression that generates an iterator

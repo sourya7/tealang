@@ -42,6 +42,7 @@ public:
     vals_ = std::make_shared<VecSObject>(*rhs.vals_);
     ids_ = rhs.ids_;
     object_ = rhs.object_;
+    type_ = rhs.type_;
   }
 
   CodeObject() {
@@ -65,7 +66,9 @@ public:
   int getId(std::string var, int &l);
   int getId(std::string var) {
     int l;
-    return getId(var, l);
+    int id = getId(var, l);
+    if(l != 0) return -1;
+    return id;
   }
 
   void setBlockType(BlockType type) { type_ = type; }

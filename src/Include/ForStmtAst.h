@@ -7,7 +7,7 @@ class ForStmtAst : public NodeAst {
   SNodeAst ident_;
 public:
   ForStmtAst(SNodeAst ident, SNodeAst iter, SNodeAst body)
-      : NodeAst(NodeType::WSTMT, iter, body) {}
+      : NodeAst(NodeType::WSTMT, iter, body), ident_(ident) {}
   void generateIr(SIrBuilder builder);
 };
 

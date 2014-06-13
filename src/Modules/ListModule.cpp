@@ -1,5 +1,5 @@
 #include "Modules/ListModule.h"
-#include "IntegerObject.h"
+#include "Objects/IntegerObject.h"
 
 // register the module.. TODO: A better way?
 //

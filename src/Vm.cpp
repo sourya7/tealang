@@ -2,9 +2,9 @@
 #include "Vm.h"
 #include "Module.h"
 #include "OpCode.h"
-#include "ClassObject.h"
+#include "Objects/FunctionObject.h"
+#include "Objects/ClassObject.h"
 #include "CodeObject.h"
-#include "FunctionObject.h"
 
 #define VM_POP()                                                               \
   vmStack_.back();                                                             \
@@ -34,8 +34,7 @@ void Vm::callModule(const SObject &instance, const SObject &funcName) {
     p.push_back(v);
   }
   auto ob = Module::call(instance, funcName, p);
-  if (ob != nullptr)
-    VM_PUSH(ob);
+  //retval = ob;
 }
 
 void Vm::callMethod(const SObject &instance, const SObject &funcName) {

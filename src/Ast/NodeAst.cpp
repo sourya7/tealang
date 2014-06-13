@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include "NodeAst.h"
+#include "Ast/NodeAst.h"
 #include "WordToken.h"
 #include "IrBuilder.h"
 #include "Debug.h"

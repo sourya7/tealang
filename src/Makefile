@@ -15,9 +15,9 @@ endif
 
 # File names
 EXEC = tlang
-SOURCES = $(wildcard *.cpp) $(wildcard Modules/*.cpp)
+SOURCES = $(wildcard *.cpp) $(wildcard Modules/*.cpp) $(wildcard Objects/*.cpp) $(wildcard Ast/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
-BUILTOBJS = $(wildcard build/*.o) $(wildcard build/Modules/*.o)
+BUILTOBJS = $(wildcard build/*.o) $(wildcard build/Modules/*.o) $(wildcard build/Objects/*.o)  $(wildcard build/Ast/*.o) 
 
 # Main target
 $(EXEC): $(OBJECTS)
@@ -29,4 +29,4 @@ $(EXEC): $(OBJECTS)
 
 # To remove generated files
 clean:
-	rm -f $(EXEC) build/*.o build/Modules/*.o
+	rm -f $(EXEC) build/*.o build/Modules/*.o build/Objects/*.o build/Ast/*.o

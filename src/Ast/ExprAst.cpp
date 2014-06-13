@@ -1,10 +1,10 @@
 #include "IrBuilder.h"
-#include "ExprAst.h"
+#include "Ast/ExprAst.h"
 #include "WordToken.h"
 #include "Debug.h"
 #include "OpToken.h"
-#include "CallAst.h"
-#include "ListAst.h"
+#include "Ast/CallAst.h"
+#include "Ast/ListAst.h"
 #include "Object.h"
 
 void ExprAst::generateIr(SIrBuilder builder) {

@@ -1,6 +1,6 @@
-#include "IntegerObject.h"
-#include "BooleanObject.h"
-#include "DoubleObject.h"
+#include "Objects/IntegerObject.h"
+#include "Objects/BooleanObject.h"
+#include "Objects/DoubleObject.h"
 
 #define PERFORM_BIN_OP(op)                                                     \
   if (rhs->isDouble())                                                         \

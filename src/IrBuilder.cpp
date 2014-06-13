@@ -1,12 +1,12 @@
 #include <cstring>
 #include "Debug.h"
 #include "IrBuilder.h"
-#include "StringObject.h"
+#include "Objects/StringObject.h"
 #include "Object.h"
 #include "OpCode.h"
 #include "CodeObject.h"
-#include "FunctionObject.h"
-#include "ClassObject.h"
+#include "Objects/FunctionObject.h"
+#include "Objects/ClassObject.h"
 
 IrBuilder::IrBuilder() { codeObject_ = std::make_shared<CodeObject>(); }
 IrBuilder::IrBuilder(SIrBuilder b) {

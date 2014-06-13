@@ -1,4 +1,4 @@
-#include "ClassStmtAst.h"
+#include "Ast/ClassStmtAst.h"
 #include "IrBuilder.h"
 #include "WordToken.h"
 

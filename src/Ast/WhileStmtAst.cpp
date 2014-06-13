@@ -1,8 +1,8 @@
-#include "WhileStmtAst.h"
+#include "Ast/WhileStmtAst.h"
 #include "WordToken.h"
 #include "IrBuilder.h"
-#include "SeqAst.h"
-#include "ParamAst.h"
+#include "Ast/SeqAst.h"
+#include "Ast/ParamAst.h"
 
 /*
  * What would while do?

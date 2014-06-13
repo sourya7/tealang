@@ -1,4 +1,4 @@
-#include "SeqAst.h"
+#include "Ast/SeqAst.h"
 
 SSeqAst SeqAst::addSeq(SNodeAst n) {
   left_ = n;

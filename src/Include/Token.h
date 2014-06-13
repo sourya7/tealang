@@ -1,7 +1,7 @@
 #ifndef T_TOKEN_H
 #define T_TOKEN_H
 #include "Common.h"
-#include "NodeAst.h"
+#include "Ast/NodeAst.h"
 
 enum class Tags {
   OP = 256,

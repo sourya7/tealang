@@ -1,5 +1,5 @@
-#include "StringObject.h"
-#include "BooleanObject.h"
+#include "Objects/StringObject.h"
+#include "Objects/BooleanObject.h"
 
 SObject StringObject::operator+(const SObject &rhs) {
   std::string x = toString();

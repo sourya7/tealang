@@ -8,7 +8,7 @@
  *
  */
 #include <istream>
-#include "NodeAst.h"
+#include "Ast/NodeAst.h"
 #include "Lexer.h"
 #include "Token.h"
 

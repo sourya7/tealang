@@ -1,5 +1,5 @@
-#include "CallAst.h"
-#include "ParamAst.h"
+#include "Ast/CallAst.h"
+#include "Ast/ParamAst.h"
 #include "IrBuilder.h"
 #include "WordToken.h"
 

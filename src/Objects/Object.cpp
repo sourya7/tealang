@@ -1,8 +1,8 @@
 #include <string>
 #include "Object.h"
-#include "DoubleObject.h"
-#include "StringObject.h"
-#include "IntegerObject.h"
+#include "Objects/DoubleObject.h"
+#include "Objects/StringObject.h"
+#include "Objects/IntegerObject.h"
 #include "Token.h"
 #include "RealToken.h"
 #include "NumberToken.h"

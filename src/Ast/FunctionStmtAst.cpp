@@ -1,8 +1,8 @@
-#include "FunctionStmtAst.h"
+#include "Ast/FunctionStmtAst.h"
 #include "WordToken.h"
 #include "IrBuilder.h"
-#include "SeqAst.h"
-#include "ParamAst.h"
+#include "Ast/SeqAst.h"
+#include "Ast/ParamAst.h"
 
 /*
  * defun bla:a andB:b

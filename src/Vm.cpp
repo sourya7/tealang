@@ -34,7 +34,9 @@ void Vm::callModule(const SObject &instance, const SObject &funcName) {
     p.push_back(v);
   }
   auto ob = Module::call(instance, funcName, p);
-  retval = ob;
+  if(ob != nullptr){
+    VM_PUSH(ob);
+  }
 }
 
 void Vm::callMethod(const SObject &instance, const SObject &funcName) {

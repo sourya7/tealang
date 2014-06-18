@@ -5,8 +5,7 @@
 //
 
 SObject ListModule::init(const VecSObject &obj) {
-  auto instptr = new ListModule();
-  auto inst = std::shared_ptr<ListModule>(instptr);
+  auto inst = std::make_shared<ListModule>();
   MapStrFunc funcMap = {
     { "append:", BIND_METH_F(ListModule::append, inst.get(), 1) },
     { "append:WithKey:", BIND_METH_F(ListModule::append, inst.get(), 2) },

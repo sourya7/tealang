@@ -156,19 +156,17 @@ SNodeAst Parser::parseFunctionCall() {
     call->setLeft(parseFunctionCall());
     call->setRight(parseFunctionParam(true));
     break;
-  case Tags::ID:
-  {
+  case Tags::ID: {
     auto tmp = look_;
     move();
-    if(look_->getTag() != Tags::BSQC){
+    if (look_->getTag() != Tags::BSQC) {
       call->setLeft(tmp);
       call->setRight(parseFunctionParam(true)); //[obj some]
-    }
-    else{
+    } else {
       auto param = std::make_shared<ParamAst>();
-      std::string fName = GUARD_CAST<WordToken*>(tmp.get())->getValue();
+      std::string fName = GUARD_CAST<WordToken *>(tmp.get())->getValue();
       param->addParam(fName);
-      call->setRight(param);  // [func]
+      call->setRight(param); // [func]
     }
     break;
   }
@@ -353,8 +351,7 @@ SNodeAst Parser::parseExpr() {
       outstack.push_back(look_);
       move();
       break;
-    case Tags::OP:
-    {
+    case Tags::OP: {
       /*
        * Handle Unary + and -.
        * If OP is the first token, it is unary. Similarly, if the previous token
@@ -365,12 +362,12 @@ SNodeAst Parser::parseExpr() {
        * TODO, we can skip if the op is a UNARY_ADD
        */
       Opc opc = GUARD_CAST<OpToken *>(look_.get())->getValue();
-      if(opc == Opc::SUB){
+      if (opc == Opc::SUB) {
         SToken sndLast;
-        if(linearExpr.size() > 1){
+        if (linearExpr.size() > 1) {
           sndLast = linearExpr[linearExpr.size() - 2];
         }
-        if(sndLast == nullptr || sndLast->getTag() == Tags::OP){
+        if (sndLast == nullptr || sndLast->getTag() == Tags::OP) {
           opc = Opc::UNARY_SUB;
           look_ = std::make_shared<OpToken>(opc, look_->getLineNo());
         }
@@ -436,24 +433,24 @@ SNodeAst Parser::parseIfStmt() {
  * for x in y
  * endfor
  *
- * x is a simple identifier. y is an expression/identifier that represents a 
+ * x is a simple identifier. y is an expression/identifier that represents a
  * iterator
  */
-SNodeAst Parser::parseForStmt() { 
-  //consume the for
+SNodeAst Parser::parseForStmt() {
+  // consume the for
   move();
-  //consume the identifier
+  // consume the identifier
   auto ident = look_;
   move();
-  //consume the in
+  // consume the in
   move();
-  //consume the iterator or an expression that generates an iterator
+  // consume the iterator or an expression that generates an iterator
   auto iter = parseExpr();
-  //parse the body of the loop
+  // parse the body of the loop
   auto body = parseBlock();
-  //consume endfor
+  // consume endfor
   move();
-  return std::make_shared<ForStmtAst>(ident, iter, body); 
+  return std::make_shared<ForStmtAst>(ident, iter, body);
 }
 
 SNodeAst Parser::parseTryStmt() { return nullptr; }

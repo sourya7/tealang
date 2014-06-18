@@ -4,9 +4,9 @@
 #include "WordToken.h"
 
 /*
- * What would the vm do? 
+ * What would the vm do?
  * for stmts are while in disguise. While we have a next element, go on
- * 
+ *
  */
 void ForStmtAst::generateIr(SIrBuilder b) {
   auto forChild = std::make_shared<IrBuilder>(b);
@@ -31,4 +31,3 @@ void ForStmtAst::generateIr(SIrBuilder b) {
   forChild->condJump(forBlk, fakeBlk);
   b->declWhile(forChild);
 }
-

@@ -67,7 +67,8 @@ public:
   int getId(std::string var) {
     int l;
     int id = getId(var, l);
-    if(l != 0) return -1;
+    if (l != 0)
+      return -1;
     return id;
   }
 

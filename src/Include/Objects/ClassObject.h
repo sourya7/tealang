@@ -18,8 +18,6 @@ public:
       : Object(std::make_shared<Value>(this)), codeObject_(codeObject),
         isInstance_(true) {}
   bool isInstance() const { return isInstance_; }
-  SCodeObject getCodeObject() const {
-    return codeObject_;
-  }
+  SCodeObject getCodeObject() const { return codeObject_; }
 };
 #endif

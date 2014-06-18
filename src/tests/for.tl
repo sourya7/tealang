@@ -4,7 +4,7 @@ defclass Range
 
   defcon init
     container = {1,2,3,4,5,6}
-    index = 0
+    index = -1
   endcon
 
   defun next

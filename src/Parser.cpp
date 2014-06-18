@@ -310,12 +310,14 @@ SNodeAst Parser::parseExpr() {
   uint currentLine = look_->getLineNo();
   VecSToken opstack;
   VecSToken outstack;
+  auto linearExpr = std::vector<SToken>();
   bool stop = false;
   // Stop is needed for cases when the expression does not extend whole line
   // Eg. [someFunc: (a+b) ano:b]
   // Here we dont stop at the end of the line, but when we reach the
   // "ano:" PARAM
   while (!stop && (currentLine == look_->getLineNo())) {
+    linearExpr.push_back(look_);
     switch (look_->getTag()) {
     case Tags::BCIO:
       opstack.push_back(look_);
@@ -352,6 +354,28 @@ SNodeAst Parser::parseExpr() {
       move();
       break;
     case Tags::OP:
+    {
+      /*
+       * Handle Unary + and -.
+       * If OP is the first token, it is unary. Similarly, if the previous token
+       * is a OP, we have a unary operator
+       * linearExpr[last] contains the current token
+       * [linearExpr[last-1] contains the previous token
+       *
+       * TODO, we can skip if the op is a UNARY_ADD
+       */
+      Opc opc = GUARD_CAST<OpToken *>(look_.get())->getValue();
+      if(opc == Opc::SUB){
+        SToken sndLast;
+        if(linearExpr.size() > 1){
+          sndLast = linearExpr[linearExpr.size() - 2];
+        }
+        if(sndLast == nullptr || sndLast->getTag() == Tags::OP){
+          opc = Opc::UNARY_SUB;
+          look_ = std::make_shared<OpToken>(opc, look_->getLineNo());
+        }
+      }
+
       while (!opstack.empty() && (opstack.back()->getTag() != Tags::BCIO)) {
         if (getPrecedence(look_) <= getPrecedence(opstack.back())) {
           outstack.push_back(opstack.back());
@@ -362,6 +386,7 @@ SNodeAst Parser::parseExpr() {
       opstack.push_back(look_);
       move();
       break;
+    }
     default:
       stop = true;
       break;

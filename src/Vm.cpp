@@ -2,6 +2,7 @@
 #include "Vm.h"
 #include "Module.h"
 #include "OpCode.h"
+#include "Objects/IntegerObject.h"
 #include "Objects/FunctionObject.h"
 #include "Objects/ClassObject.h"
 #include "CodeObject.h"
@@ -108,6 +109,12 @@ void Vm::execCode(const SCodeObject &c) {
       DEBUG("OP::SUB");
       BIN_OP(-);
       break;
+    case Opc::UNARY_SUB:
+      DEBUG("OP::UNARY_SUB");
+      i = VM_POP();
+      j = std::make_shared<IntegerObject>(0);
+      VM_PUSH(*j - i);
+      break;
     case Opc::LT:
       DEBUG("OP::LT");
       BIN_OP(< );
@@ -177,7 +184,6 @@ void Vm::execCode(const SCodeObject &c) {
       assert(op.hasArgA());
       assert(op.hasArgB());
       i = VM_POP();
-      assert(i->getInt() >= 0);
       codeObject_->storeIdValue(i, op.getArgA(), op.getArgB());
       break;
     case Opc::JMP_IF_ELSE: {

@@ -26,6 +26,8 @@ enum class Opc {
   XOR,
   EQ,
   MOD,
+  UNARY_ADD,
+  UNARY_SUB,
 
   /* Internal OP's */
   LOAD_CONSTANT,

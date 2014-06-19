@@ -9,7 +9,7 @@ SObject BooleanObject::operator==(const SObject &rhs) {
   return FALSE;
 }
 
-std::string BooleanObject::toString() {
+std::string BooleanObject::toString() const {
   if (isTrue())
     return "TRUE";
   return "FALSE";

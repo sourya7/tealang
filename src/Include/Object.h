@@ -57,7 +57,7 @@ protected:
 public:
   static SObject NIL;
   static SObject fromToken(Token *);
-  std::string getName() { return name_; }
+  std::string getName() const { return name_; }
   virtual bool isTrue() const { return !isNil(); }
   virtual bool isBool() const { return false; }
   virtual bool isInteger() const { return false; }
@@ -66,7 +66,7 @@ public:
   virtual bool isNumeral() const { return isInteger() || isDouble(); }
   virtual bool isDouble() const { return value_->getType() == Type::DOUBLE; }
   virtual bool isNil() const { return value_->getType() == Type::NIL; }
-  Type getType() { return value_->getType(); }
+  Type getType() const { return value_->getType(); }
   int getInt() const { return value_->getInt(); }
   int getDouble() const { return value_->getDouble(); }
   bool getBool() const { return value_->getBool(); }
@@ -112,7 +112,7 @@ public:
     assert(false);
     return rhs;
   }
-  virtual std::string toString() { return "<" + name_ + ">"; }
+  virtual std::string toString() const { return "<" + name_ + ">"; }
 };
 
 #endif

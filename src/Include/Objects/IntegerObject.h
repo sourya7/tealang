@@ -4,8 +4,8 @@
 class IntegerObject : public Object {
 public:
   IntegerObject(long l) : Object(std::make_shared<Value>(l)) {}
-  bool isInteger() { return true; }
-  bool isTrue() { return getInt() != 0; }
+  bool isInteger() const { return true; }
+  bool isTrue() const { return getInt() != 0; }
   SObject operator+(const SObject &rhs);
   SObject operator<(const SObject &rhs);
   SObject operator<=(const SObject &rhs);
@@ -16,6 +16,6 @@ public:
   SObject operator==(const SObject &rhs);
   SObject operator!=(const SObject &rhs);
   static long getValue(const SObject &val) { return val->getInt(); }
-  std::string toString();
+  std::string toString() const;
 };
 #endif

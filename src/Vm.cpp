@@ -48,6 +48,7 @@ void Vm::callMethod(const SObject &instance, const SObject &funcName) {
   auto clsObj = std::dynamic_pointer_cast<ClassObject>(instance);
   auto clsCo = clsObj->getCodeObject();
   auto fnId = clsCo->getId(funcName->toString());
+  assert(fnId != -1 && "No function with such name!");
   auto fn = std::dynamic_pointer_cast<FunctionObject>(clsCo->getIdValue(fnId));
   auto fnCo = fn->getCodeObject(clsCo);
   if (fn->isInit()) {

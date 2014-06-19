@@ -7,7 +7,7 @@ SObject StringObject::operator+(const SObject &rhs) {
   return std::make_shared<StringObject>(x + y);
 }
 
-std::string StringObject::toString() { return getString(); }
+std::string StringObject::toString() const { return getString(); }
 
 SObject StringObject::operator==(const SObject &rhs) {
   return toString().compare(rhs->toString()) == 0 ? BooleanObject::TRUE

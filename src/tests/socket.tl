@@ -1,6 +1,6 @@
 var HOST = "localhost"
 var PORT = 5007
-var socket = [Socket initWithAF: "AF_INET" withStream: "SOCK_STREAM"]
+var socket = [Socket initWithAF: Socket.AF_INET withStream: Socket.SOCK_STREAM]
 
 [socket bindHost: HOST andPort: PORT]
 [socket listen: 1]

@@ -4,8 +4,8 @@
 class DoubleObject : public Object {
 public:
   DoubleObject(double d) : Object(std::make_shared<Value>(d)) {}
-  bool isDouble() { return true; }
-  bool isTrue() { return getDouble() != 0; }
+  bool isDouble() const { return true; }
+  bool isTrue() const { return getDouble() != 0; }
   SObject operator+(const SObject &rhs);
   SObject operator*(const SObject &rhs);
   SObject operator-(const SObject &rhs);

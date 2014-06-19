@@ -1,14 +1,14 @@
-defclass Range
+defclass ListIterator
   var container
   var index
 
-  defcon init
-    container = {1,2,3,4,5,6}
+  defcon initWithContainer:c
+    container = c
     index = -1
   endcon
 
   defun next
-    if index <= [container count]
+    if (index + 1) < [container count]
       index = index + 1
       return 1
     endif
@@ -16,11 +16,13 @@ defclass Range
   endfun
 
   defun get
-    return [container at: index]
+    return [container at:index]
   endfun
 endclass
 
-var newRange = [Range init]
-for x in newRange
+
+var list = {1,2,3,4,5,6}
+var rangeIterator = [ListIterator initWithContainer:list]
+for x in rangeIterator 
   [IO println: x]
 endfor

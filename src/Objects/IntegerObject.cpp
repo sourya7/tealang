@@ -22,7 +22,7 @@ SObject IntegerObject::operator>=(const SObject &rhs) { PERFORM_BOOL_OP(>= ) }
 SObject IntegerObject::operator==(const SObject &rhs) { PERFORM_BOOL_OP(== ) }
 SObject IntegerObject::operator!=(const SObject &rhs) { PERFORM_BOOL_OP(!= ) }
 
-std::string IntegerObject::toString() {
+std::string IntegerObject::toString() const {
   long val = getInt();
   std::string str = com::toStr(val);
   return str;

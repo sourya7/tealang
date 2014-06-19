@@ -5,8 +5,8 @@ class BooleanObject : public Object {
 public:
   BooleanObject(bool b) : Object(std::make_shared<Value>(b)) {}
   bool isTrue() const { return getBool(); }
-  bool isBoolean() { return true; }
-  std::string toString();
+  bool isBoolean() const { return true; }
+  std::string toString() const;
   SObject operator==(const SObject &rhs);
   static SObject TRUE;
   static SObject FALSE;

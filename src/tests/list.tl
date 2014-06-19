@@ -1,9 +1,7 @@
-var l = [List init]
-[l append:1]
-[l append:2]
-[l append:3]
-[l append:23]
-[IO println: [l at:0]]
-[IO println: [l at:1]]
-[IO println: [l at:2]]
-[IO println: [l at:3]]
+var l = {1,2,3,4,5,6}
+var index = 4
+
+if (index + 1) < [l count ]
+  [IO println: "L is bigger than index + 1"]
+endif
+

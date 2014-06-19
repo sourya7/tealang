@@ -21,7 +21,7 @@ defclass ListIterator
 endclass
 
 
-var list = {1,2,3,4,5,6}
+var list = {1,2,3,4,5}
 var rangeIterator = [ListIterator initWithContainer:list]
 for x in rangeIterator 
   [IO println: x]

@@ -29,6 +29,9 @@ short getPrecedence(SToken t) {
     return 100;
   OpToken *opt = GUARD_CAST<OpToken *>(t.get());
   switch (opt->getValue()) {
+  case Opc::AND:
+  case Opc::OR:
+    return 0;
   case Opc::LT:
   case Opc::LEQ:
   case Opc::GT:
@@ -389,8 +392,10 @@ SNodeAst Parser::parseExpr() {
       break;
     }
   }
-  for (auto v : opstack)
-    outstack.push_back(v);
+  while (!opstack.empty()){
+    outstack.push_back(opstack.back());
+    opstack.pop_back();
+  }
   int count = outstack.size();
   if (count == 0)
     return std::shared_ptr<NodeAst>(nullptr);

@@ -1,6 +1,10 @@
-var a = 4
-while a != 0
-  [IO println:a]
-  a = a - 1
-endwhile
+defun test
+  var a = 2
+  while a < 40
+    [IO println:a]
+  a = a + 1
+  endwhile
+endfun
+
+[test]
 

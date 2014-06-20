@@ -190,6 +190,7 @@ void Vm::execCode(const SCodeObject &c) {
       assert(op.hasArgA());
       assert(op.hasArgB());
       i = codeObject_->getIdValue(op.getArgA(), op.getArgB());
+      assert(i != nullptr);
       VM_PUSH(i);
       break;
     case Opc::STORE_VALUE:

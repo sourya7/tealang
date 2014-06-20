@@ -13,6 +13,7 @@
                                      : BooleanObject::FALSE;
 
 SObject IntegerObject::operator+(const SObject &rhs) { PERFORM_BIN_OP(+) }
+SObject IntegerObject::operator%(const SObject &rhs) { PERFORM_BIN_OP(%) }
 SObject IntegerObject::operator*(const SObject &rhs) { PERFORM_BIN_OP(*) }
 SObject IntegerObject::operator-(const SObject &rhs) { PERFORM_BIN_OP(-) }
 SObject IntegerObject::operator<(const SObject &rhs) { PERFORM_BOOL_OP(< ) }

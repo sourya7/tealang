@@ -100,11 +100,11 @@ public:
     assert(false);
     return rhs;
   }
-  virtual SObject operator||(const SObject &rhs) {
+  virtual SObject operator==(const SObject &rhs) {
     assert(false);
     return rhs;
   }
-  virtual SObject operator==(const SObject &rhs) {
+  virtual SObject operator%(const SObject &rhs) {
     assert(false);
     return rhs;
   }
@@ -112,6 +112,8 @@ public:
     assert(false);
     return rhs;
   }
+  virtual SObject operator&&(const SObject &rhs);
+  virtual SObject operator||(const SObject &rhs);
   virtual std::string toString() const { return "<" + name_ + ">"; }
 };
 

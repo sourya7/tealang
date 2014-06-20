@@ -116,6 +116,10 @@ void Vm::execCode(const SCodeObject &c) {
       j = std::make_shared<IntegerObject>(0);
       VM_PUSH(*j - i);
       break;
+    case Opc::MOD:
+      DEBUG("OP::MOD");
+      BIN_OP(% );
+      break;
     case Opc::LT:
       DEBUG("OP::LT");
       BIN_OP(< );
@@ -135,6 +139,14 @@ void Vm::execCode(const SCodeObject &c) {
     case Opc::EQ:
       DEBUG("OP::EQ");
       BIN_OP(== );
+      break;
+    case Opc::AND:
+      DEBUG("OP::AND");
+      BIN_OP(&& );
+      break;
+    case Opc::OR:
+      DEBUG("OP::OR");
+      BIN_OP(|| );
       break;
     case Opc::NEQ:
       DEBUG("OP::NEQ");

@@ -3,6 +3,7 @@
 #include "Objects/DoubleObject.h"
 #include "Objects/StringObject.h"
 #include "Objects/IntegerObject.h"
+#include "Objects/BooleanObject.h"
 #include "Token.h"
 #include "RealToken.h"
 #include "NumberToken.h"
@@ -28,4 +29,18 @@ SObject Object::fromToken(Token *t) {
     break;
   }
   return o;
+}
+
+SObject Object::operator&&(const SObject &rhs) {
+  if (isTrue() && rhs->isTrue()) {
+    return BooleanObject::TRUE;
+  }
+  return BooleanObject::FALSE;
+}
+
+SObject Object::operator||(const SObject &rhs) {
+  if (isTrue() || rhs->isTrue()) {
+    return BooleanObject::TRUE;
+  }
+  return BooleanObject::FALSE;
 }

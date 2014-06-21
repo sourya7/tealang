@@ -161,6 +161,7 @@ void Vm::execCode(const SCodeObject &c) {
       DEBUG("OP::WHILE");
       assert(op.hasArgA());
       SCodeObject co = codeObject_->getChild(op.getArgA());
+      co->setParent(codeObject_);
       pushCodeObject(co);
       continue;
     }

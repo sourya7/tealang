@@ -2,7 +2,7 @@ defun sumfib
   var start = 1
   var next = 2
   var sum = 0
-  while next < 40
+  while start < 4000000
     if start % 2 == 0
       sum = sum + start
     endif

@@ -1,5 +1,5 @@
 #include "Modules/MathModule.h"
-#include "Objects/IntegerObject.h"
+#include "Objects/DoubleObject.h"
 #include <cmath>
 
 MathModule::MathModule() : Module("Math") {
@@ -8,10 +8,9 @@ MathModule::MathModule() : Module("Math") {
 }
 
 SObject MathModule::sqrt(const VecSObject &obj) {
-  auto num = obj.back()->getInt();
-  //todo need to implemnet it as double once that is done
-  long sqrtAsInt = ::sqrt(num);
-  auto numObj = std::make_shared<IntegerObject>(sqrtAsInt);
+  auto num = obj.back()->getDouble();
+  double val = ::sqrt(num);
+  auto numObj = std::make_shared<DoubleObject>(val);
   return numObj;
 }
 

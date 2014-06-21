@@ -37,7 +37,7 @@ public:
   Value(Type type) : type_(type) {}
 
   int getInt() const { return long_; }
-  int getDouble() const { return double_; }
+  double getDouble() const { return double_; }
   bool getBool() const { return bool_; }
   std::string getString() const { return string_; }
   SObject getObject() const { return object_; }
@@ -67,8 +67,8 @@ public:
   virtual bool isDouble() const { return value_->getType() == Type::DOUBLE; }
   virtual bool isNil() const { return value_->getType() == Type::NIL; }
   Type getType() const { return value_->getType(); }
-  int getInt() const { return value_->getInt(); }
-  int getDouble() const { return value_->getDouble(); }
+  int getInt() const;
+  double getDouble() const;
   bool getBool() const { return value_->getBool(); }
   std::string getString() const { return value_->getString(); }
   SObject getObject() const { return value_->getObject(); }

@@ -110,7 +110,7 @@ SToken Lexer::parseNumericToken() {
     tmp += peek_;
     readChar();
   } while (isdigit(peek_));
-  return std::make_shared<WordToken>(tmp, Tags::ID, line_);
+  return std::make_shared<RealToken>(com::strTo<double>(tmp), line_);
 }
 
 SToken Lexer::parseIdentifierToken() {
@@ -199,6 +199,13 @@ SToken Lexer::scan() {
   case '>': { IFMATCH2ELSE('=', Opc::GEQ, '>', Opc::RSHIFT, Opc::GT); }
   case '/': {
     readChar();
+    if(peek_ == '/'){
+      // its a comment
+      while(peek_ != '\n'){
+        readChar();
+      }
+      return scan();
+    }
     return std::make_shared<OpToken>(Opc::DIV, line_);
   }
   case '%': {

@@ -7,8 +7,16 @@ public:
   bool isDouble() const { return true; }
   bool isTrue() const { return getDouble() != 0; }
   SObject operator+(const SObject &rhs);
+  SObject operator%(const SObject &rhs);
+  SObject operator<(const SObject &rhs);
+  SObject operator<=(const SObject &rhs);
+  SObject operator>(const SObject &rhs);
+  SObject operator>=(const SObject &rhs);
   SObject operator*(const SObject &rhs);
   SObject operator-(const SObject &rhs);
+  SObject operator==(const SObject &rhs);
+  SObject operator!=(const SObject &rhs);
   static double getValue(SObject &val) { return val->getDouble(); }
+  std::string toString() const;
 };
 #endif

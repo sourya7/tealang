@@ -19,7 +19,9 @@
                                              : BooleanObject::FALSE;
 
 SObject DoubleObject::operator+(const SObject &rhs) { PERFORM_BIN_OP(+) }
-SObject DoubleObject::operator%(const SObject &rhs) { return std::make_shared<IntegerObject>(getInt() % rhs->getInt()); }
+SObject DoubleObject::operator%(const SObject &rhs) {
+  return std::make_shared<IntegerObject>(getInt() % rhs->getInt());
+}
 SObject DoubleObject::operator*(const SObject &rhs) { PERFORM_BIN_OP(*) }
 SObject DoubleObject::operator-(const SObject &rhs) { PERFORM_BIN_OP(-) }
 SObject DoubleObject::operator<(const SObject &rhs) { PERFORM_BOOL_OP(< ) }

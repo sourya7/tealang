@@ -142,7 +142,7 @@ void Vm::execCode(const SCodeObject &c) {
       break;
     case Opc::AND:
       DEBUG("OP::AND");
-      BIN_OP(&& );
+      BIN_OP(&&);
       break;
     case Opc::OR:
       DEBUG("OP::OR");

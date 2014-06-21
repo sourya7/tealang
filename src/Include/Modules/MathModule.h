@@ -13,7 +13,6 @@ typedef std::shared_ptr<MathModule> SMathModule;
 using namespace std::placeholders;
 class MathModule : public Module {
 private:
-
 public:
   MathModule();
   static SObject sqrt(const VecSObject &obj);

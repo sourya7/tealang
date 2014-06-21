@@ -9,8 +9,6 @@ MathModule::MathModule() : Module("Math") {
 
 SObject MathModule::sqrt(const VecSObject &obj) {
   auto num = obj.back()->getDouble();
-  double val = ::sqrt(num);
-  auto numObj = std::make_shared<DoubleObject>(val);
+  auto numObj = std::make_shared<DoubleObject>(::sqrt(num));
   return numObj;
 }
-

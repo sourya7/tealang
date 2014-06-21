@@ -392,7 +392,7 @@ SNodeAst Parser::parseExpr() {
       break;
     }
   }
-  while (!opstack.empty()){
+  while (!opstack.empty()) {
     outstack.push_back(opstack.back());
     opstack.pop_back();
   }

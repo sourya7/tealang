@@ -45,22 +45,19 @@ SObject Object::operator||(const SObject &rhs) {
   return BooleanObject::FALSE;
 }
 
-template <typename T> 
-T getNumeralValue(Type type, SValue value) {
+template <typename T> T getNumeralValue(Type type, SValue value) {
   if (type == Type::INTEGER) {
     return value->getInt();
   } else if (type == Type::DOUBLE) {
     return value->getDouble();
-  } else if (type  == Type::BOOLEAN) {
+  } else if (type == Type::BOOLEAN) {
     return value->getBool();
   } else {
     assert(false && "Attemt to get an int from non-numeral");
   }
 }
 
-int Object::getInt() const {
-  return getNumeralValue<int>(getType(), value_);
-}
+int Object::getInt() const { return getNumeralValue<int>(getType(), value_); }
 
 double Object::getDouble() const {
   return getNumeralValue<double>(getType(), value_);

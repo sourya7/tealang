@@ -199,9 +199,9 @@ SToken Lexer::scan() {
   case '>': { IFMATCH2ELSE('=', Opc::GEQ, '>', Opc::RSHIFT, Opc::GT); }
   case '/': {
     readChar();
-    if(peek_ == '/'){
+    if (peek_ == '/') {
       // its a comment
-      while(peek_ != '\n'){
+      while (peek_ != '\n') {
         readChar();
       }
       return scan();

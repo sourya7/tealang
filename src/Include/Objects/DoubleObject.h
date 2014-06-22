@@ -7,6 +7,7 @@ public:
   bool isDouble() const { return true; }
   bool isTrue() const { return getDouble() != 0; }
   SObject operator+(const SObject &rhs);
+  SObject operator/(const SObject &rhs);
   SObject operator%(const SObject &rhs);
   SObject operator<(const SObject &rhs);
   SObject operator<=(const SObject &rhs);

@@ -156,6 +156,10 @@ void Vm::execCode(const SCodeObject &c) {
       DEBUG("OP::MULT");
       BIN_OP(*);
       break;
+    case Opc::DIV:
+      DEBUG("OP::DIV");
+      BIN_OP(/);
+      break;
     // case Opc::POWER: DEBUG("OP::POWER"); BIN_OP(**); break;
     case Opc::WHILE: {
       DEBUG("OP::WHILE");

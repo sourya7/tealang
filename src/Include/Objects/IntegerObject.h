@@ -8,6 +8,7 @@ public:
   bool isTrue() const { return getInt() != 0; }
   SObject operator+(const SObject &rhs);
   SObject operator%(const SObject &rhs);
+  SObject operator/(const SObject &rhs);
   SObject operator<(const SObject &rhs);
   SObject operator<=(const SObject &rhs);
   SObject operator>(const SObject &rhs);

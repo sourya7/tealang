@@ -19,6 +19,7 @@ enum class NodeType {
   TOKEN,
   VAR,
   RETURN,
+  BREAK,
   CLASS
 };
 class NodeAst {

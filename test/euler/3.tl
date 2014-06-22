@@ -1,4 +1,6 @@
 // naive algorithm. Extra stuff just to test language
+// This wont work as a solution because the number is
+// too big to be held as a long
 
 var primes = {2}
 defun getPrimeAfter:lastPrime

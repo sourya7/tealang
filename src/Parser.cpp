@@ -259,6 +259,10 @@ SNodeAst Parser::parseSingleStmt() {
     move();
     return std::make_shared<NodeAst>(NodeType::RETURN, parseExpr(), nullptr);
     break;
+  case Tags::BREAK:
+    move();
+    return std::make_shared<NodeAst>(NodeType::BREAK, nullptr, nullptr);
+    break;
   default:
     assert(false);
   }

@@ -48,7 +48,9 @@ enum class Tags {
   ENDFUN,   /*297*/
   ENDWHILE, /*298*/
   DEFCON,   /*299*/
-  ENDCON    /*300*/
+  ENDCON,   /*300*/
+  DOT,      /*301*/
+  IMPORT    /*302*/
 };
 
 class Token : public NodeAst {

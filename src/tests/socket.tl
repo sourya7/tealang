@@ -1,3 +1,5 @@
+import Socket
+
 var HOST = "localhost"
 var PORT = 5007
 var socket = [Socket initWithAF: Socket.AF_INET withStream: Socket.SOCK_STREAM]

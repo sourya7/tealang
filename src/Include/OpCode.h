@@ -28,6 +28,7 @@ enum class Opc {
   MOD,
   UNARY_ADD,
   UNARY_SUB,
+  DOT,
 
   /* Internal OP's */
   LOAD_CONSTANT,

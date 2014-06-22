@@ -34,6 +34,7 @@ public:
   SNodeAst parseFunctionParam(bool isCall);
   SNodeAst parseFunctionCall();
   SNodeAst parseExpr();
+  SNodeAst parseImportStmt();
 };
 
 #endif

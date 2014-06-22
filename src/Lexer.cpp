@@ -248,6 +248,10 @@ SToken Lexer::scan() {
     readChar();
     return std::make_shared<Token>(Tags::CSEP, line_);
   }
+  case '.':{
+    readChar();
+    return std::make_shared<OpToken>(Opc::DOT, line_);
+  }
   case '"':
   case '\'': { return parseStringLiteral(); }
   case -1: { return std::make_shared<Token>(Tags::SEOF, line_); }

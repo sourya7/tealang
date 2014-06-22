@@ -40,6 +40,19 @@ void Vm::callModule(const SObject &instance, const SObject &funcName) {
   }
 }
 
+void Vm::getMethodProp(const SObject &instance, const SObject &propName){
+  if(instance->getType() == Type::MODULE){
+    return;
+    //do something about it
+  }
+  auto clsObj = std::dynamic_pointer_cast<ClassObject>(instance);
+  auto classCo = clsObj->getCodeObject();
+  int id = classCo->getId(propName->toString());
+  assert(id != -1);
+  auto value = classCo->getIdValue(id);
+  VM_PUSH(value);
+}
+
 void Vm::callMethod(const SObject &instance, const SObject &funcName) {
   if (instance->getType() == Type::MODULE) {
     Vm::callModule(instance, funcName);
@@ -237,6 +250,13 @@ void Vm::execCode(const SCodeObject &c) {
       auto instance = VM_POP();
       Vm::callMethod(instance, method);
       continue;
+    }
+    case Opc::DOT: {
+      DEBUG("OP::DOT");
+      i = VM_POP();
+      j = VM_POP();
+      Vm::getMethodProp(j,i);
+      break;
     }
     case Opc::CALL: {
       DEBUG("OP::CALL");

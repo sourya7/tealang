@@ -6,6 +6,7 @@
  *
  */
 #include <istream>
+#include <fstream>
 #include <iostream>
 #include "Debug.h"
 #include "Parser.h"
@@ -488,6 +489,45 @@ SNodeAst Parser::parseWhileStmt() {
   return stmt;
 }
 
+SNodeAst Parser::parseImportStmt() {
+  static std::map<std::string,SNodeAst> parsedImports;
+
+  //consume 'import'
+  auto line = look_->getLineNo();
+  std::vector<std::string> path;
+  move();
+  while(look_->getLineNo() == line){
+    auto lw = GUARD_CAST<WordToken *>(look_.get());
+    path.push_back(lw->getValue());
+    move();
+  }
+  //can either be a * or a function/property/class
+  std::string importObj = path.back();
+  path.pop_back();
+  SNodeAst root;
+  if(path.size() > 0){
+    std::string filePath = "";
+    for(auto i : path){
+      //TODO, dont hardcode the seperator
+      filePath += i + '/';
+    }
+    //get rid of the last '/'.
+    filePath.pop_back();
+    if (parsedImports.find(filePath) == parsedImports.end()) {
+      std::ifstream src;
+      src.open(filePath.c_str(), std::ifstream::in);
+      auto parser = std::make_shared<Parser>(&src);
+      root = parser->parse();
+      parsedImports[filePath] = root;
+    }
+    else{
+      root = parsedImports[filePath];
+    }
+  }
+
+  return std::make_shared<ImportAst>(importObj, root);
+}
+
 /*
  *                             SeqAST
  *                         STMT   SEQ
@@ -520,6 +560,9 @@ SNodeAst Parser::parseBlock() {
       break;
     case Tags::WHILE:
       tmp = parseWhileStmt();
+      break;
+    case Tags::IMPORT:
+      tmp = parseImportStmt();
       break;
     // block ends
     case Tags::SEOF:

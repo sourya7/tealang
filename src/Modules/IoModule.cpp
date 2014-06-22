@@ -10,19 +10,19 @@ IoModule::IoModule() : Module("IO") {
 
 SObject IoModule::println(const VecSObject &v) {
   std::string s = v.back()->toString();
-  std::cout << s << "\n";
+  std::cerr << s << "\n";
   return nullptr;
 }
 
 SObject IoModule::print(const VecSObject &v) {
   std::string s = v.back()->toString();
-  std::cout << s;
+  std::cerr << s;
   return nullptr;
 }
 
 SObject IoModule::printf(const VecSObject &v) {
   std::string f = v[0]->toString();
   std::string s = v[1]->toString();
-  std::cout << f << " " << s;
+  std::cerr  << f << " " << s;
   return nullptr;
 }

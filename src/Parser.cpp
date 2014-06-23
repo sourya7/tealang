@@ -489,6 +489,18 @@ SNodeAst Parser::parseWhileStmt() {
   return stmt;
 }
 
+/*
+ * import Socket
+ * import IO
+ * import Animals
+ * import doSomthWithW:andB: from Animals
+ * import Dog from Animals
+ *
+ * [Animals::Dog initSound:"Woof!"]
+ * [Animals::Cat initSound:"Purr!"]
+ * [Animals::doSomthWithW: w andB:b]
+ * [Socket::Socket initWithW:w andY:y]
+ */
 SNodeAst Parser::parseImportStmt() {
   static std::map<std::string,SNodeAst> parsedImports;
 
@@ -524,8 +536,8 @@ SNodeAst Parser::parseImportStmt() {
       root = parsedImports[filePath];
     }
   }
-
-  return std::make_shared<ImportAst>(importObj, root);
+  return nullptr;
+  //return std::make_shared<ImportAst>(importObj, root);
 }
 
 /*

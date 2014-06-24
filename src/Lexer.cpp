@@ -35,7 +35,8 @@ map<string, Tags> TokenMap{ { "defclass", Tags::DEFCLASS },
                             { "var", Tags::VAR },
                             { "isa", Tags::ISA },
                             { "return", Tags::RETURN },
-                            { "break", Tags::BREAK } };
+                            { "break", Tags::BREAK },
+                            { "import", Tags::IMPORT} };
 
 /*
 * Some helper functions for converting from numeric string types

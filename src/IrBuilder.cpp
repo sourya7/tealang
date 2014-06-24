@@ -8,6 +8,15 @@
 #include "Objects/FunctionObject.h"
 #include "Objects/ClassObject.h"
 
+SIrBuilder IrBuilder::globalIrBuilder_;
+SIrBuilder IrBuilder::getGlobalIrBuilder()
+{
+  if(globalIrBuilder_ == nullptr){
+    globalIrBuilder_ = std::make_shared<IrBuilder>();
+  }
+  return globalIrBuilder_;
+}
+
 IrBuilder::IrBuilder() { codeObject_ = std::make_shared<CodeObject>(); }
 IrBuilder::IrBuilder(SIrBuilder b) {
   auto parent = b->getCodeObject();

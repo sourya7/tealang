@@ -15,7 +15,7 @@ public:
     codeObject_->setBlockType(BlockType::CLASS);
   }
   ClassObject(SCodeObject codeObject)
-      : Object(std::make_shared<Value>(this)), codeObject_(codeObject),
+      : Object(std::make_shared<Value>(Type::CLASS)), codeObject_(codeObject),
         isInstance_(true) {}
   bool isInstance() const { return isInstance_; }
   SCodeObject getCodeObject() const { return codeObject_; }

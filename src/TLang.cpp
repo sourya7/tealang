@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     cerr << "Error: Need a file name\n";
   src.open(argv[1], std::ifstream::in);
 
-  SIrBuilder globalScope = std::make_shared<IrBuilder>();
+  SIrBuilder globalScope = IrBuilder::getGlobalIrBuilder();
 
   Module::init();
   Module::loadDefaults(globalScope);
@@ -22,6 +22,8 @@ int main(int argc, char *argv[]) {
   parser = std::make_shared<Parser>(&src);
   SNodeAst root = parser->parse();
   root->generateIr(globalScope);
+  // we should require a main function so that code from imported
+  // modules are not run
   Vm::execCode(globalScope->getCodeObject());
   src.close();
 }

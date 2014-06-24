@@ -18,7 +18,8 @@ void ImportAst::generateIr(SIrBuilder b) {
     if (Module::isKnownModule(moduleName_)) {
       Module::loadModule(moduleName_, builder);
     } else {
-      assert(false && "Unknown Module!");
+      std::cerr << "Trying to load " << moduleName_ << " failed!\n";
+      assert(false);
     }
   } else {
     // TODO, this leads to a bug if the new file has code outside blocks

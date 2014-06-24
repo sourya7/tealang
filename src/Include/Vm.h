@@ -19,8 +19,9 @@ private:
   static void callMethod(const SObject &instance, const SObject &funcName);
   static void callModule(const SObject &instance, const SObject &funcName);
   static void getMethodProp(const SObject &instance, const SObject &propName);
+  static void execCode(const SCodeObject &c);
 
 public:
-  static void execCode(const SCodeObject &c);
+  static void execMain(const SCodeObject &c, int argc, char *args[]);
 };
 #endif

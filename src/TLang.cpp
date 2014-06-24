@@ -22,8 +22,6 @@ int main(int argc, char *argv[]) {
   parser = std::make_shared<Parser>(&src);
   SNodeAst root = parser->parse();
   root->generateIr(globalScope);
-  // we should require a main function so that code from imported
-  // modules are not run
-  Vm::execCode(globalScope->getCodeObject());
+  Vm::execMain(globalScope->getCodeObject(), argc, argv);
   src.close();
 }

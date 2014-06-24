@@ -5,6 +5,7 @@
 #include "Objects/IntegerObject.h"
 #include "Objects/FunctionObject.h"
 #include "Objects/ClassObject.h"
+#include "Modules/ListModule.h"
 #include "CodeObject.h"
 
 #define VM_POP()                                                               \
@@ -98,6 +99,19 @@ void Vm::pushCodeObject(const SCodeObject &c) {
   vecOp_ = c->getOpCode();
   coStack_.push_back(codeObject_);
   opsStack_.push_back(std::make_pair(vecOp_, opId_));
+}
+
+void Vm::execMain(const SCodeObject &c, int argc, char *args[]) {
+  int mainId = c->getId("main:");
+  assert(mainId != -1 && "We need a main function!");
+  SObject fnob = c->getIdValue(mainId);
+  // make a list out of the char array
+  // push the args into the vm stack
+  auto arglist = ListModule::fromStringArray(argc, args);
+  VM_PUSH(arglist);
+  auto fn = std::dynamic_pointer_cast<FunctionObject>(fnob);
+  SCodeObject cc = fn->getCodeObject();
+  execCode(cc);
 }
 
 void Vm::execCode(const SCodeObject &c) {

@@ -22,6 +22,7 @@
 #include "Ast/ClassStmtAst.h"
 #include "Ast/ForStmtAst.h"
 #include "Ast/ListAst.h"
+#include "Ast/ImportAst.h"
 #include "IrBuilder.h"
 #include "OpToken.h"
 
@@ -493,51 +494,50 @@ SNodeAst Parser::parseWhileStmt() {
  * import Socket
  * import IO
  * import Animals
- * import doSomthWithW:andB: from Animals
- * import Dog from Animals
  *
- * [Animals::Dog initSound:"Woof!"]
- * [Animals::Cat initSound:"Purr!"]
- * [Animals::doSomthWithW: w andB:b]
- * [Socket::Socket initWithW:w andY:y]
+ * [Dog initSound:"Woof!"]
+ * [Cat initSound:"Purr!"]
+ * [doSomthWithW:w andB:b]
+ * [Socket initWithAF:Socket.AF_INET andBF:Socket.BF_INET]
  */
 SNodeAst Parser::parseImportStmt() {
-  static std::map<std::string,SNodeAst> parsedImports;
+  static std::map<std::string, SNodeAst> parsedImports;
 
-  //consume 'import'
+  // consume 'import'
+  move();
+
   auto line = look_->getLineNo();
   std::vector<std::string> path;
-  move();
-  while(look_->getLineNo() == line){
+  while (look_->getLineNo() == line) {
     auto lw = GUARD_CAST<WordToken *>(look_.get());
     path.push_back(lw->getValue());
     move();
   }
-  //can either be a * or a function/property/class
-  std::string importObj = path.back();
+  // can either be a * or a function/property/class
+  std::string fileName = path.back();
+  std::string filePath = "";
   path.pop_back();
   SNodeAst root;
-  if(path.size() > 0){
-    std::string filePath = "";
-    for(auto i : path){
-      //TODO, dont hardcode the seperator
+  if (path.size() > 0) {
+    for (auto i : path) {
+      // TODO, dont hardcode the seperator
       filePath += i + '/';
     }
-    //get rid of the last '/'.
-    filePath.pop_back();
-    if (parsedImports.find(filePath) == parsedImports.end()) {
-      std::ifstream src;
-      src.open(filePath.c_str(), std::ifstream::in);
+  }
+  filePath += fileName + ".tl";
+  if (parsedImports.find(filePath) == parsedImports.end()) {
+    std::ifstream src;
+    src.open(filePath.c_str(), std::ifstream::in);
+    if (src) {
       auto parser = std::make_shared<Parser>(&src);
       root = parser->parse();
       parsedImports[filePath] = root;
     }
-    else{
-      root = parsedImports[filePath];
-    }
+    src.close();
+  } else {
+    root = parsedImports[filePath];
   }
-  return nullptr;
-  //return std::make_shared<ImportAst>(importObj, root);
+  return std::make_shared<ImportAst>(fileName, root);
 }
 
 /*

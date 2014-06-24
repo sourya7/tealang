@@ -66,6 +66,7 @@ public:
   virtual bool isNumeral() const { return isInteger() || isDouble(); }
   virtual bool isDouble() const { return value_->getType() == Type::DOUBLE; }
   virtual bool isNil() const { return value_->getType() == Type::NIL; }
+  virtual bool isModule() const { return value_->getType() == Type::MODULE; }
   Type getType() const { return value_->getType(); }
   int getInt() const;
   double getDouble() const;

@@ -31,6 +31,7 @@ public:
   static void addModule(std::string name, SModule module) {
     modules_[name] = module;
   }
+  static bool isKnownModule(std::string moduleName);
   /*
  * LoadModule may load a module from the file or from the preloaded list of
  * modules

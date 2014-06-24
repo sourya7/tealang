@@ -9,9 +9,8 @@
 #include "Objects/ClassObject.h"
 
 SIrBuilder IrBuilder::globalIrBuilder_;
-SIrBuilder IrBuilder::getGlobalIrBuilder()
-{
-  if(globalIrBuilder_ == nullptr){
+SIrBuilder IrBuilder::getGlobalIrBuilder() {
+  if (globalIrBuilder_ == nullptr) {
     globalIrBuilder_ = std::make_shared<IrBuilder>();
   }
   return globalIrBuilder_;

@@ -41,7 +41,10 @@ void NodeAst::generateIr(SIrBuilder builder) {
       break;
     }
   }
-  case NodeType::BREAK: { builder->breakFlow(); break; }
+  case NodeType::BREAK: {
+    builder->breakFlow();
+    break;
+  }
   default:
     assert(false && "This should not be called!");
   }

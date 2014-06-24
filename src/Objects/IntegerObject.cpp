@@ -17,7 +17,7 @@ SObject IntegerObject::operator%(const SObject &rhs) {
   return std::make_shared<IntegerObject>(getInt() % rhs->getInt());
 }
 SObject IntegerObject::operator*(const SObject &rhs) { PERFORM_BIN_OP(*) }
-SObject IntegerObject::operator/(const SObject &rhs) { 
+SObject IntegerObject::operator/(const SObject &rhs) {
   return std::make_shared<DoubleObject>(getInt() / rhs->getDouble());
 }
 SObject IntegerObject::operator-(const SObject &rhs) { PERFORM_BIN_OP(-) }

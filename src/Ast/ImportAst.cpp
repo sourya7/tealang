@@ -13,12 +13,11 @@
  */
 void ImportAst::generateIr(SIrBuilder b) {
   SIrBuilder builder = IrBuilder::getGlobalIrBuilder();
-  if(left_ == nullptr){
-    //we might have a module
-    if(Module::isKnownModule(moduleName_)){
+  if (left_ == nullptr) {
+    // we might have a module
+    if (Module::isKnownModule(moduleName_)) {
       Module::loadModule(moduleName_, builder);
-    }
-    else{
+    } else {
       assert(false && "Unknown Module!");
     }
   } else {

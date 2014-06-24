@@ -22,7 +22,7 @@ void ExprAst::generateIr(SIrBuilder builder) {
       // If the next token is a 'dot' operator, we cannot dererence the value
       // now
       if ((i + 1 < expr_.size()) && expr_[i + 1]->getTag() == Tags::OP) {
-        auto op = GUARD_CAST<OpToken *>(expr_[i+1].get());
+        auto op = GUARD_CAST<OpToken *>(expr_[i + 1].get());
         if (op->getValue() == Opc::DOT) {
           builder->loadConst(std::make_shared<StringObject>(wt->getValue()));
           continue;

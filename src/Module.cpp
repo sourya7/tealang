@@ -37,7 +37,6 @@ bool Module::isKnownModule(std::string moduleName) {
   return modules_.find(moduleName) != modules_.end();
 }
 
-
 void Module::loadDefaults(const SIrBuilder &builder) {
   loadModule("List", builder);
 }

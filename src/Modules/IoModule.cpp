@@ -23,6 +23,6 @@ SObject IoModule::print(const VecSObject &v) {
 SObject IoModule::printf(const VecSObject &v) {
   std::string f = v[0]->toString();
   std::string s = v[1]->toString();
-  std::cerr  << f << " " << s;
+  std::cerr << f << " " << s;
   return nullptr;
 }

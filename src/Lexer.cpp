@@ -36,7 +36,7 @@ map<string, Tags> TokenMap{ { "defclass", Tags::DEFCLASS },
                             { "isa", Tags::ISA },
                             { "return", Tags::RETURN },
                             { "break", Tags::BREAK },
-                            { "import", Tags::IMPORT} };
+                            { "import", Tags::IMPORT } };
 
 /*
 * Some helper functions for converting from numeric string types
@@ -249,7 +249,7 @@ SToken Lexer::scan() {
     readChar();
     return std::make_shared<Token>(Tags::CSEP, line_);
   }
-  case '.':{
+  case '.': {
     readChar();
     return std::make_shared<OpToken>(Opc::DOT, line_);
   }

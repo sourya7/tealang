@@ -23,6 +23,7 @@
 class IrBuilder {
 private:
   SCodeObject codeObject_;
+  static SIrBuilder globalIrBuilder_;
 
 public:
   IrBuilder();
@@ -47,6 +48,7 @@ public:
   void returnValue(bool hasArg = true);
   void returnNoValue() { returnValue(false); }
   SCodeObject getCodeObject();
+  static SIrBuilder getGlobalIrBuilder();
 };
 
 #endif

@@ -27,6 +27,8 @@ private:
 public:
   ListModule();
   static SObject init(const VecSObject &obj);
+  static SObject initInternal();
+  static SObject fromStringArray(int count, char *arr[]);
   SObject append(const VecSObject &obj);
   SObject count(const VecSObject &obj);
   SObject get(const VecSObject &obj);

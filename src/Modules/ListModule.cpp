@@ -1,8 +1,6 @@
 #include "Modules/ListModule.h"
 #include "Objects/IntegerObject.h"
-
-// register the module.. TODO: A better way?
-//
+#include "Objects/StringObject.h"
 
 SObject ListModule::init(const VecSObject &obj) {
   auto inst = std::make_shared<ListModule>();
@@ -22,6 +20,19 @@ SObject ListModule::init(const VecSObject &obj) {
   return inst;
 }
 
+SObject ListModule::initInternal() {
+  VecSObject obj;
+  return init(obj);
+}
+
+SObject ListModule::fromStringArray(int count, char *arr[]) {
+  VecSObject obj;
+  for (int i = 0; i < count; i++) {
+    obj.push_back(std::make_shared<StringObject>(arr[i]));
+  }
+  return init(obj);
+}
+
 ListModule::ListModule() : Module("List") {
   MapStrFunc initMap = { { "init", BIND_INIT_F(ListModule::init, 0) } };
   setInitMap(initMap);
@@ -38,6 +49,8 @@ SObject ListModule::count(const VecSObject &obj) {
 }
 
 SObject ListModule::get(const VecSObject &obj) {
+  size_t index = IntegerObject::getValue(obj.back());
+  assert(index < container_.size() && "Index larger that what is inside");
   return container_[IntegerObject::getValue(obj.back())];
 }
 

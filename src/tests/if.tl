@@ -1,3 +1,5 @@
+import IO
+
 var a = 2
 if a == 3
   [IO println: "A is equal to 3"]

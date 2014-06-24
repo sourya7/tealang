@@ -1,3 +1,5 @@
+import IO
+
 defun bla:a
   if a > 2
       return 1

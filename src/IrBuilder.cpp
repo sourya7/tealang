@@ -69,7 +69,8 @@ void IrBuilder::declVar(std::string v) {
 }
 
 void IrBuilder::declVar(std::string v, SObject o) {
-  assert(codeObject_->getId(v) == -1 && "Variable already declared!");
+  if (!o->isModule())
+    assert(codeObject_->getId(v) == -1 && "Variable already declared!");
   int id = codeObject_->pushId(v);
   codeObject_->storeIdValue(o, id);
 }

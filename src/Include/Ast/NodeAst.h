@@ -20,7 +20,8 @@ enum class NodeType {
   VAR,
   RETURN,
   BREAK,
-  CLASS
+  CLASS,
+  IMPORT
 };
 class NodeAst {
 protected:

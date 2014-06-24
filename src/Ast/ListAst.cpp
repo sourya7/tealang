@@ -8,8 +8,7 @@ void ListAst::addPair(SNodeAst l, SNodeAst r) {
 }
 
 void ListAst::generateIr(SIrBuilder builder) {
-  VecSObject obj;
-  auto list = ListModule::init(obj);
+  auto list = ListModule::initInternal();
   for (auto v : container_) {
     // TODO make dict work
     v->getRight()->generateIr(builder);

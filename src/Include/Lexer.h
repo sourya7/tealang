@@ -8,7 +8,7 @@
 class Lexer {
 private:
   char peek_;
-  unsigned long line_;
+  unsigned long line_ = 0;
   std::istream *inputStream_;
 
   SToken parseNumericToken();

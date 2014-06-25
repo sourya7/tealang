@@ -2,6 +2,6 @@ import IO
 import animal
 
 defun main:args
-  var Dog = [Animal initWithSound:[args at:2]]
+  var Dog = [Animal initWithSound:[args at:0]]
   [Dog makeSound]
 endfun

@@ -16,8 +16,8 @@ void ClassStmtAst::generateIr(SIrBuilder b) {
 
   // forward reference to the class
   b->declVar(wt->getValue());
-
   auto child = std::make_shared<IrBuilder>(b);
+  if(isa_.size() > 0) child->declClassIsa(isa_);
   right_->generateIr(child);
   b->declClass(wt->getValue(), child);
 }

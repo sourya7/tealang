@@ -112,10 +112,56 @@ void IrBuilder::callFunc(std::string fn) {
   codeObject_->pushOp(Op(Opc::CALL, id, l));
 }
 
+/*
+ *     Animal->Global | We don't have to do anything as there is no inheritance
+ *
+ *     defclass Dog isa Animal | Here dog is inheriting from animal. Initially 
+ *     we have Dog->Global. We wish to convert that to Dog->Animal->Global
+ *
+ *     Dog->Animal->Global
+ *
+ *     GermanSheperd -> Dog -> Animal -> Global
+ */
+
+SCodeObject getCodeBeforeLast(const SCodeObject& obj){
+  auto tmpCo = obj;
+  SCodeObject prev;
+  while(tmpCo->getParent() != nullptr){
+    prev = tmpCo;
+    tmpCo = tmpCo->getParent();
+  }
+  return prev;
+}
+
+void IrBuilder::declClassIsa(std::vector<std::string> isa) {  
+  //get to the global object in the current code object
+  //assumption: A class can only be defined in the global ns 
+  auto prev = getCodeBeforeLast(codeObject_);
+  assert(prev != nullptr);
+  //we now have the global in tmpCo and the parent pointing to it in prev
+  //we need to change the value in prev to point to our isa class
+
+  for (auto cls : isa) {
+    int level = 0;
+    int clsId = codeObject_->getId(cls, level);
+    assert(clsId != -1 && "Class Does not exist to inherit!");
+    //gives me the object for the cls
+    SObject object = codeObject_->getIdValue(clsId, level);
+    auto clsO = std::dynamic_pointer_cast<ClassObject>(object);
+    //the code object for that class
+    auto clsCo = clsO->getCodeObject();
+    //make a copy of it as we don't want to modify the original
+    auto clsCoCp = std::make_shared<CodeObject>(*clsCo);
+    prev->setParent(clsCoCp);
+    prev = getCodeBeforeLast(clsCoCp);
+  }
+}
+
 void IrBuilder::declClass(std::string n, SIrBuilder b) {
   // Todo, add a default init if there is none
   auto b_co = b->getCodeObject();
   auto cls_o = std::make_shared<ClassObject>(n, b_co);
+
   int id = codeObject_->getId(n);
   assert(id != -1);
   codeObject_->storeIdValue(cls_o, id);

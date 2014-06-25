@@ -22,6 +22,6 @@ int main(int argc, char *argv[]) {
   parser = std::make_shared<Parser>(&src);
   SNodeAst root = parser->parse();
   root->generateIr(globalScope);
-  Vm::execMain(globalScope->getCodeObject(), argc, argv);
+  Vm::execMain(globalScope->getCodeObject(), argc-1, argv+1);
   src.close();
 }

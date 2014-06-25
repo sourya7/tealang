@@ -2,6 +2,7 @@
 #define T_CLASSOBJ_H
 #include "Object.h"
 #include "CodeObject.h"
+
 class ClassObject : public Object {
 private:
   SCodeObject codeObject_;

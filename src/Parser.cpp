@@ -472,7 +472,22 @@ SNodeAst Parser::parseClassStmt() {
   // TODO handle 'isa' for class inheritencec;
   auto className = look_;
   move();
-  auto classAst = std::make_shared<ClassStmtAst>(className, parseBlock());
+  std::vector<std::string> isa;
+  if(look_->getTag() == Tags::ISA){
+    move();
+    uint line = look_->getLineNo();
+    while(line == look_->getLineNo()){
+      auto lw = GUARD_CAST<WordToken *>(look_.get());
+      isa.push_back(lw->getValue());
+      move();
+      if(look_->getTag() == Tags::CSEP){
+        move();
+      }
+    }
+    assert(isa.size() > 0 && "Invalid ISA syntax");
+  }
+  auto block = parseBlock();
+  auto classAst = std::make_shared<ClassStmtAst>(className, block, isa);
 
   // consume the endclass
   move();

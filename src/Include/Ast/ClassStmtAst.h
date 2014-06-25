@@ -4,8 +4,11 @@
 #include "NodeAst.h"
 
 class ClassStmtAst : public NodeAst {
+private:
+  std::vector<std::string> isa_;
 public:
-  ClassStmtAst(SNodeAst n, SNodeAst b) : NodeAst(NodeType::CLASS, n, b) {};
+  ClassStmtAst(SNodeAst n, SNodeAst b, std::vector<std::string> i)
+      : NodeAst(NodeType::CLASS, n, b), isa_(i) {};
   void generateIr(SIrBuilder builder);
 };
 

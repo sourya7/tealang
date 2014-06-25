@@ -38,6 +38,7 @@ public:
   void callMethod(std::string method);
   void declFunc(bool i, std::string n, int ac, SIrBuilder f);
   void declClass(std::string n, SIrBuilder b);
+  void declClassIsa(std::vector<std::string> i);
   void declCFunc(std::string n, int ac);
   void declWhile(SIrBuilder whileBlk);
   void condJump(SIrBuilder ifBlk);

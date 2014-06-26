@@ -1,6 +1,7 @@
 import IO
 
 defun main:args
-  [IO println: [Integer fromStr:[args at:1]]]
+  [IO println: "Got: " + [args at:1]]
+  [IO println: [String fromObj:[args at:1]]]
 endfun
 

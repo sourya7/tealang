@@ -1,4 +1,3 @@
-#include <cstring>
 #include "Debug.h"
 #include "IrBuilder.h"
 #include "Objects/StringObject.h"

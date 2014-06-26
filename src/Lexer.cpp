@@ -69,19 +69,21 @@ double floatFromFloat(string floatStr) {
 }
 
 SToken Lexer::parseSpecialNumber() {
+  string tmp = "0";
   bool isHex = peek_ == 'x';
   bool isOctal = isdigit(peek_);
   bool isBinary = peek_ == 'b';
-  if (isHex || isBinary)
+  if (isHex || isBinary) {
+    tmp += peek_;
     readChar();
+  }
   if (isHex || isOctal || isBinary) {
-    string tmp;
     do {
       tmp += peek_;
       readChar();
     } while ((isHex && isxdigit(peek_)) || (isOctal && isdigit(peek_)) ||
              (isBinary && (peek_ == '0' || peek_ == '1')));
-    return std::make_shared<WordToken>(tmp, Tags::ID, line_);
+    return std::make_shared<NumberToken>(com::fromStr(tmp), line_);
 
     /* TODO use these instead
     if(isHex) return new NumberTok(decFromHex(tmp), line_);

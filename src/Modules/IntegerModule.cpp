@@ -1,6 +1,7 @@
 #include "Modules/IntegerModule.h"
 #include "Objects/IntegerObject.h"
 #include "Common.h"
+#include <string>
 
 IntegerModule::IntegerModule() : Module("IO") {
   MapStrFunc funcMap = { { "fromStr:", BIND_INIT_F(IntegerModule::fromStr, 1) },
@@ -10,7 +11,7 @@ IntegerModule::IntegerModule() : Module("IO") {
 
 SObject IntegerModule::fromStr(const VecSObject &v) {
   auto obj = v.back();
-  long num = com::strTo<long>(obj->toString());
+  long num = com::fromStr(obj->toString());
   return std::make_shared<IntegerObject>(num);
 }
 

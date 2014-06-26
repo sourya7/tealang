@@ -1,5 +1,6 @@
 #include "Module.h"
 #include "IrBuilder.h"
+#include "Objects/BooleanObject.h"
 
 std::map<std::string, SModule> Module::modules_;
 SObject Module::call(const SObject &instance, const SObject &method,
@@ -38,6 +39,9 @@ bool Module::isKnownModule(std::string moduleName) {
 }
 
 void Module::loadDefaults(const SIrBuilder &builder) {
+  builder->declVar("true", BooleanObject::TRUE);
+  builder->declVar("false", BooleanObject::FALSE);
+
   loadModule("List", builder);
   loadModule("Dict", builder);
   loadModule("String", builder);

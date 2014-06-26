@@ -25,6 +25,20 @@ template <typename T> T strTo(std::string tmp) {
   in >> output;
   return output;
 }
+
+inline long fromStr(std::string num) {
+  if (num[0] == '0') {
+    if (num[1] == 'x') {
+      return std::stol(num, 0, 16);
+    } else if (isdigit(num[1])) {
+      return std::stol(num, 0, 8);
+    } else if (num[1] == 'b') {
+      num = num.substr(2);
+      return std::stol(num,0,2);
+    }
+  }
+  return std::stol(num, 0, 10);
+}
 }
 
 class Token;

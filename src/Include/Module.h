@@ -2,14 +2,17 @@
 #define T_MODULE_H
 
 #include "Object.h"
+typedef std::map<std::string, SModule> MapSModule;
+typedef std::map<std::string, SObject> MapStrProp;
 
 class Module : public Object {
 private:
-  static std::map<std::string, SModule> modules_;
+  static MapSModule modules_;
   std::string moduleName_;
   bool loadDefault_ = false;
   MapStrFunc funcMap_;
   MapStrFunc initMap_;
+  MapStrProp propMap_;
   bool isInstance_ = false;
 
 protected:
@@ -21,6 +24,7 @@ protected:
   }
   void setInitMap(MapStrFunc initMap) { initMap_ = initMap; }
   void setFuncMap(MapStrFunc funcMap) { funcMap_ = funcMap; }
+  void setPropMap(MapStrProp propMap) { propMap_ = propMap; }
   void setInstance() { isInstance_ = true; }
 
 public:

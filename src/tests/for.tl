@@ -1,5 +1,5 @@
 import IO
-defclass ListIterator
+defclass SomeClassIter 
   var container
   var index
 
@@ -9,7 +9,7 @@ defclass ListIterator
   endcon
 
   defun next
-    if (index + 1) < [container count]
+    if (index + 1) < [container size]
       index = index + 1
       return 1
     endif
@@ -21,9 +21,20 @@ defclass ListIterator
   endfun
 endclass
 
+defclass SomeClass
+  var list
+  defcon init
+    list = {1,2,3,4,5}
+  endcon
+  defun __iter__
+    var rangeIterator = [SomeClassIter initWithContainer:list]
+    return rangeIterator
+  endfun
+endclass
 
-var list = {1,2,3,4,5}
-var rangeIterator = [ListIterator initWithContainer:list]
-for x in rangeIterator 
-  [IO println: x]
-endfor
+defun main:args
+  var sc = [SomeClass init]
+  for x in sc
+    [IO println: x]
+  endfor
+endfun

@@ -2,16 +2,31 @@
 #include "Objects/IntegerObject.h"
 #include "Objects/StringObject.h"
 
+
+/*
+ * var list = {1,2,3,4,6]
+ * var listIter = [list __iter__] 
+ */
+SObject ListModule::getIterator(const VecSObject &obj){
+  auto iterator = std::make_shared<ListIterator>(&container_); 
+  return iterator;
+}
+
 SObject ListModule::init(const VecSObject &obj) {
   auto inst = std::make_shared<ListModule>();
   MapStrFunc funcMap = {
     { "append:", BIND_METH_F(ListModule::append, inst.get(), 1) },
-    { "append:WithKey:", BIND_METH_F(ListModule::append, inst.get(), 2) },
-    { "count", BIND_METH_F(ListModule::count, inst.get(), 0) },
+    { "size", BIND_METH_F(ListModule::count, inst.get(), 0) },
     { "at:", BIND_METH_F(ListModule::get, inst.get(), 1) },
     { "reverse", BIND_METH_F(ListModule::reverse, inst.get(), 0) },
-    { "insertVal:At:", BIND_METH_F(ListModule::insert, inst.get(), 2) }
+    { "insertVal:At:", BIND_METH_F(ListModule::insert, inst.get(), 2) },
+    { "__iter__", BIND_METH_F(ListModule::getIterator, inst.get(), 0) }
   };
+  /*
+  MapStrProp propMap = {
+    { "__iter__", std::make_shared<ListIterator>(&(inst->container_))}
+  }
+  */
   inst->setFuncMap(funcMap);
   inst->setInstance();
   if (obj.size() > 0) {

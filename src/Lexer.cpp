@@ -117,7 +117,8 @@ SToken Lexer::parseNumericToken() {
 
 SToken Lexer::parseIdentifierToken() {
   string tmp;
-  while (isalpha(peek_) || isdigit(peek_)) {
+  //TODO, make sure that the first digit is not a number
+  while (isalpha(peek_) || isdigit(peek_) || peek_ == '_') {
     tmp += peek_;
     readChar();
   }
@@ -260,8 +261,11 @@ SToken Lexer::scan() {
   case '=': {
     if (readAndMatch('='))
       return std::make_shared<OpToken>(Opc::EQ, line_);
-    else
-      return std::make_shared<WordToken>('=', Tags::ASSIGN, line_);
+    else if (peek_ == '>') {
+      readChar();
+      return std::make_shared<Token>(Tags::DSEP, line_);
+    } else
+      return std::make_shared<Token>(Tags::ASSIGN, line_);
   }
   default: {
     return isdigit(peek_) ? parseNumericToken() : parseIdentifierToken();

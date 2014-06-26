@@ -1,12 +1,14 @@
 import IO
 
 defun test
-  var a = 2
+  var a = 0
   while a < 40
     [IO println:a]
     a = a + 1
   endwhile
 endfun
 
-[test]
+defun main:args
+  [test]
+endfun
 

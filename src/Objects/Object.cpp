@@ -57,7 +57,7 @@ template <typename T> T getNumeralValue(Type type, SValue value) {
   }
 }
 
-int Object::getInt() const { return getNumeralValue<int>(getType(), value_); }
+long Object::getInt() const { return getNumeralValue<long>(getType(), value_); }
 
 double Object::getDouble() const {
   return getNumeralValue<double>(getType(), value_);

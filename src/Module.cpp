@@ -39,4 +39,7 @@ bool Module::isKnownModule(std::string moduleName) {
 
 void Module::loadDefaults(const SIrBuilder &builder) {
   loadModule("List", builder);
+  loadModule("Dict", builder);
+  loadModule("String", builder);
+  loadModule("Integer", builder);
 }

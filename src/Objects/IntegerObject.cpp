@@ -9,8 +9,11 @@
     return std::make_shared<IntegerObject>(getInt() op rhs->getInt());
 
 #define PERFORM_BOOL_OP(op)                                                    \
-  return (getInt() op rhs->getInt()) ? BooleanObject::TRUE                     \
-                                     : BooleanObject::FALSE;
+  if (rhs->isNumeral()) {                                                      \
+    return (getInt() op rhs->getInt()) ? BooleanObject::TRUE                   \
+                                       : BooleanObject::FALSE;                 \
+  } else                                                                       \
+    return BooleanObject::FALSE;
 
 SObject IntegerObject::operator+(const SObject &rhs) { PERFORM_BIN_OP(+) }
 SObject IntegerObject::operator%(const SObject &rhs) {

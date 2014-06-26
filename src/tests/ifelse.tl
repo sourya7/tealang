@@ -7,5 +7,7 @@ defun bla:a
   return 0
 endfun
 
-var a = [bla:3]
-[IO println:a]
+defun main:args
+  var a = [bla:3]
+  [IO println:a]
+endfun

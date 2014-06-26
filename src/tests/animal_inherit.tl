@@ -20,6 +20,5 @@ defun main:args
   var animal = [Animal init]
   var dog = [Dog init]
 
-  [animal speak]
-  [dog speak]
+  [IO println: dog.sound]
 endfun

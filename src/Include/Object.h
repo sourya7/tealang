@@ -14,6 +14,7 @@ enum class Type {
   CLASS,
   MODULE,
   OBJECT,
+  ITERATOR,
   NIL
 };
 
@@ -36,7 +37,7 @@ public:
   }
   Value(Type type) : type_(type) {}
 
-  int getInt() const { return long_; }
+  long getInt() const { return long_; }
   double getDouble() const { return double_; }
   bool getBool() const { return bool_; }
   std::string getString() const { return string_; }
@@ -63,12 +64,12 @@ public:
   virtual bool isInteger() const { return false; }
   virtual bool isString() const { return false; }
   virtual bool isFunction() const { return false; }
-  virtual bool isNumeral() const { return isInteger() || isDouble(); }
+  virtual bool isNumeral() const { return isInteger() || isDouble() || isBool(); }
   virtual bool isDouble() const { return value_->getType() == Type::DOUBLE; }
   virtual bool isNil() const { return value_->getType() == Type::NIL; }
   virtual bool isModule() const { return value_->getType() == Type::MODULE; }
   Type getType() const { return value_->getType(); }
-  int getInt() const;
+  long getInt() const;
   double getDouble() const;
   bool getBool() const { return value_->getBool(); }
   std::string getString() const { return value_->getString(); }

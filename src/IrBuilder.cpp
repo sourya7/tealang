@@ -50,29 +50,23 @@ void IrBuilder::loadConst(SObject c) {
 }
 
 void IrBuilder::loadValue(std::string v) {
-  int l;
-  int id = codeObject_->getId(v, l);
-  assert(id != -1);
-  codeObject_->pushOp(Op(Opc::LOAD_VALUE, id, l));
+  codeObject_->pushOp(Op(Opc::LOAD_VALUE, v));
 }
 
 void IrBuilder::storeValue(std::string v) {
-  int l = 0;
-  int id = codeObject_->getId(v, l);
-  assert(id != -1 && "Variable not declared");
-  codeObject_->pushOp(Op(Opc::STORE_VALUE, id, l));
+  codeObject_->pushOp(Op(Opc::STORE_VALUE, v));
 }
 
 void IrBuilder::declVar(std::string v) {
-  assert(codeObject_->getId(v) == -1 && "Variable already declared!");
-  codeObject_->pushId(v);
+  //assert(codeObject_->getValue(v) == nullptr && "Variable already declared!");
+  codeObject_->addVar(v);
 }
 
 void IrBuilder::declVar(std::string v, SObject o) {
-  if (!o->isModule())
-    assert(codeObject_->getId(v) == -1 && "Variable already declared!");
-  int id = codeObject_->pushId(v);
-  codeObject_->storeIdValue(o, id);
+  //if (!o->isModule())
+  //  assert(codeObject_->getValue(v) == nullptr && "Variable already declared!");
+  codeObject_->addVar(v);
+  codeObject_->storeValue(v, o);
 }
 
 void IrBuilder::declFunc(bool i, std::string n, int ac, SIrBuilder b) {
@@ -82,9 +76,7 @@ void IrBuilder::declFunc(bool i, std::string n, int ac, SIrBuilder b) {
     fun_co->pushOp(Op(Opc::INIT_INSTANCE));
 
   auto fo = std::make_shared<FunctionObject>(n, ac, fun_co, i);
-  int id = codeObject_->getId(n);
-  assert(id != -1);
-  codeObject_->storeIdValue(fo, id);
+  codeObject_->storeValue(n, fo);
   // load the into the stack
 }
 
@@ -106,10 +98,7 @@ void IrBuilder::declWhile(SIrBuilder whileBlk) {
 void IrBuilder::breakFlow() { codeObject_->pushOp(Op(Opc::BREAK)); }
 
 void IrBuilder::callFunc(std::string fn) {
-  int l;
-  int id = codeObject_->getId(fn, l);
-  assert(id != -1);
-  codeObject_->pushOp(Op(Opc::CALL, id, l));
+  codeObject_->pushOp(Op(Opc::CALL, fn));
 }
 
 /*
@@ -142,11 +131,9 @@ void IrBuilder::declClassIsa(std::vector<std::string> isa) {
   //we need to change the value in prev to point to our isa class
 
   for (auto cls : isa) {
-    int level = 0;
-    int clsId = codeObject_->getId(cls, level);
-    assert(clsId != -1 && "Class Does not exist to inherit!");
     //gives me the object for the cls
-    SObject object = codeObject_->getIdValue(clsId, level);
+    SObject object = codeObject_->getValue(cls);
+    assert(object != nullptr && "Class Does not exist to inherit!");
     auto clsO = std::dynamic_pointer_cast<ClassObject>(object);
     //the code object for that class
     auto clsCo = clsO->getCodeObject();
@@ -159,12 +146,9 @@ void IrBuilder::declClassIsa(std::vector<std::string> isa) {
 
 void IrBuilder::declClass(std::string n, SIrBuilder b) {
   // Todo, add a default init if there is none
-  auto b_co = b->getCodeObject();
-  auto cls_o = std::make_shared<ClassObject>(n, b_co);
-
-  int id = codeObject_->getId(n);
-  assert(id != -1);
-  codeObject_->storeIdValue(cls_o, id);
+  auto bCo = b->getCodeObject();
+  auto clsO = std::make_shared<ClassObject>(n, bCo);
+  codeObject_->storeValue(n, clsO);
 }
 
 void IrBuilder::callMethod(std::string method) {

@@ -49,20 +49,25 @@ enum class Opc {
 class Op {
 private:
   int argA_, argB_;
+  std::string str_;
   bool hasArgA_ = false;
   bool hasArgB_ = false;
+  bool hasStr_ = false;
 
 public:
   const Opc opc_;
-  Op(Opc opc) : hasArgA_(false), hasArgB_(false), opc_(opc) {}
+  Op(Opc opc) : opc_(opc) {}
   Op(Opc opc, int a) : argA_(a), hasArgA_(true), opc_(opc) {}
   Op(Opc opc, int a, int b)
       : argA_(a), argB_(b), hasArgA_(true), hasArgB_(true), opc_(opc) {}
+  Op(Opc opc, std::string str) : str_(str), hasStr_(true), opc_(opc) {}
   bool hasArgA() { return hasArgA_; }
+  bool hasStr() { return hasStr_; }
   int getArgA() { return hasArgA_ ? argA_ : -1; }
 
   bool hasArgB() { return hasArgB_; }
   int getArgB() { return hasArgB_ ? argB_ : -1; }
+  std::string getStr() { return hasStr_ ? str_ : "NIL"; }
 };
 
 #endif

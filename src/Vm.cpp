@@ -48,9 +48,8 @@ void Vm::getMethodProp(const SObject &instance, const SObject &propName) {
   }
   auto clsObj = std::dynamic_pointer_cast<ClassObject>(instance);
   auto classCo = clsObj->getCodeObject();
-  int id = classCo->getId(propName->toString());
-  assert(id != -1);
-  auto value = classCo->getIdValue(id);
+  auto value = classCo->getValue(propName->toString());
+  assert(value != nullptr);
   VM_PUSH(value);
 }
 
@@ -62,10 +61,9 @@ void Vm::callMethod(const SObject &instance, const SObject &funcName) {
   auto clsObj = std::dynamic_pointer_cast<ClassObject>(instance);
   assert(clsObj != nullptr);
   auto clsCo = clsObj->getCodeObject();
-  int level = 0;
-  auto fnId = clsCo->getId(funcName->toString(), level);
-  assert(fnId != -1 && "No function with such name!");
-  auto fn = std::dynamic_pointer_cast<FunctionObject>(clsCo->getIdValue(fnId, level));
+  auto fnObj = clsCo->getValue(funcName->toString());
+  assert(fnObj != nullptr && "No function with such name!");
+  auto fn = std::dynamic_pointer_cast<FunctionObject>(fnObj);
   auto fnCo = fn->getCodeObject(clsCo);
   if (fn->isInit()) {
     assert(!clsObj->isInstance());
@@ -104,9 +102,8 @@ void Vm::pushCodeObject(const SCodeObject &c) {
 }
 
 void Vm::execMain(const SCodeObject &c, int argc, char *args[]) {
-  int mainId = c->getId("main:");
-  assert(mainId != -1 && "We need a main function!");
-  SObject fnob = c->getIdValue(mainId);
+  auto fnob = c->getValue("main:");
+  assert(fnob != nullptr && "We need a main function!");
   // make a list out of the char array
   // push the args into the vm stack
   auto arglist = ListModule::fromStringArray(argc, args);
@@ -221,18 +218,16 @@ void Vm::execCode(const SCodeObject &c) {
       break;
     case Opc::LOAD_VALUE:
       DEBUG("OP::LOAD_VALUE");
-      assert(op.hasArgA());
-      assert(op.hasArgB());
-      i = codeObject_->getIdValue(op.getArgA(), op.getArgB());
+      assert(op.hasStr());
+      i = codeObject_->getValue(op.getStr());
       assert(i != nullptr);
       VM_PUSH(i);
       break;
     case Opc::STORE_VALUE:
       DEBUG("OP::STORE_VALUE");
-      assert(op.hasArgA());
-      assert(op.hasArgB());
+      assert(op.hasStr());
       i = VM_POP();
-      codeObject_->storeIdValue(i, op.getArgA(), op.getArgB());
+      codeObject_->storeValue(op.getStr(), i);
       break;
     case Opc::JMP_IF_ELSE: {
       DEBUG("OP::JMP_IF_ELSE");
@@ -276,9 +271,9 @@ void Vm::execCode(const SCodeObject &c) {
     }
     case Opc::CALL: {
       DEBUG("OP::CALL");
-      assert(op.hasArgA());
-      assert(op.hasArgB());
-      auto fnob = codeObject_->getIdValue(op.getArgA(), op.getArgB());
+      assert(op.hasStr());
+      auto fnob = codeObject_->getValue(op.getStr());
+      assert(fnob != nullptr);
       INCR_OP();
       Vm::callFunc(fnob);
       continue;

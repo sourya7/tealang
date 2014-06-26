@@ -6,38 +6,39 @@ int CodeObject::pushConst(const SObject &o) {
   return consts_->size() - 1;
 }
 
-int CodeObject::pushId(std::string var) {
-  ids_->push_back(var);
-  vals_->push_back(Object::NIL);
-  assert(ids_->size() == vals_->size());
-  return ids_->size() - 1;
+void CodeObject::addVar(std::string name) {
+  valmap_[name] = Object::NIL;
+}
+
+/*
+ * Helper function to find the var in the given CodeObject
+ */
+std::map<std::string, SObject>::iterator CodeObject::findVar(CodeObject *code,
+                                                             std::string var) {
+  auto itEnd = code->valmap_.end();
+  auto root = code;
+  while (root != nullptr) {
+    auto it = root->valmap_.find(var);
+    if (it != root->valmap_.end()) {
+      return it;
+    }
+    root = root->parent_.get();
+  }
+  return itEnd;
 }
 
 // level returns if we can find it in a parent
-int CodeObject::getId(std::string var, int &level) {
-  level = 0;
-  CodeObject *root = this;
-  while (root != nullptr) {
-    auto it = std::find(root->ids_->begin(), root->ids_->end(), var);
-    if (it != root->ids_->end()) {
-      return it - root->ids_->begin();
-    }
-    level++;
-    root = root->parent_.get();
-  }
-  // not found in any level
-  level = -1;
-  return -1;
+SObject CodeObject::getValue(std::string var) {
+  auto it = findVar(this, var);
+  if(it != this->valmap_.end())
+    return it->second;
+  return nullptr;
 }
 
-void CodeObject::storeIdValue(const SObject &val, int id, int level) {
-  CodeObject *root = this;
-  while (level--) {
-    assert(root != nullptr);
-    root = root->parent_.get();
-  }
-  assert(static_cast<int>(root->ids_->size()) > id);
-  root->vals_->at(id) = val;
+void CodeObject::storeValue(std::string var, const SObject &val) {
+  auto it = findVar(this, var);
+  assert(it != this->valmap_.end() && "Value does not exist!");
+  it->second = val;
 }
 
 int CodeObject::getChildId(const SCodeObject &c) {
@@ -46,15 +47,6 @@ int CodeObject::getChildId(const SCodeObject &c) {
     return it - children_->begin();
   else
     return -1;
-}
-
-SObject CodeObject::getIdValue(int id, int level) {
-  CodeObject *root = this;
-  while (level--) {
-    assert(root != nullptr);
-    root = root->parent_.get();
-  }
-  return root->vals_->at(id);
 }
 
 void CodeObject::addChild(const SCodeObject &child) {

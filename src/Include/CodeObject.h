@@ -18,10 +18,8 @@ class CodeObject;
 
 class CodeObject {
 private:
-  // variables in the codeobject scope
-  SVecString ids_;
-  // value for those vars
-  SVecSObject vals_;
+  // values
+  std::map<std::string,SObject> valmap_;
   // constants in the codeobject scope
   SVecSObject consts_;
   // opcodes for this codeobject
@@ -30,6 +28,8 @@ private:
   SCodeObject parent_ = nullptr;
   SObject object_ = nullptr;
   BlockType type_ = BlockType::EXPR;
+  static std::map<std::string, SObject>::iterator findVar(CodeObject *code,
+                                                          std::string var);
 
 public:
   CodeObject(SCodeObject parent) : CodeObject() { parent_ = parent; }
@@ -39,15 +39,12 @@ public:
     children_ = rhs.children_;
     opcode_ = rhs.opcode_;
     consts_ = rhs.consts_;
-    vals_ = std::make_shared<VecSObject>(*rhs.vals_);
-    ids_ = rhs.ids_;
     object_ = rhs.object_;
     type_ = rhs.type_;
+    valmap_ = rhs.valmap_;
   }
 
   CodeObject() {
-    ids_ = std::make_shared<VecString>();
-    vals_ = std::make_shared<VecSObject>();
     consts_ = std::make_shared<VecSObject>();
     opcode_ = std::make_shared<VecOp>();
     children_ = std::make_shared<VecSCodeObject>();
@@ -62,21 +59,14 @@ public:
   int pushConst(const SObject &o);
   SObject getConst(int id) { return consts_->at(id); }
 
-  int pushId(std::string var);
-  int getId(std::string var, int &l);
-  int getId(std::string var) {
-    int l;
-    int id = getId(var, l);
-    if (l != 0)
-      return -1;
-    return id;
-  }
+
 
   void setBlockType(BlockType type) { type_ = type; }
   BlockType getBlockType() const { return type_; }
 
-  void storeIdValue(const SObject &value, int id, int level = 0);
-  SObject getIdValue(int id, int level = 0);
+  void addVar(std::string name);
+  void storeValue(std::string name, const SObject &value);
+  SObject getValue(std::string name);
 
   SVecOp getOpCode() { return opcode_; }
   void pushOp(Op op) { opcode_->push_back(op); }

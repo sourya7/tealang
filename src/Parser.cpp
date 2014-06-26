@@ -524,6 +524,11 @@ SNodeAst Parser::parseImportStmt() {
   auto line = look_->getLineNo();
   std::vector<std::string> path;
   while (look_->getLineNo() == line) {
+    if(look_->getTag() == Tags::OP) {
+      if(GUARD_CAST<OpToken*>(look_.get())->getValue() == Opc::DOT){
+        move();
+      }
+    }
     auto lw = GUARD_CAST<WordToken *>(look_.get());
     path.push_back(lw->getValue());
     move();

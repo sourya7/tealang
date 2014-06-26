@@ -43,6 +43,8 @@ public:
   static void loadModule(std::string name, const SIrBuilder &builder);
   static SObject call(const SObject &instance, const SObject &method,
                       const VecSObject &params);
+  static SObject getProperty(const SObject &instance, const SObject &method);
+
 };
 
 #endif

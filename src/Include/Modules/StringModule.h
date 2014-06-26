@@ -24,6 +24,8 @@ class StringModule : public Module {
 public:
   StringModule();
   static SObject fromObj(const VecSObject &v);
+  static SObject length(const VecSObject &v);
+  static SObject find(const VecSObject &v);
 };
 
 #endif

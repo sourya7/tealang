@@ -5,6 +5,7 @@
 #include "Modules/IoModule.h"
 #include "Modules/StringModule.h"
 #include "Modules/IntegerModule.h"
+#include "Modules/SocketModule.h"
 
 /*
  * TODO, This file will be generated in the future
@@ -16,4 +17,5 @@ void Module::init() {
   addModule("Integer", std::make_shared<IntegerModule>());
   addModule("IO", std::make_shared<IoModule>());
   addModule("Math", std::make_shared<MathModule>());
+  addModule("Socket", std::make_shared<SocketModule>());
 }

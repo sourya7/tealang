@@ -15,6 +15,12 @@ SObject Module::call(const SObject &instance, const SObject &method,
   return nullptr;
 }
 
+SObject Module::getProperty(const SObject &instance, const SObject &propName) {
+  SModule mod = std::dynamic_pointer_cast<Module>(instance);
+  assert(mod != nullptr);
+  return mod->propMap_[propName->toString()];
+}
+
 void Module::loadModule(std::string name, const SIrBuilder &builder) {
   auto m = modules_[name];
   builder->declVar(name, m);

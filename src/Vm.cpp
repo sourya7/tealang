@@ -1,8 +1,10 @@
+#include <cmath>
 #include "Debug.h"
 #include "Vm.h"
 #include "Module.h"
 #include "OpCode.h"
 #include "Objects/IntegerObject.h"
+#include "Objects/DoubleObject.h"
 #include "Objects/FunctionObject.h"
 #include "Objects/ClassObject.h"
 #include "Modules/ListModule.h"
@@ -43,6 +45,9 @@ void Vm::callModule(const SObject &instance, const SObject &funcName) {
 
 void Vm::getMethodProp(const SObject &instance, const SObject &propName) {
   if (instance->getType() == Type::MODULE) {
+    auto ob = Module::getProperty(instance, propName);
+    assert(ob != nullptr && "Property does not exist");
+    VM_PUSH(ob);
     return;
     // do something about it
   }
@@ -186,7 +191,12 @@ void Vm::execCode(const SCodeObject &c) {
       DEBUG("OP::DIV");
       BIN_OP(/ );
       break;
-    // case Opc::POWER: DEBUG("OP::POWER"); BIN_OP(**); break;
+    case Opc::POWER: 
+      DEBUG("OP::POWER"); 
+      j = VM_POP();
+      i = VM_POP();
+      VM_PUSH(std::make_shared<DoubleObject>(pow(i->getDouble(), j->getDouble())));
+      break;
     case Opc::WHILE: {
       DEBUG("OP::WHILE");
       assert(op.hasArgA());

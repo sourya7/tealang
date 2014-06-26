@@ -1,22 +1,18 @@
+import IO
 import Socket
 
-var HOST = "localhost"
-var PORT = 5007
-var socket = [Socket initWithAF: Socket.AF_INET withStream: Socket.SOCK_STREAM]
+defun main:args
+  var HOST = "localhost"
+  var PORT = [Integer fromStr:[args at:1]]
+  var socket = [Socket initWithFamily:Socket.AF_INET andStream:Socket.SOCK_STREAM]
 
-[socket bindHost: HOST andPort: PORT]
-[socket listen: 1]
-
-var res = [socket accept]
-var addr = [res get:"addr"]
-var conn = [res get:"conn"]
-
-[IO println: "Connected by" + addr]
-while True
-  var data = [conn recv: 1024]
-  if [data len] == 0: 
-    break
-  endif
-  [conn send: data]
-endwhile
-
+  [socket bindHost:HOST andPort:PORT]
+  [socket listen:1]
+  [socket accept]
+  
+  while true 
+    var data = [socket recvN:1024]
+    [IO print: data]
+    [socket send:data]
+  endwhile
+endfun

@@ -43,4 +43,6 @@ SObject DictModule::get(const VecSObject &obj) {
   return it->second;
 }
 
-SObject DictModule::insert(const VecSObject &obj) { return nullptr; }
+SObject DictModule::insert(const VecSObject &obj) { 
+  return append(obj);
+}
